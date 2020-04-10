@@ -1,9 +1,6 @@
-import os
 import pandas as pd
 
-from analysis_configuration import EARLIEST_ANALYZED_YEAR, lang_name
 from confusion_matrix import ConfusionMatrix, ifnull, safe_divide
-from repo_utils import get_valid_repos
 
 
 def cochange_preperation(cochange_file
@@ -79,17 +76,6 @@ def cochange_analysis(per_year_df
                        , improved_sig_second_metric
                        , key)
 
-    """
-    two_years_analysis(two_years
-                       , improved_first_metric
-                       , improved_sig_second_metric
-                       , key)
-
-    two_years_analysis(two_years
-                       , improved_sig_first_metric
-                       , improved_second_metric
-                       , key)
-    """
 
 def two_years_analysis(two_years_df
                        , first_metric
@@ -151,11 +137,12 @@ def build_two_years_df(per_year_df
 
 def build_repo_per_year_df(cochange_file
                            , key
+                           , earliaest_analyzed_year=-1
                            , control_variables=[]):
     trep = get_valid_repos()
     trep = trep[[key] + control_variables]
     cochange_df = pd.read_csv(cochange_file)
-    cochange_df = cochange_df[cochange_df.year > EARLIEST_ANALYZED_YEAR]
+    cochange_df = cochange_df[cochange_df.year > earliaest_analyzed_year]
     df = pd.merge(cochange_df, trep, on=key)
 
     return df
@@ -193,155 +180,3 @@ def cochange_analysis_by_value(per_year_df
                           )
 
 
-
-def onboarding_ccp_cochange_by_lang(repo_file_quality_per_year
-                           , repo_file_onboarding_per_year):
-    """
-        Note that repo_file_quality_per_year uses bug hit ratio and not ccp.
-        For change analysis it doesn't matter.
-    :param repo_file_quality_per_year:
-    :return:
-    """
-    key = 'repo_name'
-    fixed_variable = 'language'
-    control_variables = [fixed_variable]
-
-    repo_file_quality_per_year_df = build_repo_per_year_df(repo_file_quality_per_year
-                                                           , key=key
-                                                           , control_variables=control_variables)
-    repo_file_churn_per_year_df = build_repo_per_year_df(repo_file_onboarding_per_year
-                                                         , key=key
-                                                         , control_variables=control_variables)
-    repo_file_churn_per_year_df = repo_file_churn_per_year_df[(repo_file_churn_per_year_df.comming_developers > 9)
-                                                    & (repo_file_churn_per_year_df.language.isin(lang_name))]
-    per_year_df = pd.merge(repo_file_quality_per_year_df
-                           , repo_file_churn_per_year_df
-                           , on=[key, 'year'] + control_variables)
-
-    cochange_analysis_by_value(per_year_df
-                               , first_metric='corrective_commits_ratio'
-                               , second_metric='comming_involved_developers_ratio'
-                               , first_the_higher_the_better=False
-                               , second_the_higher_the_better=True
-                               , first_sig_threshold=0.1
-                               , second_sig_threshold=0.1
-                               , fixed_variable=fixed_variable
-                               , fixed_values=lang_name
-                               , key=key
-                               , control_variables=control_variables
-                               )
-
-
-
-def cochange_by_language(per_year_df
-                         , first_metric
-                         , second_metric
-                         , first_the_higher_the_better
-                         , second_the_higher_the_better
-                         , first_sig_threshold
-                         , second_sig_threshold
-                         , key='repo_name'):
-    fixed_variable = 'language'
-    control_variables = [fixed_variable]
-
-    per_year_df = per_year_df[(per_year_df.language.isin(lang_name))]
-
-    cochange_analysis_by_value(per_year_df
-                               , first_metric=first_metric
-                               , second_metric=second_metric
-                               , first_the_higher_the_better=first_the_higher_the_better
-                               , second_the_higher_the_better=second_the_higher_the_better
-                               , first_sig_threshold=first_sig_threshold
-                               , second_sig_threshold=second_sig_threshold
-                               , fixed_variable=fixed_variable
-                               , fixed_values=lang_name
-                               , key=key
-                               , control_variables=control_variables
-                               )
-
-
-
-def cochange_by_dev_num_group(per_year_df
-                         , first_metric
-                         , second_metric
-                         , first_the_higher_the_better
-                         , second_the_higher_the_better
-                         , first_sig_threshold
-                         , second_sig_threshold
-                         , key='repo_name'):
-    fixed_variable = 'dev_num_group'
-    control_variables = [fixed_variable]
-
-    cochange_analysis_by_value(per_year_df
-                               , first_metric=first_metric
-                               , second_metric=second_metric
-                               , first_the_higher_the_better=first_the_higher_the_better
-                               , second_the_higher_the_better=second_the_higher_the_better
-                               , first_sig_threshold=first_sig_threshold
-                               , second_sig_threshold=second_sig_threshold
-                               , fixed_variable=fixed_variable
-                               , fixed_values=['small', 'medium', 'large']
-                               , key=key
-                               , control_variables=control_variables
-                               )
-
-
-def cochange_by_age_group(per_year_df
-                         , first_metric
-                         , second_metric
-                         , first_the_higher_the_better
-                         , second_the_higher_the_better
-                         , first_sig_threshold
-                         , second_sig_threshold
-                         , key='repo_name'):
-    fixed_variable = 'age_group'
-    control_variables = [fixed_variable]
-
-    cochange_analysis_by_value(per_year_df
-                               , first_metric=first_metric
-                               , second_metric=second_metric
-                               , first_the_higher_the_better=first_the_higher_the_better
-                               , second_the_higher_the_better=second_the_higher_the_better
-                               , first_sig_threshold=first_sig_threshold
-                               , second_sig_threshold=second_sig_threshold
-                               , fixed_variable=fixed_variable
-                               , fixed_values=['old', 'medium', 'young']
-                               , key=key
-                               , control_variables=control_variables
-                               )
-
-def cochange_with_control(per_year_df
-                         , first_metric
-                         , second_metric
-                         , first_the_higher_the_better
-                         , second_the_higher_the_better
-                         , first_sig_threshold
-                         , second_sig_threshold
-                         , key='repo_name'):
-
-    cochange_by_language(per_year_df=per_year_df
-                         , first_metric=first_metric
-                         , second_metric=second_metric
-                         , first_the_higher_the_better=first_the_higher_the_better
-                         , second_the_higher_the_better=second_the_higher_the_better
-                         , first_sig_threshold=first_sig_threshold
-                         , second_sig_threshold=second_sig_threshold
-                         , key=key)
-
-    cochange_by_dev_num_group(per_year_df=per_year_df
-                         , first_metric=first_metric
-                         , second_metric=second_metric
-                         , first_the_higher_the_better=first_the_higher_the_better
-                         , second_the_higher_the_better=second_the_higher_the_better
-                         , first_sig_threshold=first_sig_threshold
-                         , second_sig_threshold=second_sig_threshold
-                         , key=key)
-
-    cochange_by_age_group(per_year_df=per_year_df
-                         , first_metric=first_metric
-                         , second_metric=second_metric
-                         , first_the_higher_the_better=first_the_higher_the_better
-                         , second_the_higher_the_better=second_the_higher_the_better
-                         , first_sig_threshold=first_sig_threshold
-                         , second_sig_threshold=second_sig_threshold
-                         , key=key)
