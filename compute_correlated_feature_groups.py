@@ -57,8 +57,3 @@ def compute_correlated_feautre_groups(df
                             , n_components
                             , labels)
 
-
-if __name__ == '__main__':
-    df = pd.read_csv(os.path.join(DATA_PATH, 'pivot.csv'))
-    compute_correlated_feautre_groups(df)
-
