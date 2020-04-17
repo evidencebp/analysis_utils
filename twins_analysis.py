@@ -24,6 +24,9 @@ def generate_twins_sql(source_data_set
                        , output_file
                        , schema='ccp'
                        , control_variables=[]
+                       , twin_threshold=None
+                       , env_threshold=None
+                       , having_clause=''
                        ):
     f = open(output_file, "w")
     f.write(generate_env_porfile_sql(source_data_set
@@ -31,7 +34,8 @@ def generate_twins_sql(source_data_set
                    , metrics_dict
                    , prefix
                    , schema=schema
-                   , control_variables=control_variables))
+                   , control_variables=control_variables
+                   , having_clause=having_clause))
     f.write("\n")
     f.write(generate_twin_in_env_porfile_sql(source_data_set
                                 , twin_column
@@ -39,7 +43,8 @@ def generate_twins_sql(source_data_set
                                 , metrics_dict
                                 , prefix
                                 , schema=schema
-                                , control_variables=control_variables))
+                                , control_variables=control_variables
+                                ,having_clause=having_clause))
     f.write("\n")
 
     for metric in metrics_dict:
@@ -49,6 +54,9 @@ def generate_twins_sql(source_data_set
                        , prefix
                        , schema=schema
                        , control_variables=control_variables
+                       , the_higher_the_better=metrics_dict[metric]['the_higher_the_better']
+                       , twin_threshold=twin_threshold
+                       , env_threshold=env_threshold
                        ))
     f.close()
 
@@ -59,6 +67,7 @@ def generate_twin_porfile_sql(source_data_set : str
                        , prefix : str
                        , schema: str ='ccp'
                        , control_variables=[]
+                       ,having_clause=''
                        ) -> str:
 
     table_name = prefix + 'twin_porfile'
@@ -81,6 +90,7 @@ def generate_twin_porfile_sql(source_data_set : str
     group by
     {twin_column}
     {control_variables}
+    {having_clause}
     ;    
     """.format(schema=schema
                , table_name=table_name
@@ -88,6 +98,7 @@ def generate_twin_porfile_sql(source_data_set : str
                , control_variables=' '.join([", " + i for i in control_variables])
                , metrics=generate_metrics_clause(metrics_dict)
                , source_data_set=source_data_set
+               , having_clause=having_clause
                )
 
     generation_sql = drop_sql + " " + create_sql
@@ -98,7 +109,7 @@ def generate_metrics_clause(metrics_dict : Dict) -> str:
 
     clauses = []
     for i in sorted(metrics_dict.keys()):
-        clauses.append(" {} as {}".format(metrics_dict[i]
+        clauses.append(" {} as {}".format(metrics_dict[i]['code']
                                          , i))
     return ",".join(clauses)
 
@@ -108,7 +119,8 @@ def generate_env_porfile_sql(source_data_set
                                 , metrics_dict
                                 , prefix
                                 , schema: str = 'ccp'
-                                , control_variables=[]):
+                                , control_variables=[]
+                                , having_clause=''):
 
     table_name = prefix + 'env_porfile'
 
@@ -130,6 +142,7 @@ def generate_env_porfile_sql(source_data_set
     group by
     {env_column}
     {control_variables}
+    {having_clause}
     ;    
     """.format(schema=schema
                , table_name=table_name
@@ -137,9 +150,9 @@ def generate_env_porfile_sql(source_data_set
                , control_variables=' '.join([", " + i for i in control_variables])
                , metrics=generate_metrics_clause(metrics_dict)
                , source_data_set=source_data_set
+               , having_clause=having_clause
                )
-    # todo - metric side
-    #todo threshhold
+    # TODO - having cond
     generation_sql = drop_sql + " " + create_sql
 
     return generation_sql
@@ -150,7 +163,8 @@ def generate_twin_in_env_porfile_sql(source_data_set
                        , metrics_dict
                        , prefix
                        , schema: str = 'ccp'
-                       , control_variables=[]):
+                       , control_variables=[]
+                       ,having_clause=''):
     table_name = prefix + 'twin_in_env_porfile'
 
     drop_sql = 'drop table if exists {schema}.{table_name};'.format(schema=schema
@@ -173,6 +187,7 @@ def generate_twin_in_env_porfile_sql(source_data_set
     {env_column}
     , {twin_column}
     {control_variables}
+    {having_clause}
     ;    
     """.format(schema=schema
                , table_name=table_name
@@ -181,6 +196,7 @@ def generate_twin_in_env_porfile_sql(source_data_set
                , control_variables=' '.join([", " + i for i in control_variables])
                , metrics=generate_metrics_clause(metrics_dict)
                , source_data_set=source_data_set
+               , having_clause=having_clause
                )
 
     generation_sql = drop_sql + " " + create_sql
@@ -193,13 +209,35 @@ def generate_twins_match_stats_sql(twin_column
                        , metric
                        , prefix
                        , schema: str = 'ccp'
-                       , control_variables=[]):
+                       , control_variables=[]
+                       , the_higher_the_better=True
+                       , twin_threshold=None
+                       , env_threshold=None):
+    #todo threshhold
+
+    twin_threshold_val = ''
+    if twin_threshold:
+        if the_higher_the_better:
+            twin_threshold_val = ' + ' + str(twin_threshold)
+        else:
+            twin_threshold_val = ' - ' + str(twin_threshold)
+
+    env_threshold_val = ''
+    if env_threshold:
+        if the_higher_the_better:
+            env_threshold_val = ' + ' + str(env_threshold)
+        else:
+            env_threshold_val = ' - ' + str(env_threshold)
+
+
     sql = """
     Select 
         {control_variables}
-        env1.{metric} > env2.{metric} as env_higher
-        , twin_in_env1.{metric} > twin_in_env2.{metric} as twin_higher
+        env1.{metric} {the_higher_the_better} env2.{metric} {env_threshold} as env_improved
+        , twin_in_env1.{metric} {the_higher_the_better} twin_in_env2.{metric} {twin_threshold} as twin_improved
         , count(*) as cnt
+        , count(distinct twin_in_env1.{twin_column}) as twins_cnt
+        , count(distinct twin_in_env1.{env_column}) as envs_cnt
     from
         {schema}.{twin_in_env} as twin_in_env1
         join
@@ -218,12 +256,15 @@ def generate_twins_match_stats_sql(twin_column
         twin_in_env2.{env_column} = env2.{env_column}
         group by
         {control_variables}        
-        env_higher, twin_higher
+        env_improved, twin_improved
         order by
         {control_variables} 
-        env_higher, twin_higher
+        env_improved, twin_improved
         ;
     """.format(metric=metric
+               , the_higher_the_better= '>' if the_higher_the_better else '<'
+               , env_threshold=env_threshold_val
+               , twin_threshold=twin_threshold_val
                , twin_in_env=prefix + 'twin_in_env_porfile'
                , twin_column=twin_column
                , env_column=env_column
