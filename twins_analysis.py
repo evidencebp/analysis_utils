@@ -229,12 +229,16 @@ def generate_twins_match_stats_sql(twin_column
         else:
             env_threshold_val = ' - ' + str(env_threshold)
 
+    if len(control_variables) > 0:
+        control_cond = " ".join(["and  twin_in_env1.{v} = twin_in_env2.{v}".format(v=i) for i in control_variables])
+    else:
+        control_cond = ''
 
     sql = """
     Select 
-        {control_variables}
         env1.{metric} {the_higher_the_better} env2.{metric} {env_threshold} as env_improved
         , twin_in_env1.{metric} {the_higher_the_better} twin_in_env2.{metric} {twin_threshold} as twin_improved
+        {control_variables}
         , count(*) as cnt
         , count(distinct twin_in_env1.{twin_column}) as twins_cnt
         , count(distinct twin_in_env1.{env_column}) as envs_cnt
@@ -246,6 +250,7 @@ def generate_twins_match_stats_sql(twin_column
         twin_in_env1.{twin_column} = twin_in_env2.{twin_column}
         and
         twin_in_env1.{env_column} <> twin_in_env2.{env_column}
+        {control_cond}
         join
         {schema}.{env} as env1
         on
@@ -255,11 +260,11 @@ def generate_twins_match_stats_sql(twin_column
         on
         twin_in_env2.{env_column} = env2.{env_column}
         group by
+        env_improved, twin_improved
         {control_variables}        
-        env_improved, twin_improved
         order by
-        {control_variables} 
         env_improved, twin_improved
+        {control_variables} 
         ;
     """.format(metric=metric
                , the_higher_the_better= '>' if the_higher_the_better else '<'
@@ -270,7 +275,8 @@ def generate_twins_match_stats_sql(twin_column
                , env_column=env_column
                , env=prefix + 'env_porfile'
                , schema=schema
-               , control_variables=' '.join([ i + ", " for i in control_variables])
+               , control_variables=' '.join([ ", twin_in_env1.{v}".format(v=i) for i in control_variables])
+               , control_cond=control_cond
                )
 
     return sql
