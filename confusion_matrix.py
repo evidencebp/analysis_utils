@@ -2,7 +2,8 @@
     Implements a confusion matrix.
     For details see https://en.wikipedia.org/wiki/Confusion_matrix
 """
-
+import json
+from pandas import DataFrame
 
 def ifnull(var, val=0):
   if var is None:
@@ -15,6 +16,34 @@ def safe_divide(numerator, divisor, default=None):
         return ifnull(numerator)/ifnull(divisor)
     else:
         return default
+
+def sk_to_grouped_df(labels
+                     , predictions
+                     , classifier='classifier'
+                     , concept='concept'
+                     , count='count'
+                     ):
+    dict = {concept: labels
+            , classifier : predictions}
+    df = DataFrame(dict)
+    df = df.reset_index()
+    grouped_df = group_df_for_cm(df
+                                 , classifier
+                                 , concept
+                                 , count)
+
+    return grouped_df
+
+
+def group_df_for_cm(df
+                    , classifier
+                    , concept
+                    , count='count'):
+    grouped_df = df.groupby([concept, classifier], as_index=False).agg({'index': 'count'})
+    grouped_df = grouped_df.rename(columns={'index': count})
+
+    return grouped_df
+
 
 class ConfusionMatrix(object):
     def __init__(self
@@ -121,13 +150,14 @@ class ConfusionMatrix(object):
         return safe_divide(self.tp() , self.tp() + self.fp() + self.fn())
     # TODO  - confusion matix metrics
 
-    def summarize(self):
+    def summarize(self
+                  , output_file=None):
 
-        return {'true_positives' : self.tp()
-                , 'true_negatives' : self.tn()
-                , 'false_positives' : self.fp()
-                , 'false_negatives' : self.fn()
-                , 'samples' : self.samples()
+        sum_dict = {'true_positives' : int(self.tp())
+                , 'true_negatives' : int(self.tn())
+                , 'false_positives' : int(self.fp())
+                , 'false_negatives' : int(self.fn())
+                , 'samples' : int(self.samples())
                 , 'accuracy' : round(ifnull(self.accuracy()), self.digits)
                 , 'positive_rate' : round(ifnull(self.positive_rate()), self.digits)
                 , 'hit_rate' : round(ifnull(self.hit_rate()), self.digits)
@@ -139,6 +169,11 @@ class ConfusionMatrix(object):
                 , 'comment' : self.comment
                 }
 
+        if output_file:
+            with open(output_file, 'w', encoding='utf-8') as f:
+                json.dump(sum_dict, f, ensure_ascii=False, indent=4)
+
+        return sum_dict
 
     def to_latex(self
                  , caption):
