@@ -5,15 +5,20 @@ def analyze_stability(metric_per_year_df
                       , metric_name
                       , time_column='year'
                       , minimal_time=-1
-                      , control_variables=[]):
+                      , control_variables=[]
+                      , min_cnt_column=None
+                      , min_cnt_threshold=None):
 
+    if min_cnt_column:
+        metric_per_year_df = metric_per_year_df[metric_per_year_df[min_cnt_column] >= min_cnt_threshold]
     stats = {}
     two_years_df = build_two_years_df(metric_per_year_df=metric_per_year_df
                        , key=key
                        , metric_name=metric_name
                        , time_column=time_column
                        , minimal_time=minimal_time
-                       , control_variables=control_variables)
+                       , control_variables=control_variables
+                                      )
 
     stats['Pearson'] = two_years_df.corr()['cur_' + metric_name]['prev_' + metric_name]
 
