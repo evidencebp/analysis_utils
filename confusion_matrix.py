@@ -155,6 +155,10 @@ class ConfusionMatrix(object):
     def lift_over_independent(self):
         return self.accuracy()/self.independent_prob() -1
 
+    def lift_over_majority(self):
+        majority = max(self.positive_rate(), 1 - self.positive_rate())
+        return self.accuracy()/majority -1
+
     def summarize(self
                   , output_file=None):
 
@@ -173,6 +177,7 @@ class ConfusionMatrix(object):
                 , 'jaccard' : round(ifnull(self.jaccard()), self.digits)
                 , 'independent_prob' : round(ifnull(self.independent_prob()), self.digits)
                 , 'lift_over_independent' : round(ifnull(self.lift_over_independent()), self.digits)
+                , 'lift_over_majority' : round(ifnull(self.lift_over_majority()), self.digits)
                 , 'comment' : self.comment
                 }
 
