@@ -148,7 +148,12 @@ class ConfusionMatrix(object):
 
     def jaccard(self):
         return safe_divide(self.tp() , self.tp() + self.fp() + self.fn())
-    # TODO  - confusion matix metrics
+
+    def independent_prob(self):
+        return (self.positive_rate()*self.hit_rate()) +  ((1- self.positive_rate())*(1-self.hit_rate()))
+
+    def lift_over_independent(self):
+        return self.accuracy()/self.independent_prob() -1
 
     def summarize(self
                   , output_file=None):
@@ -166,6 +171,8 @@ class ConfusionMatrix(object):
                 , 'recall' : round(ifnull(self.recall()), self.digits)
                 , 'fpr' : round(ifnull(self.fpr()), self.digits)
                 , 'jaccard' : round(ifnull(self.jaccard()), self.digits)
+                , 'independent_prob' : round(ifnull(self.independent_prob()), self.digits)
+                , 'lift_over_independent' : round(ifnull(self.lift_over_independent()), self.digits)
                 , 'comment' : self.comment
                 }
 
