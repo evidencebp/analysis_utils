@@ -60,3 +60,17 @@ def label_sample(samples_df : pd.DataFrame
     labels_df = labels_df.drop_duplicates()
 
     return labels_df
+
+def get_samples_to_label(samples_df : pd.DataFrame
+                          , labels_df : pd.DataFrame
+                          , keys :string_list) -> pd.DataFrame:
+
+    df_all = samples_df.merge(labels_df[keys]
+                              , on=keys
+                              ,how='left'
+                              , indicator=True)
+
+    samples_to_label = df_all[(df_all._merge == 'left_only')]
+    samples_to_label = samples_to_label.drop(columns=['_merge'])
+
+    return samples_to_label
