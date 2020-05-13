@@ -25,7 +25,7 @@ from confusion_matrix import ConfusionMatrix
                                     'false_negatives': 7, 'samples': 30, 'accuracy': 0.63, 'positive_rate': 0.33,
                                     'hit_rate': 0.23, 'precision': 0.43, 'recall': 0.3, 'fpr': 0.2,
                                     'jaccard': 0.21, 'independent_prob': 0.59, 'lift_over_independent': 0.08
-                                     , 'precision_lift': 0.29 , 'comment': None}
+                                     , 'lift_over_majority': -0.05, 'precision_lift': 0.29 , 'comment': None}
                                  , id='regular1')
      ])
 def test_summrize(classifier
