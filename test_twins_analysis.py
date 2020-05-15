@@ -93,8 +93,8 @@ def test_generate_twins_match_stats_sql():
                        , schema='ccp'
                        ).replace("'", "").replace("\n", "").replace(" ", "")
 
-    expected = "\n'\n '    Select \n'\n '        \n'\n '        env1.avg_ccp > env2.avg_ccp  as env_improved\n'\n '" \
-               "        , twin_in_env1.avg_ccp > twin_in_env2.avg_ccp  as twin_improved\n'\n '        " \
+    expected = "\n'\n '    Select \n'\n '        \n'\n 'twin_in_env1.avg_ccp > twin_in_env2.avg_ccp  as twin_improved\n'\n '" \
+               "        , env1.avg_ccp > env2.avg_ccp  as env_improved\n'\n '        " \
                ", count(*) as cnt\n'\n '        " \
                ", count(distinct twin_in_env1.Author_email) as twins_cnt\n'\n '        " \
                ", count(distinct twin_in_env1.repo_name) as envs_cnt\n'\n '    " \
@@ -106,8 +106,8 @@ def test_generate_twins_match_stats_sql():
                "twin_in_env1.repo_name = env1.repo_name\n'\n '        join\n'\n '        " \
                "ccp.churn_env_porfile as env2\n'\n '        on\n'\n '        " \
                "twin_in_env2.repo_name = env2.repo_name\n'\n '        " \
-               "group by\n'\n '                \n'\n '        env_improved, twin_improved\n'\n '        " \
-               "order by\n'\n '         \n'\n '        env_improved, twin_improved\n'\n '        ;\n'\n '    "
+               "group by\n'\n '                \n'\n '        twin_improved, env_improved\n'\n '        " \
+               "order by\n'\n '         \n'\n '        twin_improved, env_improved\n'\n '        ;\n'\n '    "
     expected = expected.replace("'", "").replace("\n", "").replace(" ", "")
 
     assert actual == expected

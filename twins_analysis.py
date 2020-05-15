@@ -236,8 +236,8 @@ def generate_twins_match_stats_sql(twin_column
 
     sql = """
     Select 
-        env1.{metric} {the_higher_the_better} env2.{metric} {env_threshold} as env_improved
-        , twin_in_env1.{metric} {the_higher_the_better} twin_in_env2.{metric} {twin_threshold} as twin_improved
+        twin_in_env1.{metric} {the_higher_the_better} twin_in_env2.{metric} {twin_threshold} as twin_improved
+        , env1.{metric} {the_higher_the_better} env2.{metric} {env_threshold} as env_improved
         {control_variables}
         , count(*) as cnt
         , count(distinct twin_in_env1.{twin_column}) as twins_cnt
@@ -260,10 +260,10 @@ def generate_twins_match_stats_sql(twin_column
         on
         twin_in_env2.{env_column} = env2.{env_column}
         group by
-        env_improved, twin_improved
+        twin_improved, env_improved
         {control_variables}        
         order by
-        env_improved, twin_improved
+        twin_improved, env_improved
         {control_variables} 
         ;
     """.format(metric=metric
