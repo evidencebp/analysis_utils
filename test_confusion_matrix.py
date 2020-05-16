@@ -42,3 +42,29 @@ def test_summrize(classifier
 
 
 
+@pytest.mark.parametrize(('classifier'
+                          , 'concept'
+                          , 'count'
+                          , 'g_df'
+                          , 'expected')
+    , [
+                             pytest.param(
+                                 'classifier'
+                                 , 'concept'
+                                 , 'count'
+                                 , pd.DataFrame(columns=['classifier', 'concept', 'count'])
+                                 , 1
+                                 , id='regular1')
+                         ])
+def test_independent_prob(classifier
+                  , concept
+                  , count
+                  , g_df
+                  , expected):
+    cm = ConfusionMatrix(classifier
+                         , concept
+                         , count
+                         , g_df)
+    actual = cm.independent_prob()
+    assert expected == actual
+

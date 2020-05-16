@@ -113,7 +113,7 @@ class ConfusionMatrix(object):
         return (ifnull(self.tp()) + ifnull(self.fn()))
 
     def positive_rate(self):
-        return safe_divide(self.positives(), self.samples())
+        return safe_divide(ifnull(self.positives()), ifnull(self.samples()))
 
     def negatives(self):
         return (ifnull(self.tn()) + ifnull(self.fp()))
@@ -122,7 +122,7 @@ class ConfusionMatrix(object):
         return (ifnull(self.tp()) + ifnull(self.fp()))
 
     def hit_rate(self):
-        return safe_divide(self.hits(), self.samples())
+        return safe_divide(ifnull(self.hits()), ifnull(self.samples()))
 
     def precision(self):
         return safe_divide(self.tp(), self.hits())
@@ -150,7 +150,7 @@ class ConfusionMatrix(object):
         return safe_divide(self.tp() , self.tp() + self.fp() + self.fn())
 
     def independent_prob(self):
-        return (self.positive_rate()*self.hit_rate()) +  ((1- self.positive_rate())*(1-self.hit_rate()))
+        return (ifnull(self.positive_rate())*ifnull(self.hit_rate())) +  ((1- ifnull(self.positive_rate()))*(1-ifnull(self.hit_rate())))
 
     def lift_over_independent(self):
         return self.accuracy()/self.independent_prob() -1
