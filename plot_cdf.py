@@ -9,7 +9,7 @@ import plotly.graph_objs as go
 def plot_cdf(df : pd.DataFrame
                 , column_name : str
                 , title : str
-                , output_file : str
+                , output_file : str = None
                 , subsets =[]):
 
     data = []
@@ -36,7 +36,7 @@ def plot_cdf(df : pd.DataFrame
             x=cdf[column_name],
             y=cdf.cdf,
             mode='lines',
-            name=i['value']
+            name=str(i['value'])
         ))
 
     layout = go.Layout(
@@ -62,7 +62,8 @@ def plot_cdf(df : pd.DataFrame
                     , layout=layout)
 
     fig.show()
-    fig.write_image(output_file)
+    if output_file:
+        fig.write_image(output_file)
 
 
 def plot_cdf_by_column(df : pd.DataFrame
