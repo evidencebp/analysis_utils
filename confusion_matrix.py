@@ -153,11 +153,11 @@ class ConfusionMatrix(object):
         return (ifnull(self.positive_rate())*ifnull(self.hit_rate())) +  ((1- ifnull(self.positive_rate()))*(1-ifnull(self.hit_rate())))
 
     def lift_over_independent(self):
-        return self.accuracy()/self.independent_prob() -1
+        return ifnull(self.accuracy())/self.independent_prob() -1
 
     def lift_over_majority(self):
-        majority = max(self.positive_rate(), 1 - self.positive_rate())
-        return self.accuracy()/majority -1
+        majority = max(ifnull(self.positive_rate()), 1 - ifnull(self.positive_rate()))
+        return ifnull(self.accuracy())/majority -1
 
     def summarize(self
                   , output_file=None):
