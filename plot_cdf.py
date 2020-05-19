@@ -55,7 +55,7 @@ def plot_cdf(df : pd.DataFrame
     layout = go.Layout(
         title=title_to_present,
         xaxis=dict(
-            title='CCP',
+            title='CDF percentiles',
             titlefont=dict(
                 family='Courier New, monospace',
                 size=24,
