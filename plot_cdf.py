@@ -50,7 +50,7 @@ def plot_cdf(df : pd.DataFrame
             )
         ),
         yaxis=dict(
-            title='CDF of' + column_name,
+            title='CDF of ' + column_name,
             titlefont=dict(
                 family='Courier New, monospace',
                 size=24,
