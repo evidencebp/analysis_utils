@@ -15,7 +15,7 @@ def plot_cdf(df : pd.DataFrame
                 , underscore_to_space=True
                 , limit=None):
 
-    auxiliry_col = 'prob'
+    prob_col = 'prob'
     data = []
 
     local = df.copy()
@@ -28,8 +28,8 @@ def plot_cdf(df : pd.DataFrame
         else:
             g = local
         weight_sum = g[weight_column].sum()
-        g[auxiliry_col] = g[weight_column] / weight_sum
-        cdf = g[auxiliry_col].sort_index().cumsum()
+        g[prob_col] = g[weight_column] / weight_sum
+        cdf = g[prob_col].sort_index().cumsum()
     else:
         cdf = local[column_name].value_counts(normalize=True).sort_index().cumsum()
 
@@ -63,8 +63,8 @@ def plot_cdf(df : pd.DataFrame
             else:
                 g = local[local[i['column']] == i['value']]
             weight_sum = g[weight_column].sum()
-            g[auxiliry_col] = g[weight_column] / weight_sum
-            cdf = g[auxiliry_col].sort_index().cumsum()
+            g[prob_col] = g[weight_column] / weight_sum
+            cdf = g[prob_col].sort_index().cumsum()
         else:
             cdf = local[local[i['column']] == i['value']][column_name].value_counts(normalize=True).sort_index().cumsum()
 
