@@ -1,3 +1,4 @@
+import numpy as np
 import pandas as pd
 
 def analyze_stability(metric_per_year_df
@@ -28,9 +29,20 @@ def analyze_stability(metric_per_year_df
     stats['diff_avg'] = two_years_df['diff'].mean()
     stats['diff_std'] = two_years_df['diff'].std()
 
+    two_years_df['relative_diff'] = two_years_df['diff'].divide(two_years_df[prev_metric])
+    two_years_df.loc[~np.isfinite(two_years_df['relative_diff']), 'relative_diff'] = np.nan
+    stats['relative_diff_avg'] = two_years_df['relative_diff'].mean()
+    stats['relative_diff_std'] = two_years_df['relative_diff'].std()
+
+
     two_years_df['abs_diff'] = two_years_df['diff'].map(abs)
     stats['abs_diff_avg'] = two_years_df['abs_diff'].mean()
     stats['abs_diff_std'] = two_years_df['abs_diff'].std()
+
+    two_years_df['abs_relative_diff'] = two_years_df['abs_diff'].divide(two_years_df[prev_metric])
+    two_years_df.loc[~np.isfinite(two_years_df['abs_relative_diff']), 'abs_relative_diff'] = np.nan
+    stats['abs_relative_diff_avg'] = two_years_df['abs_relative_diff'].mean()
+    stats['abs_relative_diff_std'] = two_years_df['abs_relative_diff'].std()
 
     return stats
 
