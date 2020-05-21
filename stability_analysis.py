@@ -19,10 +19,12 @@ def analyze_stability(metric_per_year_df
                        , minimal_time=minimal_time
                        , control_variables=control_variables
                                       )
+    cur_metric = 'cur_' + metric_name
+    prev_metric = 'prev_' + metric_name
 
-    stats['Pearson'] = two_years_df.corr()['cur_' + metric_name]['prev_' + metric_name]
+    stats['Pearson'] = two_years_df.corr()[cur_metric][prev_metric]
 
-    two_years_df['diff'] = two_years_df['cur_' + metric_name] - two_years_df['prev_' + metric_name]
+    two_years_df['diff'] = two_years_df[cur_metric] - two_years_df[prev_metric]
     stats['diff_avg'] = two_years_df['diff'].mean()
     stats['diff_std'] = two_years_df['diff'].std()
 
@@ -43,14 +45,17 @@ def build_two_years_df(metric_per_year_df
     metric_per_year_df = metric_per_year_df.dropna()
     metric_per_year_df = metric_per_year_df[metric_per_year_df[time_column] >= minimal_time]
 
+    cur_metric = 'cur_' + metric_name
+    prev_metric = 'prev_' + metric_name
+
     cur_df = metric_per_year_df.copy()
     cur_df['prev_year'] = cur_df[time_column] -1
     cur_df = cur_df.rename(columns={time_column : 'cur_year'
-        , metric_name : 'cur_' + metric_name})
+        , metric_name : cur_metric})
 
     prev_df = metric_per_year_df.copy()
     prev_df = prev_df.rename(columns={time_column : 'prev_year'
-        , metric_name : 'prev_' + metric_name})
+        , metric_name : prev_metric})
 
     two_years = pd.merge(cur_df, prev_df
                          , left_on=[key, 'prev_year'] + control_variables

@@ -123,7 +123,7 @@ def plot_cdf_by_column(df : pd.DataFrame
         subsets.append({'column' :subsets_column
                            , 'value' : i})
 
-    plot_cdf(df=df
+    return plot_cdf(df=df
         , column_name=column_name
         , title=title
         , output_file=output_file
