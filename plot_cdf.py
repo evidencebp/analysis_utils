@@ -5,6 +5,20 @@ CDF of CCP per language figure
 import pandas as pd
 import plotly.graph_objs as go
 
+def get_cdf(df : pd.DataFrame
+            , column_name : str):
+    return df[column_name].value_counts(normalize=True).sort_index().cumsum()
+
+
+def weighted_cdf(df: pd.DataFrame
+                 , weight_column: str
+                 , prob_col: str = 'prob'):
+    weight_sum = df[weight_column].sum()
+    df[prob_col] = df[weight_column] / weight_sum
+    cdf = df[prob_col].sort_index().cumsum()
+
+    return cdf
+
 # data, name, limit
 def plot_cdf(df : pd.DataFrame
                 , column_name : str
@@ -27,11 +41,12 @@ def plot_cdf(df : pd.DataFrame
             g= local.groupby(column_name).agg({weight_column : 'sum'})
         else:
             g = local
-        weight_sum = g[weight_column].sum()
-        g[prob_col] = g[weight_column] / weight_sum
-        cdf = g[prob_col].sort_index().cumsum()
+        cdf = weighted_cdf(df=g
+                           , weight_column=weight_column
+                           , prob_col=prob_col)
     else:
-        cdf = local[column_name].value_counts(normalize=True).sort_index().cumsum()
+        cdf = get_cdf(df=local
+                        , column_name=column_name)
 
     cdf = pd.DataFrame(cdf)
     cdf = cdf.reset_index()
@@ -62,11 +77,13 @@ def plot_cdf(df : pd.DataFrame
                 g = local[local[i['column']] == i['value']].groupby([column_name, i['column']], as_index=False).agg({weight_column: 'sum'})
             else:
                 g = local[local[i['column']] == i['value']]
-            weight_sum = g[weight_column].sum()
-            g[prob_col] = g[weight_column] / weight_sum
-            cdf = g[prob_col].sort_index().cumsum()
+            cdf = weighted_cdf(df=g
+                           , weight_column=weight_column
+                           , prob_col=prob_col)
         else:
-            cdf = local[local[i['column']] == i['value']][column_name].value_counts(normalize=True).sort_index().cumsum()
+            cdf = get_cdf(df=local[local[i['column']] == i['value']]
+                          , column_name=column_name)
+
 
         cdf = pd.DataFrame(cdf)
         cdf = cdf.reset_index()
