@@ -11,11 +11,18 @@ def get_cdf(df : pd.DataFrame
 
 
 def weighted_cdf(df: pd.DataFrame
+                 , column_name : str
                  , weight_column: str
+                 , subsets=False
                  , prob_col: str = 'prob'):
-    weight_sum = df[weight_column].sum()
-    df[prob_col] = df[weight_column] / weight_sum
-    cdf = df[prob_col].sort_index().cumsum()
+
+    if subsets:
+        g = df.groupby(column_name).agg({weight_column: 'sum'})
+    else:
+        g = df
+    weight_sum = g[weight_column].sum()
+    g[prob_col] = g[weight_column] / weight_sum
+    cdf = g[prob_col].sort_index().cumsum()
 
     return cdf
 
@@ -37,13 +44,11 @@ def plot_cdf(df : pd.DataFrame
         local = local[local[column_name] <= limit]
 
     if weight_column:
-        if subsets:
-            g= local.groupby(column_name).agg({weight_column : 'sum'})
-        else:
-            g = local
-        cdf = weighted_cdf(df=g
-                           , weight_column=weight_column
-                           , prob_col=prob_col)
+        cdf = weighted_cdf(df=local
+            , column_name=column_name
+            , weight_column=weight_column
+            , subsets = subsets
+            , prob_col=prob_col)
     else:
         cdf = get_cdf(df=local
                         , column_name=column_name)
@@ -73,13 +78,11 @@ def plot_cdf(df : pd.DataFrame
             val_to_present = str(i['value'])
 
         if weight_column:
-            if subsets:
-                g = local[local[i['column']] == i['value']].groupby([column_name, i['column']], as_index=False).agg({weight_column: 'sum'})
-            else:
-                g = local[local[i['column']] == i['value']]
-            cdf = weighted_cdf(df=g
-                           , weight_column=weight_column
-                           , prob_col=prob_col)
+            cdf = weighted_cdf(df=local[local[i['column']] == i['value']]
+                               , column_name=column_name
+                               , weight_column=weight_column
+                               , subsets=subsets
+                               , prob_col=prob_col)
         else:
             cdf = get_cdf(df=local[local[i['column']] == i['value']]
                           , column_name=column_name)
