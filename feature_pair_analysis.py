@@ -3,11 +3,7 @@ import numpy as np
 import os
 import pandas as pd
 
-import configuration
-from configuration import DATA_PATH
-from analysis_configuration import lang_name
 from confusion_matrix import ConfusionMatrix
-from repo_utils import get_valid_repos
 
 
 def pair_analysis(df
@@ -102,63 +98,6 @@ def pair_analysis_by_value(df
         
     return analysis_results
 
-def pair_analysis_by_age_group(df
-                       , first_metric
-                       , second_metric
-                         ):
-    return pair_analysis_by_value(df
-                       , first_metric
-                       , second_metric
-                       , fixed_variable='age_group'
-                       , fixed_values=['old', 'medium', 'young']
-                         )
-
-def pair_analysis_by_dev_num_group(df
-                       , first_metric
-                       , second_metric
-                         ):
-    return pair_analysis_by_value(df
-                       , first_metric
-                       , second_metric
-                       , fixed_variable='dev_num_group'
-                       , fixed_values=['small', 'medium', 'large']
-                         )
-
-
-def pair_analysis_by_language(df
-                       , first_metric
-                       , second_metric
-                         ):
-    return pair_analysis_by_value(df
-                       , first_metric
-                       , second_metric
-                       , fixed_variable='language'
-                       , fixed_values=lang_name
-                         )
-
-def pair_analysis_with_controls(df
-                       , first_metric
-                       , second_metric
-                       , metrics=None):
-    analysis_results = {}
-    analysis_results['plain'] = pair_analysis(df
-                       , first_metric
-                       , second_metric
-                       , metrics=metrics)
-    analysis_results['age_group'] = pair_analysis_by_age_group(df
-                               , first_metric
-                               , second_metric
-                               )
-    analysis_results['dev_num_group'] = pair_analysis_by_dev_num_group(df
-                               , first_metric
-                               , second_metric
-                               )
-    analysis_results['language'] = pair_analysis_by_language(df
-                               , first_metric
-                               , second_metric
-                               )
-    return analysis_results
-
 def pretty_print(parsed):
     print(json.dumps(parsed, indent=4, sort_keys=True))
 
@@ -166,8 +105,9 @@ def bin_metric_by_quantiles(df
                           , first_metric
                           , output_metric
                           , bins=10
+                          , top_val=np.inf
                             ):
-    cuts = [0.0] + [df[first_metric].quantile((1.0/bins)*i) for i in range(1, bins)] + [1.0]
+    cuts = [0.0] + [df[first_metric].quantile((1.0/bins)*i) for i in range(1, bins)] + [top_val]
     #print(cuts)
     df[output_metric] = pd.cut(df[first_metric], cuts)
 
@@ -209,70 +149,3 @@ def pair_analysis_by_bins_to_file(df
                                         )
 
     g.to_csv(output_file)
-
-def run_generate_bins():
-    df = get_valid_repos()
-    pair_analysis_by_bins_to_file(df
-                                  , 'y2019_ccp'
-                                  , 'stargazers_count'
-                                  , output_file=os.path.join(DATA_PATH, 'stars_by_ccp_bins.csv')
-                                  , bins=10
-                                  )
-    pair_analysis_by_bins_to_file(df
-                                  , 'y2019_ccp'
-                                  , 'authors'
-                                  , output_file=os.path.join(DATA_PATH, 'authors_by_ccp_bins.csv')
-                                  , bins=10
-                                  )
-    pair_analysis_by_bins_to_file(df
-                                  , 'y2019_ccp'
-                                  , 'start_year'
-                                  , output_file=os.path.join(DATA_PATH, 'start_year_by_ccp_bins.csv')
-                                  , bins=10
-                                  )
-
-
-if __name__ == '__main__':
-
-    """
-    print(pair_analysis_by_value(df
-                       , 'y2019_ccp'
-                       , 'stargazers_count'
-                       , 'dev_num_group'
-                       , ['small', 'medium', 'large']
-                         ))
-
-    print(pair_analysis(df
-                  , 'y2019_ccp'
-                  , 'dev_num_group'
-                  , metrics=None))
-    df['many_stars'] = df.stargazers_count > df.stargazers_count.quantile(0.95)
-    df['high_quality'] = df.y2019_ccp < df.y2019_ccp.quantile(0.1)
-    print(pair_analysis(df
-                  , 'many_stars'
-                  , 'high_quality'
-                  , metrics=None))
-    print(pair_analysis(df
-                  , 'quality_group'
-                  , 'dev_num_group'
-                  , metrics=None))
-
-
-    print(pair_analysis(df
-                  , 'quality_group'
-                  , 'stargazers_count'
-                  , metrics=None))
-    pretty_print(pair_analysis_with_controls(df
-                  , 'quality_group'
-                  , 'stargazers_count'
-                  , metrics=None))
-
-    print(
-        pair_analysis_by_bins(df
-                       , first_metric='y2019_ccp'
-                       , second_metric='authors'
-                       , bins=10
-                       , metrics=None))
-"""
-
-    run_generate_bins()
