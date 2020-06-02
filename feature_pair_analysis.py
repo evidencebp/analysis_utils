@@ -107,9 +107,11 @@ def bin_metric_by_quantiles(df
                           , bins=10
                           , top_val=np.inf
                             ):
-    cuts = [0.0] + [df[first_metric].quantile((1.0/bins)*i) for i in range(1, bins)] + [top_val]
+    cuts = sorted([0.0] + [df[first_metric].quantile((1.0/bins)*i) for i in range(1, bins)] + [top_val])
     #print(cuts)
-    df[output_metric] = pd.cut(df[first_metric], cuts)
+    df[output_metric] = pd.cut(df[first_metric]
+                               , cuts
+                               , duplicates='drop')
 
     return df
 
