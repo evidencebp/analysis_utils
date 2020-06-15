@@ -82,6 +82,8 @@ def mmre(y_test
             , test_pred):
     """
     Mean Magnitude of Relative Error
+    Definition is taken from
+    https://www.researchgate.net/publication/228620836_A_ranking_stability_indicator_for_selecting_the_best_effort_estimator_in_software_cost_estimation
     :param y_test:
     :param test_pred:
     :return:
@@ -90,7 +92,7 @@ def mmre(y_test
             , 'classifier' : test_pred}
     df = DataFrame(dict)
     df = df.reset_index()
-    df['rel_diff'] = df.apply(lambda x: 0.0 if x.concept == 0.0 else x.classifier/x.concept, axis=1)
+    df['rel_diff'] = df.apply(lambda x: 0.0 if x.concept == 0.0 else abs(x.classifier -x.concept)/x.concept, axis=1)
 
     return df['rel_diff'].mean()
 
