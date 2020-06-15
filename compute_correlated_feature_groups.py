@@ -1,9 +1,5 @@
-import os
-import pandas as pd
 from scipy.sparse import csr_matrix
 from scipy.sparse.csgraph import connected_components
-
-from configuration import DATA_PATH, PIVOT_FILE
 
 
 def high_correlations(correlations
