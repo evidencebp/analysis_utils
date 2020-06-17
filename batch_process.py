@@ -21,6 +21,8 @@ def batch_process(input_file : str
         df = joint[joint[pandas_merge_column] == 'left_only']
         df = df.drop(columns=[pandas_merge_column])
 
+    print("About to process {items} items, time {time}".format(items=len(df)
+                                                                , time=datetime.datetime.now()))
     item = 0;
 
     for _, i in df.iterrows():
