@@ -11,7 +11,8 @@ class BatchProcessor:
                    , error_file : str = None
                    , merge_with_prev=True
                    , batch_size=100
-                   , output_column='output'):
+                   , output_column='output'
+                   , pause_function=None):
 
         self.input_file = input_file
         self.output_file = output_file
@@ -22,6 +23,7 @@ class BatchProcessor:
         self.merge_with_prev = merge_with_prev
         self.batch_size = batch_size
         self.output_column = output_column
+        self.pause_function = pause_function
 
 
     def process(self):
@@ -66,6 +68,8 @@ class BatchProcessor:
 
                 print("Processed {items} items, time {time}".format(items=item
                                                                     , time=datetime.datetime.now()))
+                if self.pause_function:
+                    self.pause_function()
 
         output_df = pd.DataFrame(outputs_list)
         if len(output_df):
