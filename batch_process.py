@@ -52,12 +52,13 @@ class BatchProcessor:
                                                   , keys_columns=self.keys)
             try:
                 sample_output = self.fetch_function(i)
+                record.append(sample_output)
+                outputs_list.append(record)
             except:
                 if self.error_file:
-                    errors_list.append(record)
-            record.append(sample_output)
+                    errors_list.append(BatchProcessor.get_item_keys(i
+                                                  , keys_columns=self.keys))
 
-            outputs_list.append(record)
             item += 1
             if item % self.batch_size == 0:
                 self.write_results(errors_list
