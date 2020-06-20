@@ -16,6 +16,7 @@ def plot_deciles(df
                                   , grouping_column=grouping_column
                                   , deciles_column=deciles_column)
     deciles_df = deciles_df.sort_values(deciles_column)
+
     return plot_groups(deciles_df
                  , grouping_column=deciles_column
                  , metric_column=metric_column
@@ -27,6 +28,7 @@ def generate_deciles(df : pd.DataFrame
                      , grouping_column : str
                      , deciles_column: str
                      , top_val=inf):
+
     return bin_metric_by_quantiles(df
                                    , grouping_column
                                    , deciles_column
@@ -60,6 +62,7 @@ def plot_groups(df
             boxmean=True
         )
         fig.add_trace(trace)
+
         item += 1
 
     fig.update_layout(
