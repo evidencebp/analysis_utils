@@ -81,3 +81,9 @@ def plot_groups(df
         fig.write_image(output_file)
 
     return fig
+
+def get_cdf_quantile_value(cdf
+                           , quantile
+                           , value_column
+                           , cdf_column='cdf'):
+    return cdf[cdf[cdf_column] > quantile][value_column].min()
