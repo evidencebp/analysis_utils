@@ -7,8 +7,8 @@ def df_to_latex_table(df: pd.DataFrame
     print(r"\begin {table}[h!]\centering")
     print(r"\caption{", caption, "}")
     if hline:
-        print(r"\hline")
         print(r"\begin{tabular}{", "| l"*len(df.columns), " | }")
+        print(r"\hline")
     else:
         print(r"\begin{tabular}{", "l"*len(df.columns), "}")
     if columns_to_name:
@@ -18,7 +18,7 @@ def df_to_latex_table(df: pd.DataFrame
                 print(" & ", end='')
             print(columns_to_name.get(c, c), end='')
             first = False
-        print(r"\\")
+
         if hline:
             print(r"\\ \hline")
         else:
