@@ -48,18 +48,18 @@ def evaluate_model(classifier
                    , y_test
                    , get_predictive_columns_func
                    , performance_file=None
-                   , classifie_namer='classifier'
+                   , classifier_name='classifier'
                    , concept='concept'
                    , count='count'
                    ):
     test_pred = classifier.predict(X_test)
     grouped_df = sk_to_grouped_df(labels=y_test
                      , predictions=test_pred
-                     , classifier=classifie_namer
+                     , classifier=classifier_name
                      , concept=concept
                      , count=count
                      )
-    cm = ConfusionMatrix(classifier=classifie_namer
+    cm = ConfusionMatrix(classifier=classifier_name
                      , concept=concept
                      , count=count
                  , g_df=grouped_df)
