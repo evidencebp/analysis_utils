@@ -63,7 +63,8 @@ def evaluate_model(classifier
                      , concept=concept
                      , count=count
                  , g_df=grouped_df)
-    print(cm.summarize(performance_file))
+
+    return cm.summarize(performance_file)
 
 def pred_25(y_test
             , test_pred):
@@ -163,13 +164,13 @@ def build_and_eval_model(df
                   , get_predictive_columns_func=get_predictive_columns_func)
 
     classifier.fit(X_train, y_train)
-    evaluate_model(classifier
+    performance = evaluate_model(classifier
                    , X_test
                    , y_test
                    , performance_file=performance_file
                    , get_predictive_columns_func=get_predictive_columns_func)
 
-    return classifier
+    return classifier, performance
 
 def plot_tree(clf
               , dot_file_path
