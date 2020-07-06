@@ -1,9 +1,5 @@
 from cloudpickle import dump, load
-import json
 import os
-from pandas import DataFrame
-from sklearn.metrics import explained_variance_score, max_error, mean_absolute_error \
-    , mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 from sklearn.tree import export_graphviz
 
