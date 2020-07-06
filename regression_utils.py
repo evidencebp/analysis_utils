@@ -1,16 +1,22 @@
+import json
+from pandas import DataFrame
+from sklearn.metrics import explained_variance_score, max_error, mean_absolute_error \
+    , mean_squared_error, r2_score
 
-def pred_25(y_test
-            , test_pred):
+from ml_utils import df_to_sk_form
+
+def pred_by_rel_distance(y_test
+            , test_pred
+            , threshold=0.25):
 
     dict = {'concept': y_test
             , 'classifier' : test_pred}
     df = DataFrame(dict)
     df = df.reset_index()
     df['rel_diff'] = df.apply(lambda x: 0.0 if x.concept == 0.0 else x.classifier/x.concept, axis=1)
-    df['25_rel_diff'] = df.rel_diff.map(lambda x: x > 0.75 and x < 1.25)
+    df['threshold_rel_diff'] = df.rel_diff.map(lambda x: x > (1 - threshold) and x < (1 + threshold))
 
-    #return len(df[df['25_rel_diff'] == 1])/len(df)
-    return df['25_rel_diff'].mean()
+    return df['threshold_rel_diff'].mean()
 
 def mmre(y_test
             , test_pred):
@@ -45,7 +51,7 @@ def evaluate_regressor(regressor
     performace['mean_squared_error'] = mean_squared_error(y_test, test_pred)
     performace['r2_score'] = r2_score(y_test, test_pred)
 
-    performace['pred_25'] = pred_25(y_test
+    performace['pred_25'] = pred_by_rel_distance(y_test
                                     , test_pred)
     performace['mmre'] = mmre(y_test
                                     , test_pred)
