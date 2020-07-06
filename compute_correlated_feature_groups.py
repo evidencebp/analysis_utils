@@ -36,7 +36,7 @@ def graph_to_groups(graph
                             , n_components
                             , labels)
 
-def compute_correlated_feautre_groups(df
+def correlated_feature_groups(df
                             , threshold=0.7):
     df = df.fillna(0)
     correlations = df.corr()
