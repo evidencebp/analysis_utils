@@ -13,10 +13,12 @@ def perform_regression_ablations(df : pd.DataFrame
     cur_round :int = 1
     rounds : int = len(ablations.keys())*len(regressors.keys())
     for ablation in ablations.keys():
-        print("Round {cur_round} out of {rounds}".format(cur_round=cur_round
-                                                         , rounds=rounds))
         print(ablation)
         for model_name in regressors.keys():
+            print("Round {cur_round} out of {rounds}".format(cur_round=cur_round
+                                                             , rounds=rounds))
+            cur_round += 1
+
             print(model_name)
             start = time.time()
             regressor = regressors[model_name]
