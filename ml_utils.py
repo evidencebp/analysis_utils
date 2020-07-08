@@ -86,6 +86,42 @@ def build_and_eval_model(df
 
     return classifier, performance
 
+
+def same_set_build_and_eval_model(df
+                                , classifier
+                                , concept
+                                 , random_state
+                                , get_predictive_columns_func
+                                , performance_file=None
+                         ):
+    """
+        Trains and evaluate the model on the same data set, the train data set.
+        Used to see if the model has enough capacity to overfit and represent
+        the concept given the features.
+    :param df:
+    :param classifier:
+    :param concept:
+    :param random_state:
+    :param get_predictive_columns_func:
+    :param performance_file:
+    :return:
+    """
+    X_test, X_train, y_test, y_train = df_to_sk_form(df=df
+                  , concept=concept
+                  , test_size=1 # Would have been zero if supported
+                  , random_state=random_state
+                  , get_predictive_columns_func=get_predictive_columns_func)
+
+    classifier.fit(X_train, y_train)
+    performance = evaluate_model(classifier
+                   , X_train
+                   , y_train
+                   , performance_file=performance_file
+                   , get_predictive_columns_func=get_predictive_columns_func)
+
+    return classifier, performance
+
+
 def plot_tree(clf
               , dot_file_path
               , png_file_path
