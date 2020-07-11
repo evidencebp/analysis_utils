@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 
 def analyze_stability(metric_per_year_df
-                      , key
+                      , keys
                       , metric_name
                       , time_column='year'
                       , minimal_time=-1
@@ -14,7 +14,7 @@ def analyze_stability(metric_per_year_df
         metric_per_year_df = metric_per_year_df[metric_per_year_df[min_cnt_column] >= min_cnt_threshold]
     stats = {}
     two_years_df = build_two_years_df(metric_per_year_df=metric_per_year_df
-                       , key=key
+                       , keys=keys
                        , metric_name=metric_name
                        , time_column=time_column
                        , minimal_time=minimal_time
@@ -47,13 +47,13 @@ def analyze_stability(metric_per_year_df
     return stats
 
 def build_two_years_df(metric_per_year_df
-                       , key
+                       , keys
                        , metric_name
                        , time_column='year'
                        , minimal_time=-1
                        , control_variables=[]):
 
-    metric_per_year_df = metric_per_year_df[[key, time_column, metric_name] + control_variables]
+    metric_per_year_df = metric_per_year_df[keys +[ time_column, metric_name] + control_variables]
     metric_per_year_df = metric_per_year_df.dropna()
     metric_per_year_df = metric_per_year_df[metric_per_year_df[time_column] >= minimal_time]
 
@@ -70,8 +70,8 @@ def build_two_years_df(metric_per_year_df
         , metric_name : prev_metric})
 
     two_years = pd.merge(cur_df, prev_df
-                         , left_on=[key, 'prev_year'] + control_variables
-                         , right_on=[key, 'prev_year'] + control_variables)
+                         , left_on=keys +['prev_year'] + control_variables
+                         , right_on=keys + ['prev_year'] + control_variables)
 
     return two_years
 
