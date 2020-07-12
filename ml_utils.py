@@ -48,7 +48,8 @@ def evaluate_model(classifier
                    , concept='concept'
                    , count='count'
                    ):
-    test_pred = classifier.predict(X_test)
+    df = X_test[get_predictive_columns_func(X_test)]
+    test_pred = classifier.predict(df)
     grouped_df = sk_to_grouped_df(labels=y_test
                      , predictions=test_pred
                      , classifier=classifier_name
