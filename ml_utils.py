@@ -22,7 +22,7 @@ def load_model(model_file_name
 
 def get_predictive_columns(df
                            , excluded_features=set()):
-    return list(set(df.columns.tolist()) - excluded_features)
+    return sorted(list(set(df.columns.tolist()) - excluded_features))
 
 def df_to_sk_form(df
                   , concept
