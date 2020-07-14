@@ -1,6 +1,10 @@
 import numpy as np
 import pandas as pd
 
+PREV_PREFIX = 'prev_'
+CUR_PREFIX = 'cur_'
+
+
 def analyze_stability(metric_per_year_df
                       , keys
                       , metrics
@@ -22,8 +26,8 @@ def analyze_stability(metric_per_year_df
                                       )
     all_stats = {}
     for i in metrics:
-        cur_metric = 'cur_' + i
-        prev_metric = 'prev_' + i
+        cur_metric = CUR_PREFIX + i
+        prev_metric = PREV_PREFIX + i
 
         stats['Pearson'] = two_years_df.corr()[cur_metric][prev_metric]
 
@@ -62,21 +66,21 @@ def build_two_years_df(metric_per_year_df
     metric_per_year_df = metric_per_year_df[metric_per_year_df[time_column] >= minimal_time]
 
     cur_df = metric_per_year_df.copy()
-    cur_df['prev_year'] = cur_df[time_column] -1
-    cur_update = {time_column : 'cur_year'}
+    cur_df[PREV_PREFIX + 'year'] = cur_df[time_column] -1
+    cur_update = {time_column : CUR_PREFIX +'year'}
     cur_update.update(generate_rename_map(metrics
-                        , prefix='cur_'))
+                        , prefix=CUR_PREFIX))
     cur_df = cur_df.rename(columns=cur_update)
 
     prev_df = metric_per_year_df.copy()
-    prev_update = {time_column : 'prev_year'}
+    prev_update = {time_column : PREV_PREFIX + 'year'}
     prev_update.update(generate_rename_map(metrics
-                        , prefix='prev_'))
+                        , prefix=PREV_PREFIX))
     prev_df = prev_df.rename(columns=prev_update)
 
     two_years = pd.merge(cur_df, prev_df
-                         , left_on=keys +['prev_year'] + control_variables
-                         , right_on=keys + ['prev_year'] + control_variables)
+                         , left_on=keys +[PREV_PREFIX + 'year'] + control_variables
+                         , right_on=keys + [PREV_PREFIX + 'year'] + control_variables)
 
     return two_years
 
