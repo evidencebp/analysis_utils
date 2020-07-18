@@ -16,7 +16,7 @@ def analyze_stability(metric_per_year_df
 
     if min_cnt_column:
         metric_per_year_df = metric_per_year_df[metric_per_year_df[min_cnt_column] >= min_cnt_threshold]
-    stats = {}
+
     two_years_df = build_two_years_df(metric_per_year_df=metric_per_year_df
                        , keys=keys
                        , metrics=metrics
@@ -28,7 +28,7 @@ def analyze_stability(metric_per_year_df
     for i in metrics:
         cur_metric = CUR_PREFIX + i
         prev_metric = PREV_PREFIX + i
-
+        stats = {}
         stats['Pearson'] = two_years_df.corr()[cur_metric][prev_metric]
 
         two_years_df['diff'] = two_years_df[cur_metric] - two_years_df[prev_metric]
@@ -50,7 +50,7 @@ def analyze_stability(metric_per_year_df
         stats['abs_relative_diff_avg'] = two_years_df['abs_relative_diff'].mean()
         stats['abs_relative_diff_std'] = two_years_df['abs_relative_diff'].std()
 
-        all_stats[i] = stats
+        all_stats[i] = stats.copy()
 
     return all_stats
 
