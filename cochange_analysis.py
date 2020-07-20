@@ -30,7 +30,7 @@ def cochange_analysis(per_year_df
         two_years[improved_first_metric] = two_years.apply(lambda x: metrics_dict[i](x[PREV_PREFIX + i], x[CUR_PREFIX +i])
             , axis=1
         )
-        stats[i] = two_years_analysis(two_years
+        stats[i] = features_confusion_matrix_analysis(two_years
                        , improved_first_metric
                        , IMPROVED_PREFIX + main_metric
                        , keys)
@@ -38,7 +38,7 @@ def cochange_analysis(per_year_df
     return stats
 
 
-def two_years_analysis(two_years_df
+def features_confusion_matrix_analysis(two_years_df
                        , first_metric
                        , second_metric
                        , keys):
