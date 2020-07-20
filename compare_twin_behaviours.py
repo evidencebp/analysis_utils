@@ -1,5 +1,7 @@
 import pandas as pd
 
+from cochange_analysis import features_confusion_matrix_analysis
+
 COMPARISON_SUFFIX = '_cmp'
 
 
@@ -36,3 +38,16 @@ def compare_twin_behaviours(first_behaviour : pd.DataFrame
 
     return joint[relevant_columns]
 
+def compute_confusion_matrics(df : pd.DataFrame
+                              , concept : str
+                              , columns : list
+                              , keys):
+
+    stats = {}
+    for i in columns:
+        stats[i] = features_confusion_matrix_analysis(df
+                       , first_metric=i
+                       , second_metric=concept
+                       , keys=keys)
+
+    return stats
