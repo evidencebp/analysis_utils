@@ -16,3 +16,7 @@ Please cite as
     primaryClass={cs.SE}
 }
 ```
+
+See here the [linguistic commit classification](https://github.com/evidencebp/commit-classification)
+
+See here the [corrective commit probability code](https://github.com/evidencebp/corrective-commit-probability)
