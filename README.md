@@ -3,7 +3,7 @@
 Utilities for data science analysis.
 Analyze co-change over time, twin experiments, feature stability, ploting and more.
 
-Part of the supplementary Materials of the ["The Corrective Commit Probability Code Quality Metric"](https://arxiv.org/abs/2007.10912) paper by Idan Amit and [Dror G. Feitelson](https://www.cs.huji.ac.il/~feit/). Promise 2019
+Part of the supplementary Materials of the ["The Corrective Commit Probability Code Quality Metric"](https://arxiv.org/abs/2007.10912) paper by Idan Amit and [Dror G. Feitelson](https://www.cs.huji.ac.il/~feit/).
 
 Please cite as
 ``` 
