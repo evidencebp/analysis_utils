@@ -2,12 +2,14 @@
 Utilities for general file handling
 
 """
-import pandas as pd
 from typing import List
+
+import pandas as pd
 
 Strings = List[str]
 
-def merge_csv_files(files_list :Strings) -> pd.DataFrame:
+
+def merge_csv_files(files_list: Strings) -> pd.DataFrame:
     """
     :param files_list: List of csv file to merge
     :return: A data frame of the files content
