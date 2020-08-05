@@ -1,3 +1,6 @@
+"""
+    Utilities for building machine learning models
+"""
 from cloudpickle import dump, load
 import os
 from sklearn.model_selection import train_test_split
@@ -107,7 +110,7 @@ def same_set_build_and_eval_model(df
     :param performance_file:
     :return:
     """
-    X_test, X_train, y_test, y_train = df_to_sk_form(df=df
+    _, X_train, _, y_train = df_to_sk_form(df=df
                   , concept=concept
                   , test_size=1 # Would have been zero if supported
                   , random_state=random_state
