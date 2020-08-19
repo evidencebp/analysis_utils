@@ -3,9 +3,9 @@ import datetime
 
 class BatchProcessor:
     def __init__(self
-                   , input_file : str
-                   , output_file : str
-                   , prev_file : str
+                   , input_file: str
+                   , output_file: str
+                   , prev_file: str
                    , fetch_function
                    , keys
                    , error_file : str = None
