@@ -102,7 +102,7 @@ def plot_cdf(df : pd.DataFrame
     layout = go.Layout(
         title=title_to_present,
         xaxis=dict(
-            title='',
+            title=column_to_present,
             titlefont=dict(
                 family='Courier New, monospace',
                 size=24,
