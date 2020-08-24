@@ -1,3 +1,7 @@
+"""
+    A class for long non robust batch processing.
+    The class cope with seperation of the work - using previous stopped work, logging errors, pausing when needed.
+"""
 import pandas as pd
 import datetime
 
@@ -13,6 +17,19 @@ class BatchProcessor:
                    , batch_size=100
                    , output_column='output'
                    , pause_function=None):
+        """
+
+        :param input_file: Records to process
+        :param output_file: Results of processing
+        :param prev_file: File with previous results (can be the output file, populated in a prior run)
+        :param fetch_function: The function implementing the processing logic
+        :param keys:
+        :param error_file:
+        :param merge_with_prev:
+        :param batch_size:
+        :param output_column:
+        :param pause_function:
+        """
 
         self.input_file = input_file
         self.output_file = output_file
