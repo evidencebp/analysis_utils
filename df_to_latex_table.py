@@ -1,9 +1,13 @@
+import numbers
 import pandas as pd
 
 def df_to_latex_table(df: pd.DataFrame
                       , caption : str = ''
                       , columns_to_name : dict = None
-                      , hline=True):
+                      , hline=True
+                      , rounding_digits=2):
+    numbers_format = '{:,.' + str(rounding_digits) + 'f}'
+
     print(r"\begin {table}[h!]\centering")
     print(r"\caption{", caption, "}")
     if hline:
@@ -32,7 +36,10 @@ def df_to_latex_table(df: pd.DataFrame
         for c in df.columns:
             if not first:
                 print(" & ", end='')
-            print(i[c], end='')
+            if isinstance(i[c], numbers.Number):
+                print(numbers_format.format(i[c]), end='')
+            else:
+                print(i[c], end='')
             first = False
         if hline:
             print(r"\\ \hline")
