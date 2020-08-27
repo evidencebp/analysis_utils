@@ -19,8 +19,8 @@ def merge_csv_files(files_list: Strings) -> pd.DataFrame:
 
     data_frames = []
     for i in files_list:
-        df = pd.read_csv(i)
-        data_frames.append(df)
+        file_df = pd.read_csv(i)
+        data_frames.append(file_df)
 
     joint = pd.concat(data_frames)
 
@@ -28,16 +28,16 @@ def merge_csv_files(files_list: Strings) -> pd.DataFrame:
 
 
 def merge_csv_directory(files_directory: str
-                        , verify_extension: bool=True) -> pd.DataFrame:
+                        , verify_extension: bool = True) -> pd.DataFrame:
     """
 
-    :param files_directory:
-    :param verify_extension:
-    :return:
+    :param files_directory: The directory containing the input files
+    :param verify_extension: Whether to verify that the files end with ".csv"
+    :return: A data frame of the files content
     """
     files_list = [os.path.join(files_directory, file) for file in os.listdir(files_directory)]
     if verify_extension:
-        files_list = [file for file in files_list if file.endswith(".csv") ]
+        files_list = [file for file in files_list if file.endswith(".csv")]
 
     joint = merge_csv_files(files_list)
 
