@@ -120,6 +120,8 @@ def plot_cdf(df : pd.DataFrame
     )
     fig = go.Figure(data=data
                     , layout=layout)
+    if len(subsets) == 0:
+        fig = fig.update_layout(showlegend=False)
 
     fig.show()
     if output_file:
