@@ -12,7 +12,15 @@ def generate_email_message(from_user : str
                             , subject : str
                             , body : str
                 ) -> str:
-    MESSAGE_TEMPLATE = """From: {from_user}\nTo: {recipient}\nSubject: {subject}\n\n{body}
+    MESSAGE_TEMPLATE = """From: {from_user}\nTo: {recipient}\nSubject: {subject}\nMime-Version: 1.0;
+Content-Type: text/html; charset="ISO-8859-1";
+Content-Transfer-Encoding: 7bit;
+\n
+<html>
+<body>
+{body}
+</body>
+</html>
  """
     params_dict ={
                 'from_user' : from_user
