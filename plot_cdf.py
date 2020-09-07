@@ -110,7 +110,7 @@ def plot_cdf(df : pd.DataFrame
             )
         ),
         yaxis=dict(
-            title='CDF of ' + column_to_present,
+            title='Cumulative Probability of ' + column_to_present,
             titlefont=dict(
                 family='Courier New, monospace',
                 size=24,
