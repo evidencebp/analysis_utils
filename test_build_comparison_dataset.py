@@ -1,3 +1,6 @@
+"""
+    Testing build_comparison_dataset
+"""
 import pandas as pd
 from pandas.testing import assert_frame_equal
 import pytest
@@ -47,6 +50,16 @@ def test_build_comparison_dataset(first_df
                              , second_df
                              , concept_column
                             , expected):
+    """
+
+    :param first_df:
+    :param second_df:
+    :param concept_column:
+    :param expected:
+        The indices are different and therefore removed before comparision.
+        assert_frame_equal is used instead of assert in order to compare data frames.
+    :return:
+    """
 
     actual = build_comparison_dataset(first_df
                              , second_df
