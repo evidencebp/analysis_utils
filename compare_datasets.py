@@ -16,6 +16,7 @@ hurt a model based on this data.
 """
 import pandas as pd
 
+from ml_utils import build_and_eval_model, get_predictive_columns
 
 def build_comparison_dataset(first_df: pd.DataFrame
                              , second_df: pd.DataFrame
@@ -39,3 +40,30 @@ def build_comparison_dataset(first_df: pd.DataFrame
     joint = joint.rename(columns={'concept_column': concept_column})
 
     return joint
+
+def compare_datasets(first_df: pd.DataFrame
+                             , second_df: pd.DataFrame
+                             , classifier
+                             , excluded_features=set()
+                             , test_size=0.2
+                             , random_state=123
+                             ,performance_file=None
+                             , concept_column='is_first'):
+
+    predictive_columns_func = lambda df: get_predictive_columns(df
+                           , excluded_features=excluded_features)
+
+    joint = build_comparison_dataset(first_df
+                             , second_df
+                             , concept_column=concept_column)
+
+    classifier, performance = build_and_eval_model(df=joint
+                         , classifier=classifier
+                         , concept=concept_column
+                         , test_size=test_size
+                         , random_state=random_state
+                         , get_predictive_columns_func=predictive_columns_func
+                         , performance_file=performance_file
+                         )
+
+    return classifier, performance
