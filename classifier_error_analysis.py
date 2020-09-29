@@ -40,18 +40,8 @@ def classifier_error_analysis(df: pd.DataFrame
     :param random_state: Random state for model fit and evaluation
     :return:
     """
-    
+
     scope_column = 'in_scope'
-
-    error_excluded_features = excluded_features
-    if not allow_concept_usage:
-        error_excluded_features = set(list(error_excluded_features) + [concept_column])
-    if not allow_prediction_usage:
-        error_excluded_features = set(list(error_excluded_features) + [prediction_column])
-
-    error_get_predictive_columns = partial(get_predictive_columns
-                                             , excluded_features=set(error_excluded_features))
-
 
     df['correct_prediction_column'] = df.apply(lambda x: x[prediction_column] == x[concept_column]
                                                , axis=1)
@@ -61,6 +51,16 @@ def classifier_error_analysis(df: pd.DataFrame
                                 , axis=1)
     df = df[df[scope_column]]
     df = df.drop(columns=[scope_column])
+
+    error_excluded_features = excluded_features
+    if not allow_concept_usage:
+        error_excluded_features = set(list(error_excluded_features) + [concept_column])
+    if not allow_prediction_usage:
+        error_excluded_features = set(list(error_excluded_features) + [correct_prediction_column])
+
+    error_excluded_features = set(list(error_excluded_features) + [prediction_column])
+    error_get_predictive_columns = partial(get_predictive_columns
+                                             , excluded_features=set(error_excluded_features))
 
     classifier, performance = build_and_eval_model(df=df
                          , classifier=error_classifier
