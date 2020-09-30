@@ -20,7 +20,7 @@ def classifier_error_analysis(df: pd.DataFrame
                                 , allow_concept_usage: bool = False
                                 , prediction_column: str = 'prediction_column'
                                 , allow_prediction_usage: bool = False
-                                , correct_prediction_column: str = 'correct_prediction_column'
+                                , incorrect_prediction_column: str = 'incorrect_prediction_column'
                                 , test_size=0.2
                                 , random_state=1
                               ):
@@ -35,7 +35,7 @@ def classifier_error_analysis(df: pd.DataFrame
     :param allow_concept_usage: Can the concept be used as a feature in the error analysis?
     :param prediction_column: The column storing the base classifier's predictions.
     :param allow_prediction_usage: Can the prediction be used as a feature in the error analysis?
-    :param correct_prediction_column: name of the correct prediction column
+    :param incorrect_prediction_column: name of the correct prediction column
     :param test_size: Test size for evaluation
     :param random_state: Random state for model fit and evaluation
     :return:
@@ -43,9 +43,9 @@ def classifier_error_analysis(df: pd.DataFrame
 
     scope_column = 'in_scope'
 
-    df['correct_prediction_column'] = df.apply(lambda x: x[prediction_column] == x[concept_column]
+    df['incorrect_prediction_column'] = df.apply(lambda x: x[prediction_column] != x[concept_column]
                                                , axis=1)
-    df = df.rename(columns={'correct_prediction_column' : correct_prediction_column})
+    df = df.rename(columns={'incorrect_prediction_column' : incorrect_prediction_column})
 
     df[scope_column] = df.apply(lambda x: filtering_function(x)
                                 , axis=1)
@@ -58,13 +58,13 @@ def classifier_error_analysis(df: pd.DataFrame
     if not allow_prediction_usage:
         error_excluded_features = set(list(error_excluded_features) + [prediction_column])
 
-    error_excluded_features = set(list(error_excluded_features) + [correct_prediction_column])
+    error_excluded_features = set(list(error_excluded_features) + [incorrect_prediction_column])
     error_get_predictive_columns = partial(get_predictive_columns
                                              , excluded_features=set(error_excluded_features))
 
     classifier, performance = build_and_eval_model(df=df
                          , classifier=error_classifier
-                         , concept=correct_prediction_column
+                         , concept=incorrect_prediction_column
                          , test_size=test_size
                          , random_state=random_state
                          , get_predictive_columns_func=error_get_predictive_columns
