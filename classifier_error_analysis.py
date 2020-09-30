@@ -49,16 +49,16 @@ def classifier_error_analysis(df: pd.DataFrame
 
     df[scope_column] = df.apply(lambda x: filtering_function(x)
                                 , axis=1)
-    df = df[df[scope_column]]
+    df = df[df[scope_column] ==1]
     df = df.drop(columns=[scope_column])
 
     error_excluded_features = excluded_features
     if not allow_concept_usage:
         error_excluded_features = set(list(error_excluded_features) + [concept_column])
     if not allow_prediction_usage:
-        error_excluded_features = set(list(error_excluded_features) + [correct_prediction_column])
+        error_excluded_features = set(list(error_excluded_features) + [prediction_column])
 
-    error_excluded_features = set(list(error_excluded_features) + [prediction_column])
+    error_excluded_features = set(list(error_excluded_features) + [correct_prediction_column])
     error_get_predictive_columns = partial(get_predictive_columns
                                              , excluded_features=set(error_excluded_features))
 
