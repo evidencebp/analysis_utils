@@ -3,7 +3,8 @@
 Comparing the behaviour of twins in different environments.
 
 In SE usage, the twin is usually the same developer, working in two repositories.
-The twin analysis enable to factor out the influence of the developer and examine that of the repository.
+The twin analysis enable to factor out the influence of the developer
+and examine that of the repository.
 
 For more explanation on the methodology and its usage, see https://arxiv.org/pdf/2007.10912.pdf
 
@@ -17,17 +18,18 @@ from cochange_analysis import features_confusion_matrix_analysis
 COMPARISON_SUFFIX = '_cmp'
 
 
-def compare_twin_behaviours(first_behaviour : pd.DataFrame
-                            , second_behaviour : pd.DataFrame
-                            , keys : list
-                            , comparision_columns : list
+def compare_twin_behaviours(first_behaviour: pd.DataFrame
+                            , second_behaviour: pd.DataFrame
+                            , keys: list
+                            , comparision_columns: list
                             , comparision_function
-                            , filtering_function = None
-                            , differences_num : str = None) -> pd.DataFrame:
+                            , filtering_function=None
+                            , differences_num: str = None) -> pd.DataFrame:
     """
 
     :param first_behaviour: A data frame that describes the behaviour of twin in an environment.
-    :param second_behaviour: A data frame that he behaviour of twin in an environment. Many time similar to first one.
+    :param second_behaviour: A data frame that he behaviour of twin in an environment.
+    Many time similar to first one.
     :param keys: Identifiers of the twins.
     :param comparision_columns: The behaviour columns to compare.
     :param comparision_function: A function that compares the behaviour in the two environments.
@@ -50,21 +52,23 @@ def compare_twin_behaviours(first_behaviour : pd.DataFrame
     for i in comparision_columns:
         key = i + COMPARISON_SUFFIX
         joint_cols.append(key)
-        joint[key] = joint.apply(lambda x : comparision_function(x[i +'_x'], x[i +'_y'])
-                                ,axis=1)
+        joint[key] = joint.apply(lambda x: comparision_function(x[i + '_x'], x[i + '_y'])
+                                , axis=1)
 
     if differences_num:
-        joint[differences_num] = joint[[i + COMPARISON_SUFFIX for i in comparision_columns]].sum(axis=1)
+        joint[differences_num] = joint[
+            [i + COMPARISON_SUFFIX for i in comparision_columns]].sum(axis=1)
         relevant_columns = joint_cols + [differences_num]
     else:
         relevant_columns = joint_cols
 
     return joint[relevant_columns]
 
-def compute_confusion_matrics(df : pd.DataFrame
-                              , concept : str
-                              , columns : list
-                              , keys):
+
+def compute_confusion_matrics(df: pd.DataFrame
+                              , concept: str
+                              , columns: list
+                              , keys: list):
     """
         Compute the confusion matrix of a set of features with respect to a concept.
         Useful for twin behaviour too.
