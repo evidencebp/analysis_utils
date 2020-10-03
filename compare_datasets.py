@@ -38,6 +38,7 @@ def build_comparison_dataset(first_df: pd.DataFrame
     # --> assignment to a column with a variable name
     # Therefore a temporary name is used and then renamed to the desired one
     joint = joint.rename(columns={'concept_column': concept_column})
+    joint = joint.sample(frac=1).reset_index(drop=True)
 
     return joint
 
