@@ -1,3 +1,15 @@
+"""
+
+Comparing the behaviour of twins in different environments.
+
+In SE usage, the twin is usually the same developer, working in two repositories.
+The twin analysis enable to factor out the influence of the developer and examine that of the repository.
+
+For more explanation on the methodology and its usage, see https://arxiv.org/pdf/2007.10912.pdf
+
+
+"""
+
 import pandas as pd
 
 from cochange_analysis import features_confusion_matrix_analysis
@@ -12,6 +24,17 @@ def compare_twin_behaviours(first_behaviour : pd.DataFrame
                             , comparision_function
                             , filtering_function = None
                             , differences_num : str = None) -> pd.DataFrame:
+    """
+
+    :param first_behaviour: A data frame that describes the behaviour of twin in an environment.
+    :param second_behaviour: A data frame that he behaviour of twin in an environment. Many time similar to first one.
+    :param keys: Identifiers of the twins.
+    :param comparision_columns: The behaviour columns to compare.
+    :param comparision_function: A function that compares the behaviour in the two environments.
+    :param filtering_function: A function to exclude records (e.g., same repository).
+    :param differences_num: Counts the number od different columns.
+    :return: A data frame with the twins behaviour comparision.
+    """
 
     first_to_match = first_behaviour[keys + comparision_columns].copy()
     second_to_match = second_behaviour[keys + comparision_columns].copy()
@@ -42,6 +65,16 @@ def compute_confusion_matrics(df : pd.DataFrame
                               , concept : str
                               , columns : list
                               , keys):
+    """
+        Compute the confusion matrix of a set of features with respect to a concept.
+        Useful for twin behaviour too.
+
+    :param df: Data frame
+    :param concept: Concept to predict
+    :param columns: A list of decision stump classifiers.
+    :param keys:
+    :return:
+    """
 
     stats = {}
     for i in columns:
