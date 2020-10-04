@@ -8,7 +8,7 @@ from sklearn.tree import DecisionTreeClassifier
 
 from compare_datasets import build_comparison_dataset, compare_datasets
 
-TEST_SIZE = 0.2
+TEST_SIZE = 0.5
 RANDOM_STATE = 123
 
 
@@ -105,6 +105,60 @@ pytest.param(
     , RANDOM_STATE
     , 1.0
             , id='reg1')
+, pytest.param(
+ pd.DataFrame([
+     [0, 1, 1, 0, 0],
+     [0, 0, 1, 0, 0],
+     [0, 0, 0, 0, 0],
+     [0, 0, 0, 0, 1],
+     [0, 0, 0, 0, 0],
+     [0, 1, 1, 0, 0],
+     [0, 0, 1, 0, 0],
+     [0, 0, 0, 0, 0],
+     [0, 0, 0, 0, 1],
+     [0, 0, 0, 0, 0],
+     [0, 1, 1, 0, 0],
+     [0, 0, 1, 0, 0],
+     [0, 0, 0, 0, 0],
+     [0, 0, 0, 0, 1],
+     [0, 0, 0, 0, 0],
+     [0, 1, 1, 0, 0],
+     [0, 0, 1, 0, 0],
+     [0, 0, 0, 0, 0],
+     [0, 0, 0, 0, 1],
+     [0, 0, 0, 0, 0],
+ ]
+     , columns=['a1', 'a2', 'a3', 'b1', 'b2'])
+ , pd.DataFrame([
+     [0, 1, 1, 0, 0],
+     [0, 0, 1, 0, 0],
+     [0, 0, 0, 0, 0],
+     [0, 0, 0, 0, 1],
+     [0, 0, 0, 0, 0],
+     [0, 1, 1, 0, 0],
+     [0, 0, 1, 0, 0],
+     [0, 0, 0, 0, 0],
+     [0, 0, 0, 0, 1],
+     [0, 0, 0, 0, 0],
+     [0, 1, 1, 0, 0],
+     [0, 0, 1, 0, 0],
+     [0, 0, 0, 0, 0],
+     [0, 0, 0, 0, 1],
+     [0, 0, 0, 0, 0],
+     [0, 1, 1, 0, 0],
+     [0, 0, 1, 0, 0],
+     [0, 0, 0, 0, 0],
+     [0, 0, 0, 0, 1],
+     [0, 0, 0, 0, 0],
+ ]
+     , columns=['a1', 'a2', 'a3', 'b1', 'b2'])
+ , DecisionTreeClassifier(random_state=RANDOM_STATE)
+ , set(['b2'])
+ , TEST_SIZE
+ , RANDOM_STATE
+ , 0.4 # In principle, it should be 0.5 since no model can differ them. In practice, it is likely that the model
+       # will get an imbalanced train set, will learn a mistake that will be evaluated on oppositely imbalanced set.
+ , id='duplicated')
                          ])
 def test_compare_datasets(first_df
                              , second_df
@@ -123,7 +177,7 @@ def test_compare_datasets(first_df
         assert_frame_equal is used instead of assert in order to compare data frames.
     :return:
     """
-    #classifier = DecisionTreeClassifier(random_state=random_state)
+
     classifier, performance = compare_datasets(first_df=first_df
                              , second_df=second_df
                              , classifier=classifier

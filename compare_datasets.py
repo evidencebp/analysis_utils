@@ -20,7 +20,8 @@ from ml_utils import build_and_eval_model, get_predictive_columns
 
 def build_comparison_dataset(first_df: pd.DataFrame
                              , second_df: pd.DataFrame
-                             , concept_column='is_first') -> pd.DataFrame:
+                             , concept_column='is_first'
+                             ,should_shuffle=False) -> pd.DataFrame:
     """
     :param first_df:
     :param second_df:
@@ -38,7 +39,8 @@ def build_comparison_dataset(first_df: pd.DataFrame
     # --> assignment to a column with a variable name
     # Therefore a temporary name is used and then renamed to the desired one
     joint = joint.rename(columns={'concept_column': concept_column})
-    joint = joint.sample(frac=1).reset_index(drop=True)
+    if should_shuffle:
+        joint = joint.sample(frac=1).reset_index(drop=True)
 
     return joint
 
@@ -48,11 +50,11 @@ def compare_datasets(first_df: pd.DataFrame
                              , excluded_features=set()
                              , test_size=0.2
                              , random_state=123
-                             ,performance_file=None
+                             , performance_file=None
                              , concept_column='is_first'):
 
     predictive_columns_func = lambda df: get_predictive_columns(df
-                           , excluded_features=excluded_features)
+                           , excluded_features=set(list(excluded_features) + [concept_column]))
 
     joint = build_comparison_dataset(first_df
                              , second_df
