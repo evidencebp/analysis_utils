@@ -2,9 +2,10 @@
 Finding groups of related features.
 Features are related if their Pearson correlation is above a threshold.
 Features are in a group of related features if they belong to the same connected component.
-The connected components are on a graph of features where node are connected if they have high correlation.
-Not that features A and B might be in the same connected component even if they are not correlated if they both
-correlated with the feature C.
+The connected components are on a graph of features where node are connected
+if they have high correlation.
+Not that features A and B might be in the same connected component even if
+they are not correlated if they both correlated with the feature C.
 """
 
 from scipy.sparse import csr_matrix
@@ -20,16 +21,16 @@ def high_correlations(correlations
     :param threshold:
     :return:
     """
-    high_correlations = correlations.copy()
-    for i in high_correlations.columns:
+    high_correlations_graph = correlations.copy()
+    for i in high_correlations_graph.columns:
         try:
-            high_correlations[i] = high_correlations[i] > threshold
-            high_correlations[i] = high_correlations[i].astype(int)
-        except:
+            high_correlations_graph[i] = high_correlations_graph[i] > threshold
+            high_correlations_graph[i] = high_correlations_graph[i].astype(int)
+        except Exception as e:
             # Non numeric columns
-            pass
+            print("Not including feature ", i, e)
 
-    return high_correlations
+    return high_correlations_graph
 
 def compute_features_groups(columns_names
                            , n_components
@@ -87,4 +88,3 @@ def correlated_feature_groups(df
     return compute_features_groups(hcorr.columns
                             , n_components
                             , labels)
-
