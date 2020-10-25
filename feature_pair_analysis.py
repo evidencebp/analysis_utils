@@ -151,3 +151,43 @@ def pair_analysis_by_bins_to_file(df
                                         )
 
     g.to_csv(output_file)
+
+
+def pair_features_vs_concept(df
+                       , features
+                       , concept
+                       , metrics=None):
+    """
+        Computes each of the features with respect o the concept on the data frame.
+    :param df:
+    :param features:
+    :param concept:
+    :param metrics:
+    :return:
+    """
+    result = {}
+    for i in features:
+        result[i] = pair_analysis(df
+                      , i
+                      , concept
+                      , metrics=metrics)
+
+    return result
+
+def features_stats_to_cm_df(features_stats):
+    """
+        Selects the confusion matrix stats (identified by accuracy)
+        and provide them as a data frame.
+    :param features_stats:
+    :return:
+    """
+
+    cm_features = {}
+    for i in features_stats.keys():
+        if "accuracy" in features_stats[i]:
+            cm_features[i] = features_stats[i]
+
+    cm_df = pd.DataFrame(cm_features)
+    cm_df = cm_df.T
+
+    return cm_df
