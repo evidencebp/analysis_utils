@@ -6,6 +6,7 @@ import pandas as pd
 from confusion_matrix import ConfusionMatrix
 
 
+
 def pair_analysis(df
                        , first_metric
                        , second_metric
@@ -182,9 +183,11 @@ def features_stats_to_cm_df(features_stats):
     :return:
     """
 
+    CM_REPRESENTATIVE_KEY = "accuracy"
+
     cm_features = {}
     for i in features_stats.keys():
-        if "accuracy" in features_stats[i]:
+        if CM_REPRESENTATIVE_KEY in features_stats[i]:
             cm_features[i] = features_stats[i]
 
     cm_df = pd.DataFrame(cm_features)
