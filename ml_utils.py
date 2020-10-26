@@ -131,8 +131,10 @@ def plot_tree(clf
               , png_file_path
               , feature_names=None):
     export_graphviz(clf
-                                 , feature_names=feature_names
-                                 , out_file=dot_file_path)
+                        , feature_names=feature_names
+                        , out_file=dot_file_path
+                        , filled=True
+                        , rounded=True)
     #dot_to_ps_command = "dot -Tps {} -o {}".format(dot_file_path
     #                                               , png_file_path)
     dot_to_png_command = "dot -Tpng {} > {}".format(dot_file_path
