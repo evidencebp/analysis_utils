@@ -168,6 +168,12 @@ class ConfusionMatrix(object):
         majority = max(ifnull(self.positive_rate()), 1 - ifnull(self.positive_rate()))
         return ifnull(self.accuracy())/majority -1
 
+    def concept_entropy(self):
+        return entropy(ifnull(self.positive_rate()))
+
+    def classifier_entropy(self):
+        return entropy(ifnull(self.hit_rate()))
+
     def summarize(self
                   , output_file=None):
 
@@ -187,7 +193,10 @@ class ConfusionMatrix(object):
                 , 'independent_prob' : round(ifnull(self.independent_prob()), self.digits)
                 , 'lift_over_independent' : round(ifnull(self.lift_over_independent()), self.digits)
                 , 'lift_over_majority' : round(ifnull(self.lift_over_majority()), self.digits)
-                , 'comment' : self.comment
+                , 'concept_entropy': round(ifnull(self.concept_entropy()), self.digits)
+                , 'classifier_entropy': round(ifnull(self.classifier_entropy()), self.digits)
+
+            , 'comment' : self.comment
                 }
 
         if output_file:
