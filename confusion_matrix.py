@@ -3,6 +3,7 @@
     For details see https://en.wikipedia.org/wiki/Confusion_matrix
 """
 import json
+import math
 from pandas import DataFrame
 
 def ifnull(var, val=0):
@@ -34,7 +35,15 @@ def sk_to_grouped_df(labels
 
     return grouped_df
 
+BINARY_BASE = 2
 
+def entropy(probability):
+    ent = 0
+    if probability not in (0, 1):
+        ent = -(probability*math.log(probability, BINARY_BASE)
+                + (1 -probability)*math.log((1 -probability), BINARY_BASE))
+
+    return ent
 def group_df_for_cm(df
                     , classifier
                     , concept

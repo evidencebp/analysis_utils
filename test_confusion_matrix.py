@@ -4,7 +4,7 @@ sys.path.append(CODE_PATH)
 
 import pandas as pd
 import pytest
-from confusion_matrix import ConfusionMatrix
+from confusion_matrix import ConfusionMatrix, entropy
 
 @pytest.mark.parametrize(('classifier'
                          , 'concept'
@@ -68,3 +68,33 @@ def test_independent_prob(classifier
     actual = cm.independent_prob()
     assert expected == actual
 
+@pytest.mark.parametrize(('probability'
+                          , 'expected')
+    , [
+         pytest.param(
+             1
+             , 0
+             , id='regular1')
+         , pytest.param(
+             0
+             , 0
+             , id='regular2')
+        , pytest.param(
+            0.5
+            , 1
+            , id='regular3')
+        , pytest.param(
+            0.25
+            , 0.8112781244591328
+            , id='regular4')
+        , pytest.param(
+            0.75
+            , 0.8112781244591328
+            , id='regular4')
+
+                         ])
+def test_entropy(probability
+                          , expected):
+    actual = entropy(probability)
+
+    assert expected == actual
