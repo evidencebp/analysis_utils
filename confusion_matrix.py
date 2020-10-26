@@ -44,6 +44,17 @@ def entropy(probability):
                 + (1 -probability)*math.log((1 -probability), BINARY_BASE))
 
     return ent
+
+def pointwise_mutual_information(joint_prob
+                                 , ind_prob):
+    pointwise = 0.0
+
+    if (joint_prob > 0.0 and ind_prob > 0.0):
+        pointwise = joint_prob * math.log(joint_prob / ind_prob, BINARY_BASE)
+
+    return pointwise
+
+
 def group_df_for_cm(df
                     , classifier
                     , concept
@@ -174,6 +185,39 @@ class ConfusionMatrix(object):
     def classifier_entropy(self):
         return entropy(ifnull(self.hit_rate()))
 
+    def mutual_information(self):
+        mu = 0
+
+        # True positives
+        joint_prob = self.tp()/self.samples()
+        ind_prob = self.positive_rate()*self.hit_rate()
+        point_wise = pointwise_mutual_information(joint_prob
+                                 , ind_prob)
+        mu += point_wise
+
+        # False positives
+        joint_prob = self.fp()/self.samples()
+        ind_prob = (1 - self.positive_rate())*self.hit_rate()
+        point_wise = pointwise_mutual_information(joint_prob
+                                 , ind_prob)
+        mu += point_wise
+
+        # False negatives
+        joint_prob = self.fn()/self.samples()
+        ind_prob = self.positive_rate()*(1 - self.hit_rate())
+        point_wise = pointwise_mutual_information(joint_prob
+                                 , ind_prob)
+        mu += point_wise
+
+        # True negatives
+        joint_prob = self.tn()/self.samples()
+        ind_prob = (1 - self.positive_rate())*(1 - self.hit_rate())
+        point_wise = pointwise_mutual_information(joint_prob
+                                 , ind_prob)
+        mu += point_wise
+
+        return mu
+
     def summarize(self
                   , output_file=None):
 
@@ -195,6 +239,7 @@ class ConfusionMatrix(object):
                 , 'lift_over_majority' : round(ifnull(self.lift_over_majority()), self.digits)
                 , 'concept_entropy': round(ifnull(self.concept_entropy()), self.digits)
                 , 'classifier_entropy': round(ifnull(self.classifier_entropy()), self.digits)
+                , 'mutual_information': round(ifnull(self.mutual_information()), self.digits)
 
             , 'comment' : self.comment
                 }

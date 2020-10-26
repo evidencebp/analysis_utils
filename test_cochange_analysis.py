@@ -20,9 +20,10 @@ pytest.param(
             , ['k']
             , []
             , {'f2': {'true_positives': 2, 'true_negatives': 0, 'false_positives': 0, 'false_negatives': 0
-            , 'samples': 2, 'accuracy': 1.0, 'positive_rate': 1.0, 'hit_rate': 1.0, 'precision': 1.0
-            , 'precision_lift': 0.0, 'recall': 1.0, 'fpr': 0, 'jaccard': 1.0, 'independent_prob': 1.0
-            , 'lift_over_independent': 0.0, 'lift_over_majority': 0.0, 'comment': None}}
+                , 'samples': 2, 'accuracy': 1.0, 'positive_rate': 1.0, 'hit_rate': 1.0, 'precision': 1.0
+                , 'precision_lift': 0.0, 'recall': 1.0, 'fpr': 0, 'jaccard': 1.0, 'independent_prob': 1.0
+                , 'lift_over_independent': 0.0, 'lift_over_majority': 0.0, 'concept_entropy': 0
+                , 'classifier_entropy': 0, 'mutual_information': 0.0, 'comment': None}}
 
 , id='reg1')
                          ])
