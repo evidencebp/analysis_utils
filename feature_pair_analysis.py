@@ -1,6 +1,5 @@
 import json
 import numpy as np
-import os
 import pandas as pd
 
 from confusion_matrix import ConfusionMatrix
@@ -34,9 +33,9 @@ def pair_analysis(df
         g = ldf.groupby([second_metric]).agg(mean=(first_metric, 'mean')
                                             , std=(first_metric, 'std')
                                             , count=(first_metric, 'count')
-                                            , mean_capped_95 = (capped_metric, 'mean')
-                                            , std_capped_95 = (capped_metric, 'std')
-                                            , count_capped_95 = (capped_metric, 'count')
+                                            , mean_capped_95=(capped_metric, 'mean')
+                                            , std_capped_95=(capped_metric, 'std')
+                                            , count_capped_95=(capped_metric, 'count')
                                             #, min=(first_metric, 'min')
                                             #, max=(first_metric, 'max')
                                             )
@@ -66,8 +65,8 @@ def pair_analysis(df
                             , second_metric], as_index=False).size().reset_index(name=count_column)
 
         cm = ConfusionMatrix(g_df=g
-        , classifier = first_metric
-        , concept = second_metric, count = count_column)
+        , classifier=first_metric
+        , concept=second_metric, count = count_column)
         result = cm.summarize()
     else:
         count_column = 'count'
@@ -109,7 +108,6 @@ def bin_metric_by_quantiles(df
                           , top_val=np.inf
                             ):
     cuts = sorted([0.0] + [df[first_metric].quantile((1.0/bins)*i) for i in range(1, bins)] + [top_val])
-    #print(cuts)
     df[output_metric] = pd.cut(df[first_metric]
                                , cuts
                                , duplicates='drop')
