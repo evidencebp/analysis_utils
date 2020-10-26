@@ -173,7 +173,11 @@ def pair_features_vs_concept(df
 
     return result
 
-def features_stats_to_cm_df(features_stats):
+CM_REPRESENTATIVE_KEY = "accuracy"
+CONTINUOUS_REPRESENTATIVE_KEY = "mean"
+
+def features_stats_to_cm_df(features_stats
+                            , representative_key=CM_REPRESENTATIVE_KEY):
     """
         Selects the confusion matrix stats (identified by accuracy)
         and provide them as a data frame.
@@ -181,11 +185,10 @@ def features_stats_to_cm_df(features_stats):
     :return:
     """
 
-    CM_REPRESENTATIVE_KEY = "accuracy"
 
     cm_features = {}
     for i in features_stats.keys():
-        if CM_REPRESENTATIVE_KEY in features_stats[i]:
+        if representative_key in features_stats[i]:
             cm_features[i] = features_stats[i]
 
     cm_df = pd.DataFrame(cm_features)
