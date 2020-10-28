@@ -48,7 +48,7 @@ def analyze_stability(metric_per_year_df
         two_years_df['abs_relative_diff'] = two_years_df['abs_diff'].divide(two_years_df[prev_metric])
         two_years_df.loc[~np.isfinite(two_years_df['abs_relative_diff']), 'abs_relative_diff'] = np.nan
         stats['abs_relative_diff_avg'] = two_years_df['abs_relative_diff'].mean()
-        stats['abs_relative_diff_std'] = two_years_df['abs_relative_diff'].std()
+        stats['abs_relative_diff_avg'] = two_years_df['abs_relative_diff'].std()
 
         all_stats[i] = stats.copy()
 
@@ -62,7 +62,7 @@ def build_two_years_df(metric_per_year_df
                        , control_variables=[]):
 
     metric_per_year_df = metric_per_year_df[keys + metrics + [time_column] + control_variables]
-    metric_per_year_df = metric_per_year_df.dropna()
+    #metric_per_year_df = metric_per_year_df.dropna() # TODO - drops all
     metric_per_year_df = metric_per_year_df[metric_per_year_df[time_column] >= minimal_time]
 
     cur_df = metric_per_year_df.copy()
