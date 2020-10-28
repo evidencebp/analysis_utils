@@ -42,3 +42,18 @@ def merge_csv_directory(files_directory: str
     joint = merge_csv_files(files_list)
 
     return joint
+
+
+def apply_function_to_file(input_file
+                        , applied_function
+                        , output_file=None):
+
+    df = pd.read_csv(input_file)
+    out_df = applied_function(df)
+
+    if output_file:
+        out_df.to_csv(output_file
+                  , index=False)
+    return out_df
+
+
