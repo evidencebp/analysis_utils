@@ -9,6 +9,7 @@ from typing import List
 import pandas as pd
 
 Strings = List[str]
+DataFrames = List[pd.DataFrame]
 
 
 def merge_csv_files(files_list: Strings) -> pd.DataFrame:
@@ -47,6 +48,13 @@ def merge_csv_directory(files_directory: str
 def apply_function_to_file(input_file
                         , applied_function
                         , output_file=None):
+    """
+        Apply a function to the row in CSV file
+    :param input_file: The rows file
+    :param applied_function: The applied function
+    :param output_file: The file after application (if provided)
+    :return: The rows after application
+    """
 
     df = pd.read_csv(input_file)
     out_df = applied_function(df)
@@ -56,4 +64,22 @@ def apply_function_to_file(input_file
                   , index=False)
     return out_df
 
+def join_dataframes(dataframes: DataFrames
+                                , keys: Strings
+                                , how: str = 'inner'):
+    """
+        Joins the data frames into a single one based on common keys
+    :param dataframes: A ist of data frames to join
+    :param keys: Common keys
+    :param how: Join type
+    :return:
+    """
 
+    joint_df = dataframes[0]
+    for i in range(1, len(dataframes)):
+        joint_df = pd.merge(joint_df
+                            , dataframes[i]
+                            , on=keys
+                            , how=how)
+
+    return joint_df
