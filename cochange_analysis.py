@@ -7,6 +7,19 @@ from stability_analysis import build_two_years_df, PREV_PREFIX, CUR_PREFIX
 IMPROVED_PREFIX = 'improved_'
 MAIN_METRIC_POS = 0
 
+def the_lower_the_better(prev
+                         , cur
+                         , required_gap=0):
+
+    return (prev - required_gap) > cur
+
+
+def the_higher_the_better(prev
+                         , cur
+                         , required_gap=0):
+    return prev < (cur - required_gap)
+
+
 def cochange_analysis(per_year_df
                          , metrics_dict
                          , keys
