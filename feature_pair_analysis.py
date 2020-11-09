@@ -197,3 +197,36 @@ def features_stats_to_cm_df(features_stats
     cm_df = cm_df.T
 
     return cm_df
+
+def boolean_vs_count_to_df(stats
+                           , metrics=None):
+    if not metrics:
+        metrics = stats.keys()
+
+    rows = []
+    for i in metrics:
+        res = json.loads(stats[i])
+        rows.append([i
+                        , res.get('count').get('True')
+                        , res.get('count').get('False')
+                        , res.get('mean').get('True')
+                        , res.get('mean').get('False')
+                        , res.get('std').get('True')
+                        , res.get('std').get('False')
+                        ])
+
+    stats_df = pd.DataFrame(rows
+                            , columns=['metric'
+                                    , 'True_count'
+                                    , 'False_count'
+                                    , 'True_mean'
+                                    , 'False_mean'
+                                    , 'True_std'
+                                    , 'False_std'
+                                    ])
+    stats_df['ccp_increase'] = stats_df['True_mean'] - stats_df['False_mean']
+    stats_df = stats_df.sort_values(['ccp_increase', 'metric']
+                                    , ascending=[False, False])
+
+    return stats_df
+
