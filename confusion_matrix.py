@@ -189,8 +189,8 @@ class ConfusionMatrix(object):
         mu = 0
 
         # True positives
-        joint_prob = self.tp()/self.samples()
-        ind_prob = self.positive_rate()*self.hit_rate()
+        joint_prob = safe_divide(self.tp(),self.samples())
+        ind_prob = ifnull(self.positive_rate())*ifnull(self.hit_rate())
         point_wise = pointwise_mutual_information(joint_prob
                                  , ind_prob)
         mu += point_wise
@@ -212,8 +212,8 @@ class ConfusionMatrix(object):
         # True negatives
         joint_prob = self.tn()/self.samples()
         ind_prob = (1 - self.positive_rate())*(1 - self.hit_rate())
-        point_wise = pointwise_mutual_information(joint_prob
-                                 , ind_prob)
+        point_wise = pointwise_mutual_information(ifnull(joint_prob)
+                                 , ifnull(ind_prob))
         mu += point_wise
 
         return mu
