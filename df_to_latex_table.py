@@ -23,13 +23,14 @@ def df_to_latex_table(df: pd.DataFrame
             print(columns_to_name.get(c, c), end='')
             first = False
 
-        if hline:
-            print(r"\\ \hline")
-        else:
-            print(r"\\")
+        print(r"\\")
+
 
     else:
         print(" & ".join(df.columns), r"\\")
+
+    if hline:
+        print(r"\hline")
 
     for _, i in df.iterrows():
         first = True
