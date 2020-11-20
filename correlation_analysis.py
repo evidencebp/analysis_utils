@@ -13,7 +13,10 @@ def analyze_correlation(metrics_df: pd.DataFrame
                         , concept_column: str
                         , metrics: StringsList
                         , correlation_stats_file: str = None
-                        , concept_display: str = None):
+                        , concept_display: str = None
+                        , min_cnt_column=None
+                        , min_cnt_threshold=None
+                        ):
     """
     :param metrics_df: A data frame of the entities
     :param concept_column: The column with respect to we compute correlation
@@ -21,6 +24,9 @@ def analyze_correlation(metrics_df: pd.DataFrame
     :param correlation_stats_file: Where to store the results
     :return:
     """
+
+    if min_cnt_column:
+        metrics_df = metrics_df[metrics_df[min_cnt_column] >= min_cnt_threshold]
 
     stats_df = metrics_df[metrics].corr()[concept_column]
     if not concept_display:
