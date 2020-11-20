@@ -21,11 +21,17 @@ def the_higher_the_better(prev
 
 
 def cochange_analysis(per_year_df
-                         , metrics_dict
-                         , keys
-                         , control_variables=[]
-                         ):
+                        , metrics_dict
+                        , keys
+                        , control_variables=[]
+                        , min_cnt_column=None
+                        , min_cnt_threshold=None
+                      ):
     metrics_names = [*metrics_dict]
+
+    if min_cnt_column:
+        per_year_df = per_year_df[per_year_df[min_cnt_column] >= min_cnt_threshold]
+
     two_years = build_two_years_df(metric_per_year_df=per_year_df
                        , metrics=metrics_names
                        , keys=keys
