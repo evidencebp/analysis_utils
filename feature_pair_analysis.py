@@ -229,4 +229,3 @@ def boolean_vs_count_to_df(stats
                                     , ascending=[False, False])
 
     return stats_df
-
