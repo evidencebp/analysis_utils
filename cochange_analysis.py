@@ -91,9 +91,14 @@ def cochange_analysis_by_value(per_year_df
                          , keys
                          , control_variables=[]
                          ):
+    if fixed_values:
+        values = fixed_values
+    else:
+        values = per_year_df[fixed_variable].unique()
+
     stats = {}
 
-    for i in fixed_values:
+    for i in values:
         fixed_per_year_df = per_year_df[per_year_df[fixed_variable] == i]
         stats[i] = cochange_analysis(per_year_df=fixed_per_year_df
                           , metrics_dict=metrics_dict
