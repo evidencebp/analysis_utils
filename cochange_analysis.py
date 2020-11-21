@@ -70,6 +70,20 @@ def features_confusion_matrix_analysis(two_years_df
 
     return cm.summarize()
 
+
+def cochange_to_df(stats
+                   , outputfile=None
+                   , lead_column='metric'):
+    stats_df = pd.DataFrame.from_dict(stats, orient='index')
+    stats_df = (stats_df.reset_index()).rename(columns={'index': lead_column})
+    stats_df = stats_df.sort_values(['precision_lift',lead_column]
+                                        , ascending=[False, True])
+    if outputfile:
+        stats_df.to_csv(outputfile
+                    , index=False)
+    return stats_df
+
+
 def cochange_analysis_by_value(per_year_df
                          , metrics_dict
                          , fixed_variable
@@ -89,3 +103,23 @@ def cochange_analysis_by_value(per_year_df
     return stats
 
 
+def cochange_by_value_to_df(stats
+                            , fixed_variable
+                            , outputfile=None
+                            , lead_column='metric'
+                            ):
+    dataframes = []
+    for i in stats.keys():
+        df= cochange_to_df(stats[i]
+                       , outputfile=None
+                       , lead_column='metric')
+        df[fixed_variable] = i
+        dataframes.append(df)
+
+    stats_df = pd.concat(dataframes)
+
+    if outputfile:
+        stats_df.to_csv(outputfile
+                    , index=False)
+
+    return stats_df
