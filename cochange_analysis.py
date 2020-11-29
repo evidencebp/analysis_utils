@@ -122,6 +122,7 @@ def cochange_by_value_to_df(stats
         dataframes.append(df)
 
     stats_df = pd.concat(dataframes)
+    stats_df = stats_df.sort_values([lead_column, fixed_variable])
 
     if outputfile:
         stats_df.to_csv(outputfile
