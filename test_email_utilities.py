@@ -39,7 +39,7 @@ pytest.param(
         , "t@mail.com"
         , "My important subject"
         , "My important text"
-        , "From: f@mail.com\nTo: ['t@mail.com']\nSubject: My important subject\n\nMy important text\n "
+        , 'From: f@mail.com\nTo: [\'t@mail.com\']\nSubject: My important subject\nMime-Version: 1.0;\nContent-Type: text/html; charset="ISO-8859-1";\nContent-Transfer-Encoding: 7bit;\n\n\n<html>\n<body>\nMy important text\n</body>\n</html>\n '
 , id='reg1')
                          ])
 def test_generate_email_message(from_user : str
