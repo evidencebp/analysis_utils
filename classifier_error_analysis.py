@@ -13,10 +13,10 @@ import pandas as pd
 from ml_utils import get_predictive_columns, build_and_eval_model
 
 def classifier_error_analysis(df: pd.DataFrame
-                                , filtering_function
                                 , error_classifier
                                 , excluded_features
                                 , concept_column: str
+                                , filtering_function=None
                                 , allow_concept_usage: bool = False
                                 , prediction_column: str = 'prediction_column'
                                 , allow_prediction_usage: bool = False
@@ -47,10 +47,11 @@ def classifier_error_analysis(df: pd.DataFrame
                                                , axis=1)
     df = df.rename(columns={'incorrect_prediction_column' : incorrect_prediction_column})
 
-    df[scope_column] = df.apply(lambda x: filtering_function(x)
-                                , axis=1)
-    df = df[df[scope_column] ==1]
-    df = df.drop(columns=[scope_column])
+    if filtering_function:
+        df[scope_column] = df.apply(lambda x: filtering_function(x)
+                                    , axis=1)
+        df = df[df[scope_column] ==1]
+        df = df.drop(columns=[scope_column])
 
     error_excluded_features = excluded_features
     if not allow_concept_usage:
