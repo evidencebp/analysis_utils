@@ -129,12 +129,17 @@ def same_set_build_and_eval_model(df
 def plot_tree(clf
               , dot_file_path
               , png_file_path
-              , feature_names=None):
+              , feature_names=None
+              , class_names=None):
     export_graphviz(clf
                         , feature_names=feature_names
                         , out_file=dot_file_path
+                        , class_names=class_names
+                        , impurity=False
+                        #, proportion=True
                         , filled=True
-                        , rounded=True)
+                        , rounded=True
+                    )
     #dot_to_ps_command = "dot -Tps {} -o {}".format(dot_file_path
     #                                               , png_file_path)
     dot_to_png_command = "dot -Tpng {} > {}".format(dot_file_path
