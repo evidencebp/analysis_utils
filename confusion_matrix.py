@@ -49,7 +49,10 @@ def pointwise_mutual_information(joint_prob
                                  , ind_prob):
     pointwise = 0.0
 
-    if (joint_prob > 0.0 and ind_prob > 0.0):
+    if (joint_prob is not None
+            and joint_prob > 0.0
+            and ind_prob is not None
+            and ind_prob > 0.0):
         pointwise = joint_prob * math.log(joint_prob / ind_prob, BINARY_BASE)
 
     return pointwise
