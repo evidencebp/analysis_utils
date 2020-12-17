@@ -10,11 +10,13 @@ def plot_deciles(df
                  , metric_column
                  , title
                  , xaxis_title
-                 , output_file=None):
+                 , output_file=None
+                 , top_val=inf):
     deciles_column = grouping_column + '_deciles'
     deciles_df = generate_deciles(df=df
                                   , grouping_column=grouping_column
-                                  , deciles_column=deciles_column)
+                                  , deciles_column=deciles_column
+                                  , top_val=top_val)
     deciles_df = deciles_df.sort_values(deciles_column)
 
     return plot_groups(deciles_df
