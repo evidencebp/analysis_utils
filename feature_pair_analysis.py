@@ -196,6 +196,8 @@ def features_stats_to_cm_df(features_stats
     cm_df = pd.DataFrame(cm_features)
     cm_df = cm_df.T
 
+    cm_df = cm_df.sort_values('precision_lift', ascending=False)
+
     return cm_df
 
 def boolean_vs_count_to_df(stats
