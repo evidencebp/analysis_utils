@@ -3,7 +3,8 @@ import pandas as pd
 def evaluate_monotonocity(df : pd.DataFrame
                            , relevant_columns
                            , monotone_column
-                           , monotone_order):
+                           , monotone_order
+                           , output_file:str=None):
 
     g = df.groupby(monotone_column, as_index=False).agg(
         {i: 'mean' for i in relevant_columns})
@@ -29,5 +30,26 @@ def evaluate_monotonocity(df : pd.DataFrame
     monotone_df.columns = ['feature', 'monotonicity']
     monotone_df = monotone_df.sort_values(['monotonicity', 'feature'], ascending=[False, True])
 
+    if output_file:
+        monotone_df.to_csv(output_file
+                           , index=False)
+
     return monotone_df
 
+def evaluate_monotonocity_vs_concept(df : pd.DataFrame
+                           , relevant_columns
+                           , concepts_dict
+                           , output_file_template:str=None):
+
+    dfs = []
+    for i in concepts_dict.keys():
+        output_file = None
+        if output_file_template:
+            output_file = output_file_template.format(monotone_column=i)
+        dfs.append(evaluate_monotonocity(df=df
+                                            , relevant_columns=relevant_columns
+                                            , monotone_column=i
+                                            , monotone_order=concepts_dict[i]
+                                            , output_file=output_file)
+                   )
+    return dfs
