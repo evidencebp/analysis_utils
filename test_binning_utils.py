@@ -22,6 +22,23 @@ pytest.param(
             , pd.Series([0, 1, 1, 2])
 
 , id='reg1')
+,pytest.param(
+ pd.DataFrame([
+     [1]
+     , [1]
+     , [1]
+     , [1]
+     , [1]
+     , [3]
+     , [3]
+     , [3]
+     , [4]
+ ], columns=['c1'])
+ , 'c1'
+ , [0, 1, 2]
+ , pd.Series([0, 0, 0,0, 0,1,  1, 1, 2])
+
+ , id='too_large_25')
                          ])
 def test_sides_binning(df: pd.DataFrame
                   , column:str
