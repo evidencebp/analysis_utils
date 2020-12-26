@@ -2,7 +2,8 @@ import pandas as pd
 from pandas.testing import assert_frame_equal
 import pytest
 
-from monotonocity_utils import evaluate_monotonocity, evaluate_monotonocity_vs_concept
+from monotonocity_utils import evaluate_monotonocity, evaluate_monotonocity_vs_concept\
+    , evaluate_sides_monotonocity_vs_concept
 
 @pytest.mark.parametrize(('df'
                             , 'relevant_columns'
@@ -73,6 +74,43 @@ def test_evaluate_monotonocity_vs_concept(df : pd.DataFrame
     actual = evaluate_monotonocity_vs_concept(df
                                                 , relevant_columns
                                                 , concepts_dict
+                                                , output_file_template)
+
+    assert_frame_equal(actual[0], expected[0])
+
+
+@pytest.mark.parametrize(('df'
+                            , 'relevant_columns'
+                            , 'concepts_list'
+                            , 'output_file_template'
+                            , 'expected')
+    , [
+pytest.param(
+            pd.DataFrame([
+                [1, 0, 1],
+                [2, 0, 1],
+                [2, 1, 1],
+                [7, 1, 0],
+            ], columns=['quality_group', 'f1', 'f2'])
+            , ['f1', 'f2']
+            , ['quality_group']
+            , None
+            , [pd.DataFrame([
+                ['f1', True],
+                ['f2', False],
+    ], columns=['feature', 'monotonicity'])]
+
+, id='reg1')
+                         ])
+def test_evaluate_sides_monotonocity_vs_concept(df : pd.DataFrame
+                                            , relevant_columns
+                                            , concepts_list
+                                            , output_file_template
+                                            , expected):
+
+    actual = evaluate_sides_monotonocity_vs_concept(df
+                                                , relevant_columns
+                                                , concepts_list
                                                 , output_file_template)
 
     assert_frame_equal(actual[0], expected[0])

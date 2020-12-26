@@ -1,5 +1,7 @@
 import pandas as pd
 
+from binning_utils import sides_binning
+
 def evaluate_monotonocity(df : pd.DataFrame
                            , relevant_columns
                            , monotone_column
@@ -50,6 +52,31 @@ def evaluate_monotonocity_vs_concept(df : pd.DataFrame
                                             , relevant_columns=relevant_columns
                                             , monotone_column=i
                                             , monotone_order=concepts_dict[i]
+                                            , output_file=output_file)
+                   )
+    return dfs
+
+
+def evaluate_sides_monotonocity_vs_concept(df : pd.DataFrame
+                           , relevant_columns
+                           , concepts_list
+                           , output_file_template:str=None
+                           ,labels=[0,1,2]):
+
+    side_suffix = '_SIDES'
+
+    dfs = []
+    for i in concepts_list:
+        df[i + side_suffix] = sides_binning(df=df
+                  , column=i
+                  , labels=labels)
+        output_file = None
+        if output_file_template:
+            output_file = output_file_template.format(monotone_column=i)
+        dfs.append(evaluate_monotonocity(df=df
+                                            , relevant_columns=relevant_columns
+                                            , monotone_column=i + side_suffix
+                                            , monotone_order=labels
                                             , output_file=output_file)
                    )
     return dfs
