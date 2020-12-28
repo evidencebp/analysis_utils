@@ -231,3 +231,55 @@ def boolean_vs_count_to_df(stats
                                     , ascending=[False, False])
 
     return stats_df
+
+def pair_features_vs_concept_with_control(df
+                       , features
+                       , concept
+                       , control_variable
+                       , control_values=None
+                       , metrics=None):
+
+    if control_values:
+        controls = control_values
+    else:
+        controls = df[control_variable].unique()
+
+    stats = {}
+    for i in controls:
+        controled_df = df[df[control_variable] == i].copy()
+        stats[i] = pair_features_vs_concept(controled_df
+                                 , features
+                                 , concept
+                                 , metrics=metrics)
+
+    return stats
+
+def features_vs_concept_with_control_dfs(df
+                       , features
+                       , concept
+                       , control_variable
+                       , output_template=None
+                       , control_values=None
+                       , metrics=None):
+
+    stats = pair_features_vs_concept_with_control(df
+                       , features
+                       , concept
+                       , control_variable
+                       , control_values=control_values
+                       , metrics=metrics)
+
+    dfs = []
+    for i in stats.keys():
+        df = features_stats_to_cm_df(stats[i])
+        df = df.reset_index()
+        df = df.rename(columns={'index' : 'feature'})
+
+        dfs.append(df)
+
+        if output_template:
+            df.to_csv(output_template.format(control_variable=control_variable
+                                              , control_val=i)
+                            #, index=False
+                      )
+    return dfs
