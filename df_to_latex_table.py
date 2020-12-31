@@ -5,10 +5,15 @@ def df_to_latex_table(df: pd.DataFrame
                       , caption : str = ''
                       , columns_to_name : dict = None
                       , hline=True
-                      , rounding_digits=2):
+                      , rounding_digits=2
+                      , star_table=False):
     numbers_format = '{:,.' + str(rounding_digits) + 'f}'
 
-    print(r"\begin {table}[h!]\centering")
+    if star_table:
+        print(r"\begin {table*}[h!]\centering")
+    else:
+        print(r"\begin {table}[h!]\centering")
+
     print(r"\caption{", caption, "}")
     if hline:
         print(r"\begin{tabular}{", "| l"*len(df.columns), " | }")
@@ -48,5 +53,8 @@ def df_to_latex_table(df: pd.DataFrame
             print(r"\\")
 
     print(r"\end{tabular}")
-    print(r"\end{table}")
+    if star_table:
+        print(r"\end{table*}")
+    else:
+        print(r"\end{table}")
 
