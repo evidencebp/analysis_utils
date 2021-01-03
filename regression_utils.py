@@ -78,7 +78,8 @@ def build_and_eval_regressor(df
                   , random_state=random_state
                   , get_predictive_columns_func=get_predictive_columns_func)
 
-    regressor.fit(X_train, y_train)
+    regressor.fit(X=X_train
+                  , y=y_train)
     performance = evaluate_regressor(regressor
                    , X_test
                    , y_test
