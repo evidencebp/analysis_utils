@@ -6,7 +6,8 @@ def df_to_latex_table(df: pd.DataFrame
                       , columns_to_name : dict = None
                       , hline=True
                       , rounding_digits=2
-                      , star_table=False):
+                      , star_table=False
+                      , bold_title=True):
     numbers_format = '{:,.' + str(rounding_digits) + 'f}'
 
     if star_table:
@@ -25,7 +26,10 @@ def df_to_latex_table(df: pd.DataFrame
         for c in df.columns:
             if not first:
                 print(" & ", end='')
-            print(columns_to_name.get(c, c), end='')
+            if bold_title:
+                print(r"\textbf{" + columns_to_name.get(c, c) + "}", end='')
+            else:
+                print(columns_to_name.get(c, c), end='')
             first = False
 
         print(r"\\")
