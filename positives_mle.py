@@ -50,9 +50,9 @@ class PositivesMLE(object):
 
 
 # Values are taken from the languistic model performance on the test set
-ccp_estimator = PositivesMLE(0.84
-                     , 0.042)
+ccp_estimator = PositivesMLE(recall=0.87
+                     , fpr=0.04)
 #print("ccp", ccp_estimator.get_formula())
-refactor_estimator = PositivesMLE(0.61
-                     , 0.02)
+refactor_estimator = PositivesMLE(recall=0.6
+                     , fpr=0.02)
 #print("refactor", refactor_estimator.get_formula())
