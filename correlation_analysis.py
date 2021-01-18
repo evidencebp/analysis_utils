@@ -30,7 +30,7 @@ def analyze_correlation(metrics_df: pd.DataFrame
 
     stats_df = metrics_df[metrics].corr()[concept_column]
     if not concept_display:
-        concept_display = "Preason_with_" + concept_column
+        concept_display = "Pearson_with_" + concept_column
     stats_df = stats_df.reset_index()
     stats_df = stats_df.rename(columns={'index': 'metric'
                                                             , concept_column : concept_display})
