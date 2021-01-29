@@ -83,3 +83,12 @@ def join_dataframes(dataframes: DataFrames
                             , how=how)
 
     return joint_df
+
+
+def prefix_columns(df: pd.DataFrame
+                   , prefix : str
+                   , columns : list) -> pd.DataFrame :
+    rename = {i: prefix + i for i in columns}
+    df = df.rename(columns=rename)
+
+    return df
