@@ -7,7 +7,8 @@ def df_to_latex_table(df: pd.DataFrame
                       , hline=True
                       , rounding_digits=2
                       , star_table=False
-                      , bold_title=True):
+                      , bold_title=True
+                      , columns_header=None):
     numbers_format = '{:,.' + str(rounding_digits) + 'f}'
 
     if star_table:
@@ -16,11 +17,18 @@ def df_to_latex_table(df: pd.DataFrame
         print(r"\begin {table}[h!]\centering")
 
     print(r"\caption{", caption, "}")
+
     if hline:
-        print(r"\begin{tabular}{", "| l"*len(df.columns), " | }")
+        if columns_header:
+            print(r"\begin{tabular}", columns_header)
+        else:
+            print(r"\begin{tabular}{", "| l"*len(df.columns), " | }")
         print(r"\hline")
     else:
-        print(r"\begin{tabular}{", "l"*len(df.columns), "}")
+        if columns_header:
+            print(r"\begin{tabular}", columns_header)
+        else:
+            print(r"\begin{tabular}{", "l"*len(df.columns), "}")
     if columns_to_name:
         first = True
         for c in df.columns:
