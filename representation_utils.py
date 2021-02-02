@@ -3,6 +3,8 @@
     Utilites to convert time and size to a readable representation
 
 """
+import math
+import numpy as np
 
 def convert_minutes_to_text(minutes):
     DAYS_IN_YEAR = 365
@@ -11,7 +13,9 @@ def convert_minutes_to_text(minutes):
     MINUTES_PER_DAY = 24*MINUTES_IN_HOUR
 
     # import pdb; pdb.set_trace()
-    cur_minutes = minutes
+    if minutes is None or  math.isnan(minutes):
+        return
+    cur_minutes = int(minutes)
 
     years = cur_minutes//(DAYS_IN_YEAR*MINUTES_PER_DAY)
     cur_minutes = cur_minutes - (years*DAYS_IN_YEAR*MINUTES_PER_DAY)
@@ -48,7 +52,7 @@ def convert_minutes_to_text(minutes):
         time_parts.append(" {hours} hour".format(hours=hours))
 
     if minutes > 1:
-        time_parts.append(" {minutes} minutes".format(minutes=minutes))
+        time_parts.append(" {minutes} minutes".format(minutes=int(minutes)))
     if minutes == 1:
         time_parts.append(" {minutes} minute".format(minutes=minutes))
 
@@ -56,12 +60,17 @@ def convert_minutes_to_text(minutes):
 
 def convert_char_to_size(chars):
     KILO = 1024
-    if chars >= KILO*KILO:
+    if chars is None or chars is np.nan:
+        res = None
+    elif chars >= KILO*KILO:
         res = "{:.1f} MB".format(chars/KILO/KILO)
     elif chars >= KILO:
         res = "{:.1f} KB".format(chars/KILO)
     else:
         res = str(chars) + " b"
+
+    if res is None or 'nan' in res:
+        res = None
 
     return res
 
