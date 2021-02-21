@@ -3,7 +3,7 @@ from numpy.testing import assert_array_equal
 import pandas as pd
 import pytest
 
-from maximize_classifiers_agreement import minimize_classifiers_entropy
+from maximize_classifiers_agreement import minimize_classifiers_entropy, FixedLogisticRegression
 
 def equal_dictionaries(dict1
                        , dict2):
@@ -57,6 +57,43 @@ pytest.param(
 
 , id='f1_and_minus_f1') # weight of w1 should b minus of f2 since they always disagree
                         # actual['fixed_coef'][0][0] == - actual['fixed_coef'][0][1]
+, pytest.param(
+     pd.DataFrame([
+         [1, -1, 0],
+         [1, -1, 0],
+         [-1, 1, 0],
+         [-1, 1, 0],
+         [1, -1, 0],
+         [1, -1, 0],
+         [-1, 1, 0],
+         [-1, 1, 0],
+         [1, -1, 0],
+         [1, -1, 0],
+         [-1, 1, 0],
+         [-1, 1, 0],
+         [1, -1, 0],
+         [1, -1, 0],
+         [-1, 1, 0],
+         [-1, 1, 0],
+         [1, -1, 0],
+         [1, -1, 0],
+         [-1, 1, 0],
+         [-1, 1, 0],
+         [1, -1, 0],
+         [1, -1, 0],
+         [-1, 1, 0],
+         [-1, 1, 0],
+     ], columns=['f1', 'f2', 'f3']).to_numpy()
+     , 0.2
+     , -1
+     , 1
+     , 1
+     , False
+     , {'fixed_classes': np.array([0, 1])
+                , 'fixed_coef': np.array([[-1.,  1., -1.]]) # f3 coeffienect can be any value since it is multiplied by zero
+                , 'fixed_intercept': np.array([-0.2])}
+
+     , id='f1_and_minus_f1_abstaining_f3')
                          ])
 def test_minimize_classifiers_entropy(X
                                         , step_size
@@ -76,4 +113,3 @@ def test_minimize_classifiers_entropy(X
 
     assert_equal_parameters(actual
                             , expected)
-    #assert equal_dictionaries(actual, expected)
