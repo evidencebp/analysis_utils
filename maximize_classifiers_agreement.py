@@ -174,6 +174,7 @@ def minimize_classifiers_entropy(X
                                  , max_val=1.0
                                  , digits=1
                                  , include_zero=False
+                                 , verbose=0
                                  ):
     y = [0]*len(X)
     features_num = len(X[0])
@@ -189,6 +190,7 @@ def minimize_classifiers_entropy(X
     gs_clf = GridSearchCV(FixedLogisticRegression()
                           , parameters
                           , scoring=ent_scorer
+                          , verbose=verbose
                           )
     gs_clf.fit(X, y)
 
