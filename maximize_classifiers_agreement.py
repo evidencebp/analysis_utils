@@ -106,15 +106,24 @@ def generate_logistic_parameters(features_num
                                  , digits=1
                                  , items_as_np=True
                                  , include_zero=False):
+    """
+       i = round(max_val, digits)
+        while i <= min_val:
+            if include_zero or i != 0:
+                feature_values.append(i)
+            i -= step_size
+            i = round(i ,digits)
+
+    """
 
     feature_values = []
 
     i = round(min_val,digits)
     while i <= max_val:
-        if include_zero or i != 0:
-            feature_values.append(i)
-        i += step_size
-        i = round(i ,digits)
+         if include_zero or i != 0:
+             feature_values.append(i)
+         i += step_size
+         i = round(i ,digits)
 
     feature_values = np.array(feature_values)
     features = (feature_values for _ in range(features_num))
@@ -139,6 +148,7 @@ def generate_logistic_classifier_parameters(features_num
                                                    , min_val=min_val
                                                    , max_val=max_val
                                                    , digits=digits
+                                                   , items_as_np=items_as_np
                                                    , include_zero=include_zero
                                                    )
     fixed_coef = generate_logistic_parameters(features_num
