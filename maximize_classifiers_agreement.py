@@ -126,6 +126,66 @@ def generate_logistic_parameters(features_num
     return grid
 
 
+def generate_logistic_classifier_parameters(features_num
+                                 , step_size=0.2
+                                 , min_val=-1.0
+                                 , max_val=1.0
+                                 , digits=1
+                                 , items_as_np=True
+                                 , include_zero=False):
+
+    fixed_intercept = generate_logistic_parameters(1
+                                                   , step_size=step_size
+                                                   , min_val=min_val
+                                                   , max_val=max_val
+                                                   , digits=digits
+                                                   , include_zero=include_zero
+                                                   )
+    fixed_coef = generate_logistic_parameters(features_num
+                                              , step_size=step_size
+                                              , min_val=min_val
+                                              , max_val=max_val
+                                              , digits=digits
+                                              , include_zero=include_zero
+                                              , items_as_np=False
+                                              )
+
+    fixed_coef = [np.array([x]) for x in fixed_coef]
+    parameters = {'fixed_intercept': fixed_intercept
+        , 'fixed_coef': fixed_coef
+        , 'fixed_classes': [np.array([0, 1])]
+                  }
+
+    return parameters
+
+def minimize_classifiers_entropy(X
+                                 , step_size=0.2
+                                 , min_val=-1.0
+                                 , max_val=1.0
+                                 , digits=1
+                                 , include_zero=False
+                                 ):
+    y = [0]*len(X)
+    features_num = len(X[0])
+
+    parameters = generate_logistic_classifier_parameters(features_num
+                                 , step_size=step_size
+                                 , min_val=min_val
+                                 , max_val=max_val
+                                 , digits=digits
+                                 , items_as_np=True
+                                 , include_zero=include_zero)
+
+    gs_clf = GridSearchCV(FixedLogisticRegression()
+                          , parameters
+                          , scoring=ent_scorer
+                          )
+    gs_clf.fit(X, y)
+
+    return gs_clf.best_params_
+
+
+"""
 from sklearn.datasets import load_breast_cancer
 
 X, y = load_breast_cancer(return_X_y=True)
@@ -143,6 +203,18 @@ clf.predict_proba(X[:2, :])
 
 clf.score(X, y)
 print(clf)
+
+
+print(minimize_classifiers_entropy(X
+                                 , step_size=0.2
+                                 , min_val=-1.0
+                                 , max_val=1.0
+                                 , digits=1
+                                 , include_zero=False
+                                 ))
+
+"""
+
 """
                   generate_logistic_parameters(1
                                  , step_size=0.5
@@ -162,51 +234,4 @@ parameters = {'fixed_intercept': [-1.0, 0.0, 1.0]
               }
 
 """
-
-def minimize_classifiers_entropy(X
-                                 , step_size=0.2
-                                 , min_val=-1.0
-                                 , max_val=1.0
-                                 , digits=1
-                                 , include_zero=False
-                                 ):
-    y = [0]*len(X)
-    fixed_intercept = generate_logistic_parameters(1
-                                                   , step_size=step_size
-                                                   , min_val=min_val
-                                                   , max_val=max_val
-                                                   , digits=digits
-                                                   , include_zero=include_zero
-                                                   )
-    features_num = len(X[0])
-    fixed_coef = generate_logistic_parameters(features_num
-                                              , step_size=step_size
-                                              , min_val=min_val
-                                              , max_val=max_val
-                                              , digits=digits
-                                              , include_zero=include_zero
-                                              , items_as_np=False
-                                              )
-
-    fixed_coef = [np.array([x]) for x in fixed_coef]
-    parameters = {'fixed_intercept': fixed_intercept
-        , 'fixed_coef': fixed_coef
-        , 'fixed_classes': [np.array([0, 1])]
-                  }
-
-    gs_clf = GridSearchCV(FixedLogisticRegression()
-                          , parameters
-                          , scoring=ent_scorer
-                          )
-    gs_clf.fit(X, y)
-
-    return gs_clf.best_params_
-
-print(minimize_classifiers_entropy(X
-                                 , step_size=0.2
-                                 , min_val=-1.0
-                                 , max_val=1.0
-                                 , digits=1
-                                 , include_zero=False
-                                 ))
 
