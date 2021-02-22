@@ -118,11 +118,11 @@ def generate_logistic_parameters(features_num
 
     feature_values = []
 
-    i = round(min_val,digits)
-    while i <= max_val:
+    i = round(max_val,digits)
+    while i >= min_val:
          if include_zero or i != 0:
              feature_values.append(i)
-         i += step_size
+         i -= step_size
          i = round(i ,digits)
 
     feature_values = np.array(feature_values)

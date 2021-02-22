@@ -52,7 +52,7 @@ pytest.param(
             , 1
             , False
             , {'fixed_classes': np.array([0, 1])
-                , 'fixed_coef': np.array([[-1.,  1.]])
+                , 'fixed_coef': np.array([[1.,  -1.]])
                 , 'fixed_intercept': np.array([-0.2])}
 
 , id='f1_and_minus_f1') # weight of w1 should b minus of f2 since they always disagree
@@ -90,7 +90,7 @@ pytest.param(
      , 1
      , False
      , {'fixed_classes': np.array([0, 1])
-                , 'fixed_coef': np.array([[-1.,  1., -1.]]) # f3 coeffienect can be any value since it is multiplied by zero
+                , 'fixed_coef': np.array([[1.,  -1., 1.]]) # f3 coeffienect can be any value since it is multiplied by zero
                 , 'fixed_intercept': np.array([-0.2])}
 
      , id='f1_and_minus_f1_abstaining_f3')
