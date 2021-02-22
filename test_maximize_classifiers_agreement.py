@@ -94,6 +94,7 @@ pytest.param(
                 , 'fixed_intercept': np.array([-0.2])}
 
      , id='f1_and_minus_f1_abstaining_f3')
+
                          ])
 def test_minimize_classifiers_entropy(X
                                         , step_size
@@ -111,5 +112,41 @@ def test_minimize_classifiers_entropy(X
                                  , include_zero=include_zero
                                  )
 
+    Archimeds = FixedLogisticRegression()
+
+    Archimeds = Archimeds.set_params(**actual)
+    score = Archimeds.score(X, [0]*len(X))
+    print("actual score", score)
+
+    Archimeds = Archimeds.set_params(**expected)
+    score = Archimeds.score(X, [0]*len(X))
+    print("expected score", score)
+
     assert_equal_parameters(actual
                             , expected)
+
+"""
+, pytest.param(
+     pd.DataFrame([
+         [1, 1, -1],
+         [-1, -1, 1],
+         [1, 1, -1],
+         [-1, -1, 1],
+         [1, 1, -1],
+         [-1, -1, 1],
+         [1, 1, -1],
+         [-1, -1, 1],
+         [1, 1, -1],
+         [-1, -1, 1],
+     ], columns=['f1', 'f2', 'f3']).to_numpy()
+     , 0.2
+     , -1
+     , 1
+     , 1
+     , False
+     , {'fixed_classes': np.array([0, 1])
+                , 'fixed_coef': np.array([[0.2,  0.2, -0.4]]) # w1 + w2 = -w3, many other values are ok here too
+                , 'fixed_intercept': np.array([0])}
+
+     , id='duplicated_f1_and_minus_f1')
+"""
