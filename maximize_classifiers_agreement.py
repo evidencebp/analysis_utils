@@ -12,27 +12,45 @@ Instead we inject the parameters into the model and use grid search to find the 
 Agreement is measured using the some of the entropy of the confidence.
 """
 
+import itertools
 import numpy as np
 from sklearn.linear_model import LogisticRegression
 #from sklearn.utils.estimator_checks import check_estimator
+from sklearn.metrics import make_scorer
+from sklearn.model_selection import GridSearchCV
 from sklearn.utils.extmath import cartesian
 from sklearn.utils.validation import check_X_y
-from sklearn.model_selection import GridSearchCV
 
 from confusion_matrix import entropy
 
 def confidence_entropy(y, y_pred, **kwargs):
     ent = [entropy(i) for i in y_pred]
 
-    return sum(ent)
-
-
-from sklearn.metrics import make_scorer
+    # Returning the average entropy of confidence.
+    # It is maximaized in the same point as sum yet more interpertable
+    return sum(ent)/len(ent)
 
 # https://scikit-learn.org/stable/modules/generated/sklearn.metrics.make_scorer.html#sklearn.metrics.make_scorer
 ent_scorer = make_scorer(confidence_entropy
                          , greater_is_better=False
                          , needs_proba=True)
+
+def predict_proba_confidence(clf, X, y_true):
+    """ Applying score on prediction probability
+        Based on
+        https://stackoverflow.com/questions/38064637/pass-estimator-to-custom-score-function-via-sklearn-metrics-make-scorer
+        https://stackoverflow.com/questions/27908737/can-gridsearchcv-use-predict-proba-when-using-a-custom-score-function
+    """
+    class_labels = clf.classes_
+    y_pred_proba = clf.predict_proba(X)[:,1]
+    ent = [entropy(i) for i in y_pred_proba]
+
+    return sum(ent)/len(ent)
+
+confidence_prob_ent_scorer = make_scorer(predict_proba_confidence
+                         , greater_is_better=False
+                         , needs_proba=True)
+
 
 class FixedLogisticRegression(LogisticRegression):
     """
@@ -98,6 +116,11 @@ class FixedLogisticRegression(LogisticRegression):
             self.classes_ = original_params[CLASSES]
 
         return self
+
+    def score(self, X, y, sample_weight=None):
+        return predict_proba_confidence(self
+                                        , X
+                                        , y)
 
 def generate_logistic_parameters(features_num
                                  , step_size=0.2
@@ -196,8 +219,29 @@ def minimize_classifiers_entropy(X
 
     return gs_clf.best_params_
 
-
 """
+def find_optimal_parameters(samples_df
+                            , parameter_options
+                            , concept_column=None
+                            , include_zero=False):
+    if concept_column:
+        # TODO - Handle semi-supervised use case
+        pass
+
+    features_num = len(samples_df[0])
+
+    parameters_grid = parameter_options*(features_num +1)
+    parameter_options = list(itertools.product(*parameters_grid))
+
+    for i in parameter_options:
+        if include_zero or i != [0]*(features_num +1):
+            current_parameters = {'fixed_intercept': i[0]
+                , 'fixed_coef': i[1:]
+                , 'fixed_classes': [np.array([0, 1])]
+                          }
+
+
+
 from sklearn.datasets import load_breast_cancer
 
 X, y = load_breast_cancer(return_X_y=True)

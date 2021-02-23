@@ -164,12 +164,12 @@ pytest.param(
 , pytest.param(
             [None]
             , [0.5, 0.5]
-            , 2.0
+            , 1.0
 , id='reg2')
 , pytest.param(
             [None]
-            , [0.5, 0.5, 1]
-            , 2.0
+            , [0.5, 0.5, 1, 1, 1]
+            , 0.4
 , id='reg3')
 
 
