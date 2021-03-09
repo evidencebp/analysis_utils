@@ -12,7 +12,20 @@ def pair_analysis(df
                        , metrics=None):
     ldf = df.copy()
     result = {}
-    if ((df[first_metric].dtype in (np.float64, np.int64)) and
+    if (((set(df[first_metric].unique()).issubset({0,1})) or (df[first_metric].dtype == 'bool'))
+          and
+          ((set(df[second_metric].unique()).issubset({0,1})) or (df[second_metric].dtype == 'bool'))):
+
+        count_column = 'count'
+        g = ldf.groupby([first_metric
+                            , second_metric], as_index=False).size().reset_index(name=count_column)
+
+        cm = ConfusionMatrix(g_df=g
+                             , classifier=first_metric
+                             , concept=second_metric, count=count_column)
+        result = cm.summarize()
+
+    elif ((df[first_metric].dtype in (np.float64, np.int64)) and
             (df[second_metric].dtype in (np.float64, np.int64))):
         if metrics is None or 'Pearson' in metrics:
             result['Pearson'] = ldf.corr()[first_metric][second_metric]
@@ -25,17 +38,6 @@ def pair_analysis(df
             ldf['diff'] = ldf[first_metric] - ldf[second_metric]
             ldf['abs_diff'] = ldf['diff'].map(lambda x: abs(x))
             result['abs_avg_diff'] = ldf['abs_diff'].mean()
-    elif (((set(df[first_metric].unique()).issubset({0,1})) or (df[first_metric].dtype == 'bool'))
-          and
-          ((set(df[second_metric].unique()).issubset({0,1})) or (df[second_metric].dtype == 'bool'))):
-        count_column = 'count'
-        g = ldf.groupby([first_metric
-                            , second_metric], as_index=False).size().reset_index(name=count_column)
-
-        cm = ConfusionMatrix(g_df=g
-        , classifier=first_metric
-        , concept=second_metric, count = count_column)
-        result = cm.summarize()
 
     elif (df[first_metric].dtype in (np.float64, np.int64)):
 
