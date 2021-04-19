@@ -51,9 +51,14 @@ def evaluate_regressor(regressor
     performace['mean_squared_error'] = mean_squared_error(y_test, test_pred)
     performace['r2_score'] = r2_score(y_test, test_pred)
 
+    performace['pred_05'] = pred_by_rel_distance(y_test
+                                    , test_pred
+                                    , threshold=0.05)
+
     performace['pred_25'] = pred_by_rel_distance(y_test
                                     , test_pred
                                     , threshold=0.25)
+
     performace['pred_50'] = pred_by_rel_distance(y_test
                                     , test_pred
                                     , threshold=0.5)
