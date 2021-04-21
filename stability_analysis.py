@@ -4,6 +4,7 @@ import pandas as pd
 PREV_PREFIX = 'prev_'
 CUR_PREFIX = 'cur_'
 
+from regression_utils import pred_by_rel_distance
 
 def analyze_stability(metric_per_year_df
                       , keys
@@ -49,6 +50,16 @@ def analyze_stability(metric_per_year_df
         two_years_df.loc[~np.isfinite(two_years_df['abs_relative_diff']), 'abs_relative_diff'] = np.nan
         stats['abs_relative_diff_avg'] = two_years_df['abs_relative_diff'].mean()
         stats['abs_relative_diff_avg'] = two_years_df['abs_relative_diff'].std()
+
+        stats['pred_05'] = pred_by_rel_distance(y_test=two_years_df[prev_metric]
+                             , test_pred=two_years_df[cur_metric]
+                             , threshold=0.05)
+        stats['pred_25'] = pred_by_rel_distance(y_test=two_years_df[prev_metric]
+                             , test_pred=two_years_df[cur_metric]
+                             , threshold=0.25)
+        stats['pred_50'] = pred_by_rel_distance(y_test=two_years_df[prev_metric]
+                             , test_pred=two_years_df[cur_metric]
+                             , threshold=0.50)
 
         all_stats[i] = stats.copy()
 
