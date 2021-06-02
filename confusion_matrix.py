@@ -72,10 +72,12 @@ class ConfusionMatrix(object):
     def __init__(self
                  , classifier
                  , concept
-                 , count
+                 , count=None
                  , g_df=None
                  , comment=None
                  , digits=2):
+
+        COUNT_COLUMN = 'count'
 
         self.classifier = classifier
         self.concept = concept
@@ -87,6 +89,9 @@ class ConfusionMatrix(object):
         # Using a raw dataframe, sk-learn parameters, confusion matrix values
         if g_df is not None:
             self.g_df = g_df
+            if self.count is None:
+                self.count = COUNT_COLUMN
+                self.g_df[self.count] = 1
 
     def tp(self):
         """
