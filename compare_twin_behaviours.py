@@ -18,13 +18,11 @@ from cochange_analysis import features_confusion_matrix_analysis
 COMPARISON_SUFFIX = '_cmp'
 
 
-def compare_twin_behaviours(first_behaviour: pd.DataFrame
+def build_twin_ds(first_behaviour: pd.DataFrame
                             , second_behaviour: pd.DataFrame
                             , keys: list
                             , comparision_columns: list
-                            , comparision_function
-                            , filtering_function=None
-                            , differences_num: str = None) -> pd.DataFrame:
+                            , filtering_function=None) -> pd.DataFrame:
     """
 
     :param first_behaviour: A data frame that describes the behaviour of twin in an environment.
@@ -47,6 +45,35 @@ def compare_twin_behaviours(first_behaviour: pd.DataFrame
         joint[filter_column] = joint.apply(filtering_function, axis=1)
         joint = joint[~joint[filter_column]]
         joint = joint.drop(columns=[filter_column])
+
+    return joint
+
+
+def compare_twin_behaviours(first_behaviour: pd.DataFrame
+                            , second_behaviour: pd.DataFrame
+                            , keys: list
+                            , comparision_columns: list
+                            , comparision_function
+                            , filtering_function=None
+                            , differences_num: str = None) -> pd.DataFrame:
+    """
+
+    :param first_behaviour: A data frame that describes the behaviour of twin in an environment.
+    :param second_behaviour: A data frame that he behaviour of twin in an environment.
+    Many time similar to first one.
+    :param keys: Identifiers of the twins.
+    :param comparision_columns: The behaviour columns to compare.
+    :param comparision_function: A function that compares the behaviour in the two environments.
+    :param filtering_function: A function to exclude records (e.g., same repository).
+    :param differences_num: Counts the number od different columns.
+    :return: A data frame with the twins behaviour comparision.
+    """
+
+    joint = build_twin_ds(first_behaviour=first_behaviour
+                            , second_behaviour=second_behaviour
+                            , keys=keys
+                            , comparision_columns=comparision_columns
+                            , filtering_function=filtering_function)
 
     joint_cols = keys.copy()
     for i in comparision_columns:
