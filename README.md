@@ -49,6 +49,8 @@ See here the [corrective commit probability code](https://github.com/evidencebp/
 
 # Versions
 
+Version used for "ComSum: Commit Messages Summarization and Meaning Preservation" by Leshem Choshen and Idan Amit.
+[![DOI](https://zenodo.org/badge/254577147.svg)](https://zenodo.org/badge/latestdoi/254577147)
 
 Live version is updating at https://github.com/evidencebp/analysis_utils/
 
