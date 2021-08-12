@@ -43,6 +43,18 @@ Please cite as
 }
 ```
 
+The repository itself should be cited as
+```
+@article{Amit2021Analysis
+, title={Analysis utilities}, 
+DOI={10.5281/zenodo.5179861},
+publisher={Zenodo}
+, author={Idan Amit}
+, year={2021}
+, month={Aug}}
+
+```
+
 See here the [linguistic commit classification](https://github.com/evidencebp/commit-classification)
 
 See here the [corrective commit probability code](https://github.com/evidencebp/corrective-commit-probability)
