@@ -12,6 +12,27 @@ import pandas as pd
 
 from ml_utils import get_predictive_columns, build_and_eval_model
 
+def classification_mistake_function(record
+                                   , prediction_column
+                                   , concept_column):
+    return record[prediction_column] != record[concept_column]
+
+def regression_too_far_mistake_function(record
+                                   , prediction_column
+                                   , concept_column
+                                   , threshold=0.25):
+
+    if record[concept_column] == 0.0:
+        if record[prediction_column] == 0.0:
+            threshold_rel_diff =False
+        else:
+            threshold_rel_diff = None
+    else:
+        rel_diff = record[prediction_column]/record[concept_column]
+        threshold_rel_diff = rel_diff < (1 - threshold) or rel_diff > (1 + threshold)
+
+    return threshold_rel_diff
+
 def classifier_error_analysis(df: pd.DataFrame
                                 , error_classifier
                                 , excluded_features
@@ -23,6 +44,7 @@ def classifier_error_analysis(df: pd.DataFrame
                                 , incorrect_prediction_column: str = 'incorrect_prediction_column'
                                 , test_size=0.2
                                 , random_state=1
+                                , mistake_function=classification_mistake_function
                               ):
     """
 
@@ -43,10 +65,12 @@ def classifier_error_analysis(df: pd.DataFrame
 
     scope_column = 'in_scope'
 
-    df['incorrect_prediction_column'] = df.apply(lambda x: x[prediction_column] != x[concept_column]
+    df['incorrect_prediction_column'] = df.apply(lambda x: 1 if mistake_function(x
+                                                                                           , prediction_column
+                                                                                           , concept_column) else 0
                                                , axis=1)
     df = df.rename(columns={'incorrect_prediction_column' : incorrect_prediction_column})
-
+    df[incorrect_prediction_column] = df[incorrect_prediction_column].astype('int')
     if filtering_function:
         df[scope_column] = df.apply(lambda x: filtering_function(x)
                                     , axis=1)
@@ -62,7 +86,8 @@ def classifier_error_analysis(df: pd.DataFrame
     error_excluded_features = set(list(error_excluded_features) + [incorrect_prediction_column])
     error_get_predictive_columns = partial(get_predictive_columns
                                              , excluded_features=set(error_excluded_features))
-
+    #print("error_excluded_features", error_excluded_features)
+    #print("used features", error_get_predictive_columns(df))
     classifier, performance = build_and_eval_model(df=df
                          , classifier=error_classifier
                          , concept=incorrect_prediction_column
