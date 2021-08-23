@@ -3,6 +3,7 @@
 """
 from cloudpickle import dump, load
 import os
+from sklearn.model_selection import cross_validate
 from sklearn.model_selection import train_test_split
 from sklearn.tree import export_graphviz
 
@@ -124,6 +125,29 @@ def same_set_build_and_eval_model(df
                    , get_predictive_columns_func=get_predictive_columns_func)
 
     return classifier, performance
+
+def cross_validation(df
+                    , classifier
+                    , concept
+                    , get_predictive_columns_func
+                    , scoring=None
+                    , cv=None
+                    , return_train_score=False
+                     ):
+
+    X_test, X_train, y_test, y_train = df_to_sk_form(df
+                  , concept
+                  , test_size=1
+                  , random_state=0
+                  , get_predictive_columns_func=get_predictive_columns_func
+                  )
+
+    return cross_validate(estimator=classifier
+                          , X=X_train
+                          , y=y_train
+                          , scoring=scoring
+                          , cv=cv
+                          , return_train_score=return_train_score)
 
 
 def plot_tree(clf
