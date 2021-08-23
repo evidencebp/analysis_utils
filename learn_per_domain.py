@@ -10,7 +10,8 @@ def learn_per_domain(df
                                 , build_and_eval_function
                                 , domain_column
                                 , domain_values=None
-                                , performance_file_template=None):
+                                , performance_file_template=None
+                                , verbose=False):
     """
         Used for getting performance on different cohorts of the data set.
         Useful for domain adaptation (e.g., when comparing customers) and concet drift (e.g., when run over years).
@@ -38,6 +39,10 @@ def learn_per_domain(df
 
     all_performance = {}
     for i in values:
+
+        if verbose:
+            print("Processing ", i)
+
         if performance_file_template:
             performance_file = performance_file_template.format(domain=i)
 
