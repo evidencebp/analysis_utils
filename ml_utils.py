@@ -142,13 +142,23 @@ def cross_validation(df
                   , get_predictive_columns_func=get_predictive_columns_func
                   )
 
-    return cross_validate(estimator=classifier
+    cv = cross_validate(estimator=classifier
                           , X=X_train
                           , y=y_train
                           , scoring=scoring
                           , cv=cv
                           , return_train_score=return_train_score)
 
+    test_std = cv['test_score'].std()
+
+    if return_train_score:
+        train_std = cv['train_score'].std()
+        diff_mean = (cv['train_score'] - cv['test_score']).mean()
+    else:
+        train_std = None
+        diff_mean = None
+
+    return cv, test_std, train_std, diff_mean
 
 def plot_tree(clf
               , dot_file_path
