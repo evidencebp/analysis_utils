@@ -1,6 +1,5 @@
 import pandas as pd
 
-from ml_utils import build_and_eval_model
 
 def learn_per_domain(df
                                 , classifier
@@ -8,6 +7,7 @@ def learn_per_domain(df
                                 , test_size
                                 , random_state
                                 , get_predictive_columns_func
+                                , build_and_eval_function
                                 , domain_column
                                 , domain_values=None
                                 , performance_file_template=None):
@@ -24,6 +24,7 @@ def learn_per_domain(df
     :param test_size:
     :param random_state:
     :param get_predictive_columns_func:
+    :param build_and_eval_function - build_and_eval_model for classification, build_and_eval_regressor for regression
     :param domain_column:
     :param domain_values:
     :param performance_file_template:
@@ -40,7 +41,7 @@ def learn_per_domain(df
         if performance_file_template:
             performance_file = performance_file_template.format(domain=i)
 
-        classifier, performance = build_and_eval_model(df[df[domain_column] == i]
+        classifier, performance = build_and_eval_function(df[df[domain_column] == i]
                                 , classifier
                                 , concept
                                 , test_size
@@ -48,7 +49,6 @@ def learn_per_domain(df
                                 , get_predictive_columns_func
                                 , performance_file=performance_file
                          )
-
         all_performance[i] = performance
 
     df = pd.DataFrame(all_performance).T
