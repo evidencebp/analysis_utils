@@ -194,35 +194,38 @@ class ConfusionMatrix(object):
         return entropy(ifnull(self.hit_rate()))
 
     def mutual_information(self):
-        mu = 0
+        if self.samples():
+            mu = 0
 
-        # True positives
-        joint_prob = safe_divide(self.tp(),self.samples())
-        ind_prob = ifnull(self.positive_rate())*ifnull(self.hit_rate())
-        point_wise = pointwise_mutual_information(joint_prob
-                                 , ind_prob)
-        mu += point_wise
+            # True positives
+            joint_prob = safe_divide(self.tp(),self.samples())
+            ind_prob = ifnull(self.positive_rate())*ifnull(self.hit_rate())
+            point_wise = pointwise_mutual_information(joint_prob
+                                     , ind_prob)
+            mu += point_wise
 
-        # False positives
-        joint_prob = self.fp()/self.samples()
-        ind_prob = (1 - self.positive_rate())*self.hit_rate()
-        point_wise = pointwise_mutual_information(joint_prob
-                                 , ind_prob)
-        mu += point_wise
+            # False positives
+            joint_prob = self.fp()/self.samples()
+            ind_prob = (1 - self.positive_rate())*self.hit_rate()
+            point_wise = pointwise_mutual_information(joint_prob
+                                     , ind_prob)
+            mu += point_wise
 
-        # False negatives
-        joint_prob = self.fn()/self.samples()
-        ind_prob = self.positive_rate()*(1 - self.hit_rate())
-        point_wise = pointwise_mutual_information(joint_prob
-                                 , ind_prob)
-        mu += point_wise
+            # False negatives
+            joint_prob = self.fn()/self.samples()
+            ind_prob = self.positive_rate()*(1 - self.hit_rate())
+            point_wise = pointwise_mutual_information(joint_prob
+                                     , ind_prob)
+            mu += point_wise
 
-        # True negatives
-        joint_prob = self.tn()/self.samples()
-        ind_prob = (1 - self.positive_rate())*(1 - self.hit_rate())
-        point_wise = pointwise_mutual_information(ifnull(joint_prob)
-                                 , ifnull(ind_prob))
-        mu += point_wise
+            # True negatives
+            joint_prob = self.tn()/self.samples()
+            ind_prob = (1 - self.positive_rate())*(1 - self.hit_rate())
+            point_wise = pointwise_mutual_information(ifnull(joint_prob)
+                                     , ifnull(ind_prob))
+            mu += point_wise
+        else:
+            mu = None
 
         return mu
 
