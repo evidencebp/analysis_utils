@@ -44,6 +44,7 @@ def evaluate_regressor(regressor
     performace = {}
     test_pred = regressor.predict(X_test)
 
+    performace['samples'] = len(X_test)
     performace['explained_variance_score'] = explained_variance_score(y_test, test_pred)
     performace['max_error'] = max_error(y_test, test_pred)
     performace['mean_absolute_error'] = mean_absolute_error(y_test, test_pred)
