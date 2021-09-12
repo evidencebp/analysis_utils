@@ -11,7 +11,8 @@ SIDES_SUFFIX = '_SIDES'
 
 def sides_binning(df: pd.DataFrame
                   , column:str
-                  , labels=[0,1,2]):
+                  , labels=[0,1,2]
+                  , quantiles = [ .25, 0.75, 1]):
     """
         Bins values in to the lower 25%, higher 25% and the middle
     :param df: Dataframe to aggregate
@@ -19,7 +20,7 @@ def sides_binning(df: pd.DataFrame
     :param labels: The labels to assign to each group
     :return:
     """
-    quantiles = [ .25, 0.75, 1]
+
     quantiles_vals = [df[column].min() -1]
 
     for i in quantiles:
