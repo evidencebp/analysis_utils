@@ -159,7 +159,8 @@ def pair_analysis_by_bins_to_file(df
 def pair_features_vs_concept(df
                        , features
                        , concept
-                       , metrics=None):
+                       , metrics=None
+                       , verbose=False):
     """
         Computes each of the features with respect o the concept on the data frame.
     :param df:
@@ -170,6 +171,8 @@ def pair_features_vs_concept(df
     """
     result = {}
     for i in features:
+        if verbose:
+            print(i)
         result[i] = pair_analysis(df
                       , i
                       , concept
