@@ -12,7 +12,7 @@ SIDES_SUFFIX = '_SIDES'
 def sides_binning(df: pd.DataFrame
                   , column:str
                   , labels=[0,1,2]
-                  , quantiles = [ .25, 0.75, 1]):
+                  , quantiles=[ .25, 0.75, 1]):
     """
         Bins values in to the lower 25%, higher 25% and the middle
     :param df: Dataframe to aggregate
@@ -35,6 +35,20 @@ def sides_binning(df: pd.DataFrame
     return pd.cut(df[column],
             bins=quantiles_vals,
             labels=labels)
+
+
+def columns_sides_binning(df: pd.DataFrame
+                  , columns
+                  , labels=[0,1,2]
+                  , quantiles = [ .25, 0.75, 1]):
+
+    for i in columns:
+        df[i] = sides_binning(df
+                  , column=i
+                  , labels=labels
+                  , quantiles=quantiles)
+
+    return df
 
 def side_binning_by_direction(df: pd.DataFrame
                             , metrics
