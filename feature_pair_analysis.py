@@ -17,8 +17,14 @@ def pair_analysis(df
           ((set(df[second_metric].unique()).issubset({0,1})) or (df[second_metric].dtype == 'bool'))):
 
         count_column = 'count'
+        # If you got
+        # ValueError: No axis named 1 for object type <class 'pandas.core.series.Series'>
+        # Your DF values are probably not True/False but 1/0 or have nulls
+        # You are welcome, future me!
+        # PS
+        # I also removed  , as_index=False in this fix
         g = ldf.groupby([first_metric
-                            , second_metric], as_index=False).size().reset_index(name=count_column)
+                            , second_metric]).size().reset_index(name=count_column)
 
         cm = ConfusionMatrix(g_df=g
                              , classifier=first_metric
