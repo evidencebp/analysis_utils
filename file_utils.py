@@ -3,6 +3,7 @@ Utilities for general file handling
 
 """
 import os
+from os.path import join
 
 from typing import List
 
@@ -92,3 +93,13 @@ def prefix_columns(df: pd.DataFrame
     df = df.rename(columns=rename)
 
     return df
+
+def concat_text_files(file_names: Strings
+                      , output_file: str
+                      , input_directory: str = None):
+    if input_directory:
+        file_names = [join(input_directory, i) for i in file_names]
+    with open(output_file, 'w') as outfile:
+        for cur_file in file_names:
+            with open(cur_file) as infile:
+                outfile.write(infile.read())
