@@ -1,11 +1,16 @@
+import math
+import numpy as np
 import pandas as pd
 
 
 def compute_functions_dict(df
-                         , functions_dict):
+                         , functions_dict
+                         , verbose=False):
 
     stats = {}
     for i in functions_dict.keys():
+        if verbose:
+            print(i)
         stats[i] = [functions_dict[i](df)]
 
     stats_df = pd.DataFrame.from_dict(stats)
@@ -19,20 +24,24 @@ def control_analysis_by_value(df
                          , control_values=None
                          , output_file:str = None
                          , all_vall:str='All'
+                         , verbose=False
                          ):
     if control_values:
         values = control_values
     else:
-        values = df[control_variable].unique()
+        values = [i for i in df[control_variable].unique() if str(i) != 'nan'] # df[control_variable].unique()
 
     # Compute for each control value
     dataframes = []
     for i in values:
+        if verbose:
+            print(i)
         fixed_df = df[df[control_variable] == i]
         controlled_df = compute_functions_dict(fixed_df
-                         , functions_dict)
+                         , functions_dict
+                         , verbose=verbose)
 
-        controlled_df[control_variable] = i
+        controlled_df[control_variable] = str(i)
         dataframes.append(controlled_df)
 
     # Compute for entire set
@@ -55,16 +64,20 @@ def check_controlled_results(df
                             , functions_columns
                             , control_variable
                             , output_file:str = None
-                            , all_vall:str='All'):
+                            , all_vall:str='All'
+                            , verbose=False):
 
     inconsistency = {}
     for i in functions_columns:
+        if verbose:
+            print(i)
         all_result = df[df[control_variable]==all_vall].iloc[0][i]
         df[i+ "_consistent"] = df[i].map(lambda x: x==all_result)
         inconsistency[i + "_inconsisetent_values"] =  str(list(df[df[i+ "_consistent"] ==False][control_variable].unique()))
         inconsistency[i + "_inconsisetent_num"] =  len(list(df[df[i+ "_consistent"] ==False][control_variable].unique()))
 
-    inconsistency_df = pd.DataFrame.from_dict(inconsistency, orient='index')
+    inconsistency_df = pd.DataFrame.from_dict(inconsistency, orient='index').reset_index()
+    inconsistency_df.columns = ['metric', 'value']
 
     if output_file:
         inconsistency_df.to_csv(output_file
