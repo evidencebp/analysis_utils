@@ -1,6 +1,7 @@
 import math
 import numpy as np
 import pandas as pd
+from functools import partial
 
 
 def compute_functions_dict(df
@@ -84,3 +85,30 @@ def check_controlled_results(df
                     , index=False)
 
     return inconsistency_df
+
+def controlled_performance(df
+                            , control_variable
+                            , features
+                            , feature_evaluation_function
+                            , control_value_output_format
+                            , control_summary_output_format):
+
+    functions_dict = {}
+    for i in features:
+        functions_dict[i] = partial(feature_evaluation_function, features=[i])
+
+    controlled_result = control_analysis_by_value(df=df
+                         , functions_dict=functions_dict
+                         , control_variable=control_variable
+                         , output_file=control_value_output_format
+                         , verbose=True
+                         )
+    inconsistency_df = check_controlled_results(df=controlled_result
+                            , functions_columns=functions_dict.keys()
+                            , control_variable=control_variable
+                            , output_file=control_summary_output_format
+                            , verbose=True
+                            )
+
+    return inconsistency_df
+
