@@ -16,7 +16,8 @@ def normalize_by_ref(df: pd.DataFrame
 
     ndf = df.copy()
 
-    for i in features:
-        ndf[i] = df[i]/df[df[ref_column] == ref_val][i].iloc[0]
+    if len(ndf) > 0:
+        for i in features:
+            ndf[i] = df[i]/df[df[ref_column] == ref_val][i].iloc[0]
 
     return ndf
