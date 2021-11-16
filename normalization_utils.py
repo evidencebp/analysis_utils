@@ -18,6 +18,9 @@ def normalize_by_ref(df: pd.DataFrame
 
     if len(ndf) > 0:
         for i in features:
-            ndf[i] = df[i]/df[df[ref_column] == ref_val][i].iloc[0]
+            if len(df[df[ref_column] == ref_val][i]) > 0:
+                ndf[i] = df[i]/df[df[ref_column] == ref_val][i].iloc[0]
+            else:
+                ndf[i] = None
 
     return ndf
