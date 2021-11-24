@@ -26,3 +26,26 @@ def plot_multi_bar(df : pd.DataFrame
     fig.update_traces(textposition='auto')
 
     return fig
+
+def plot_multi_line(df : pd.DataFrame
+                   , grouping_column : str
+                   , metrics: list):
+    """
+    Plots a bar per metric
+    :param df:
+    :param grouping_column:
+    :param metrics:
+    :return:
+    """
+
+    data = []
+    for i in metrics:
+        data.append(go.Scatter(name=i['name']
+                           , x=df[grouping_column]
+                           , y=df[i['content']]
+                            , textposition='top left'
+                           ))
+
+    fig = go.Figure(data=data)
+
+    return fig
