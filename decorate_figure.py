@@ -17,7 +17,7 @@ def decorate_figure(fig: go.Figure
         fig.update_layout(xaxis_title=xaxis_title)
 
     if yaxis_title:
-        fig.update_layout(yaxis_title=title)
+        fig.update_layout(yaxis_title=yaxis_title)
 
     if font_dict:
         fig.update_layout(font=font_dict)
