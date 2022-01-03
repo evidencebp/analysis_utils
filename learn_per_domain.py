@@ -14,7 +14,7 @@ def learn_per_domain(df
                                 , verbose=False):
     """
         Used for getting performance on different cohorts of the data set.
-        Useful for domain adaptation (e.g., when comparing customers) and concet drift (e.g., when run over years).
+        Useful for domain adaptation (e.g., when comparing customers) and concept drift (e.g., when run over years).
 
         Note the other relevant analysis of compare_datasets which can find difference between the
         domain parts (e.g., between two customers).
