@@ -196,14 +196,14 @@ def plot_random_forest(rf
                   , feature_names=feature_names)
 
 def extract_relevent_features(df
-                              , excluded_features
+                              , excluded_features=[]
                               , allowed_types=[np.float64, np.int64]):
     """
         A utility to extract from a dataframe the columns suitable for ML
-    :param df:
-    :param excluded_features:
-    :param allowed_types:
-    :return:
+    :param df: A datafarme for analysis
+    :param excluded_features: Optional list of feature to exclude anyway (e.g., keys)
+    :param allowed_types: Allowed types of columns
+    :return: list of suitable for analysis columns of the dataframe.
     """
     features = df.columns
     none_suitable_columns = excluded_features
