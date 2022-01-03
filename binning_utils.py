@@ -157,6 +157,10 @@ def analyze_halves_prediction_of_concepts(df
     """
 
     for i in concepts:
+
+        if verbose:
+            print("Computing halve predictions of {concept}".format(concept=i))
+
         analyze_halves_prediction_of_concept(df
                                                 , concept=i
                                                 , features=features
