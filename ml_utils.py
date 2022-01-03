@@ -2,6 +2,7 @@
     Utilities for building machine learning models
 """
 from cloudpickle import dump, load
+import numpy as np
 import os
 from sklearn.model_selection import cross_validate
 from sklearn.model_selection import train_test_split
@@ -193,3 +194,24 @@ def plot_random_forest(rf
                   , png_file_path="{}_{}.png".format(png_files_prefix
                                                     , i)
                   , feature_names=feature_names)
+
+def extract_relevent_features(df
+                              , excluded_features
+                              , allowed_types=[np.float64, np.int64]):
+    """
+        A utility to extract from a dataframe the columns suitable for ML
+    :param df:
+    :param excluded_features:
+    :param allowed_types:
+    :return:
+    """
+    features = df.columns
+    none_suitable_columns = excluded_features
+
+    for i in features:
+        if (df[i].dtype not in allowed_types):
+            none_suitable_columns.append(i)
+
+    features = list(set(features) - set(none_suitable_columns))
+
+    return features
