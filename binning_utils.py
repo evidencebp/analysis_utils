@@ -6,6 +6,8 @@ Utilities for values binning
 import pandas as pd
 
 from cochange_analysis import the_lower_the_better
+from feature_pair_analysis import pair_features_vs_concept, features_stats_to_cm_df, pretty_print
+from ml_utils import extract_relevent_features
 
 SIDES_SUFFIX = '_SIDES'
 
@@ -81,3 +83,85 @@ def side_binning_by_direction(df: pd.DataFrame
         df[cur_col] = df[cur_col].astype(str)
 
     return df
+
+
+
+def analyze_halves_prediction_of_concept(df
+                                        , concept
+                                        , features=None
+                                        , na_val=None
+                                        , output_file=None
+                                        , verbose=False):
+    """
+
+        Splits all features to two halves and computes their confusion matrix
+    :param df: A dataframe with feature
+    :param concept: the name of the concept column
+    :param features: The list of features to use as classifiers. If None relevant features are used
+    :param na_val: A replacement for na values (optional)
+    :param output_file: output file for the statistics (optional)
+    :param verbose: Log computation
+    :return: a dataframe with the confusion metrics statistics
+    """
+
+    if features is None:
+        features = extract_relevent_features(df)
+
+    df = df[~df[concept].isnull()]
+    if na_val:
+        df = df.fillna(na_val)
+
+    df = columns_sides_binning(df=df
+                  , columns=features + [concept]
+                  , labels=[0,1]
+                  , quantiles = [ .5, 1])
+
+    for i in features + [concept] :
+        df[i] = df[i].map(lambda x: True if x == 1 else False)
+
+    stats = pair_features_vs_concept(df
+                             , features=set(features) - {concept}
+                             , concept=concept
+                             , verbose=verbose
+                             )
+    stats_df = features_stats_to_cm_df(stats)
+
+    if output_file:
+        stats_df.to_csv(output_file)
+
+    return stats_df
+
+def analyze_halves_prediction_of_concepts(df
+                                        , concepts
+                                        , features=None
+                                        , na_val=None
+                                        , output_template=None
+                                        , verbose=False):
+    """
+        Compute confusion matrices of a list of concepts with features
+
+    :param df: A dataframe with feature
+    :param concept: the name of the concept column
+    :param na_val: A replacement for na values (optional)
+    :param output_file: output file for the statistics (optional)
+    :param verbose: Log computation
+    :return: a dataframe with the confusion metrics statistics
+
+    :param df: A dataframe with feature
+    :param concepts: A list of the names of the concept columns
+    :param features:
+    :param na_val:
+    :param output_template:
+    :param verbose:
+    :return:
+    """
+
+    for i in concepts:
+        analyze_halves_prediction_of_concept(df
+                                                , concept=i
+                                                , features=features
+                                                , na_val=na_val
+                                                , output_file=None if output_template is None else
+                                                    output_template.format(concept=i)
+                                                , verbose=verbose)
+
