@@ -197,11 +197,13 @@ def plot_random_forest(rf
 
 def extract_relevent_features(df
                               , excluded_features=[]
+                              , superset=None
                               , allowed_types=[np.float64, np.int64]):
     """
         A utility to extract from a dataframe the columns suitable for ML
     :param df: A datafarme for analysis
     :param excluded_features: Optional list of feature to exclude anyway (e.g., keys)
+    :param superset: A set that all selectted columns should belong to
     :param allowed_types: Allowed types of columns
     :return: list of suitable for analysis columns of the dataframe.
     """
@@ -213,5 +215,7 @@ def extract_relevent_features(df
             none_suitable_columns.append(i)
 
     features = list(set(features) - set(none_suitable_columns))
+    if superset:
+        features = list(set(superset).intersection(set(features)))
 
     return features
