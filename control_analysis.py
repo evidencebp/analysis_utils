@@ -91,7 +91,8 @@ def controlled_performance(df
                             , features
                             , feature_evaluation_function
                             , control_value_output_file
-                            , control_summary_output_file):
+                            , control_summary_output_file
+                            , verbose=False):
 
     functions_dict = {}
     for i in features:
@@ -101,13 +102,13 @@ def controlled_performance(df
                          , functions_dict=functions_dict
                          , control_variable=control_variable
                          , output_file=control_value_output_file
-                         , verbose=True
+                         , verbose=verbose
                          )
     inconsistency_df = check_controlled_results(df=controlled_result
                             , functions_columns=functions_dict.keys()
                             , control_variable=control_variable
                             , output_file=control_summary_output_file
-                            , verbose=True
+                            , verbose=verbose
                             )
 
     return inconsistency_df
