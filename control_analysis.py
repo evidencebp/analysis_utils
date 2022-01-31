@@ -95,7 +95,7 @@ def controlled_performance(df
                             , verbose=False):
 
     functions_dict = {}
-    for i in features:
+    for i in sorted(features):
         functions_dict[i] = partial(feature_evaluation_function, features=[i])
 
     controlled_result = control_analysis_by_value(df=df
