@@ -73,11 +73,14 @@ def check_controlled_results(df
     for i in functions_columns:
         if verbose:
             print(i)
+
         all_result = df[df[control_variable]==all_vall].iloc[0][i]
+
         if none_as_consistent:
             df[i+ "_consistent"] = df[i].map(lambda x: (x is None or x == '' or x==all_result))
         else:
             df[i + "_consistent"] = df[i].map(lambda x: x == all_result)
+
         inconsistency[i + "_inconsisetent_values"] =  str(list(df[df[i+ "_consistent"] ==False][control_variable].unique()))
         inconsistency[i + "_inconsisetent_num"] =  len(list(df[df[i+ "_consistent"] ==False][control_variable].unique()))
 
