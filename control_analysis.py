@@ -66,14 +66,18 @@ def check_controlled_results(df
                             , control_variable
                             , output_file:str = None
                             , all_vall:str='All'
-                            , verbose=False):
+                            , verbose=False
+                            , none_as_consistent=True):
 
     inconsistency = {}
     for i in functions_columns:
         if verbose:
             print(i)
         all_result = df[df[control_variable]==all_vall].iloc[0][i]
-        df[i+ "_consistent"] = df[i].map(lambda x: x==all_result)
+        if none_as_consistent:
+            df[i+ "_consistent"] = df[i].map(lambda x: (x is None or x == '' or x==all_result))
+        else:
+            df[i + "_consistent"] = df[i].map(lambda x: x == all_result)
         inconsistency[i + "_inconsisetent_values"] =  str(list(df[df[i+ "_consistent"] ==False][control_variable].unique()))
         inconsistency[i + "_inconsisetent_num"] =  len(list(df[df[i+ "_consistent"] ==False][control_variable].unique()))
 
@@ -92,7 +96,8 @@ def controlled_performance(df
                             , feature_evaluation_function
                             , control_value_output_file
                             , control_summary_output_file
-                            , verbose=False):
+                            , verbose=False
+                            , none_as_consistent=True):
 
     functions_dict = {}
     for i in sorted(features):
@@ -109,6 +114,7 @@ def controlled_performance(df
                             , control_variable=control_variable
                             , output_file=control_summary_output_file
                             , verbose=verbose
+                            , none_as_consistent=none_as_consistent
                             )
 
     return inconsistency_df
