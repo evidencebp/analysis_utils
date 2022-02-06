@@ -122,3 +122,13 @@ def controlled_performance(df
 
     return inconsistency_df
 
+def is_invalid_subgoup(df
+                     , agg_column
+                     , cnt_column
+                     , sub_groups
+                     , min_thrshold=200):
+
+    gdf = df.groupby([agg_column], as_index=False).agg({cnt_column : 'count'})
+    counts = gdf[cnt_column].unique().tolist()
+
+    return  len([i for i in counts if i < min_thrshold]) or len(counts) < sub_groups
