@@ -122,7 +122,7 @@ def controlled_performance(df
 
     return inconsistency_df
 
-def is_invalid_subgoup(df
+def is_invalid_subgroup(df
                      , agg_column
                      , cnt_column
                      , sub_groups
