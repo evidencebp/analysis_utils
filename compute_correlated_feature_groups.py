@@ -88,3 +88,30 @@ def correlated_feature_groups(df
     return compute_features_groups(hcorr.columns
                             , n_components
                             , labels)
+
+def print_features_groups(features_groups
+                          , translation_function=None
+                          , all_features=None):
+
+    group_num = 1
+    unrelated_features = set(all_features)
+
+    for group in features_groups:
+
+        if unrelated_features:
+            unrelated_features = unrelated_features -set(group)
+
+        if translation_function:
+            translated_group = [translation_function(i) for i in group]
+        else:
+            translated_group = group
+
+        print("Group #", group_num, translated_group)
+        group_num = group_num + 1
+
+    if all_features is not None:
+        if translation_function:
+            print("Unrelated features", [translation_function(i) for i in unrelated_features])
+        else:
+            print("Unrelated features", unrelated_features)
+
