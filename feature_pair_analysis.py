@@ -10,19 +10,23 @@ def pair_analysis(df
                        , first_metric
                        , second_metric
                        , metrics=None):
+
+    count_column = 'count'
+
     ldf = df.copy()
     result = {}
     if (((set(df[first_metric].unique()).issubset({0,1})) or (df[first_metric].dtype == 'bool'))
           and
           ((set(df[second_metric].unique()).issubset({0,1})) or (df[second_metric].dtype == 'bool'))):
 
-        count_column = 'count'
         # If you got
         # ValueError: No axis named 1 for object type <class 'pandas.core.series.Series'>
         # Your DF values are probably not True/False but 1/0 or have nulls
         # You are welcome, future me!
         # PS
         # I also removed  , as_index=False in this fix
+        #####
+        # It is your future you, the comment helped me, thanks!
         g = ldf.groupby([first_metric
                             , second_metric]).size().reset_index(name=count_column)
 
@@ -62,7 +66,7 @@ def pair_analysis(df
 
         result = g.to_json()
     elif (df[second_metric].dtype in (np.float64, np.int64)):
-        # Symetric version of the case above
+        # Symmetric version of the case above
         q95 = ldf[second_metric].quantile(0.95)
         capped_metric = 'capped_95_' + second_metric
         ldf[capped_metric] = ldf[second_metric].map(lambda x: q95 if x > q95 else x)
@@ -79,9 +83,9 @@ def pair_analysis(df
 
         result = g.to_json()
     else:
-        count_column = 'count'
         g = ldf.groupby([first_metric
-                            , second_metric], as_index=False).size().reset_index(name=count_column)
+                            , second_metric], as_index=False).size().reset_index() #(name=count_column)
+        g = g.rename(columns={'size': count_column})
         result = g.to_json()
 
     return result
@@ -166,7 +170,8 @@ def pair_features_vs_concept(df
                        , features
                        , concept
                        , metrics=None
-                       , verbose=False):
+                       , verbose=False
+                       , remove_feature_na=True):
     """
         Computes each of the features with respect o the concept on the data frame.
     :param df:
@@ -179,7 +184,11 @@ def pair_features_vs_concept(df
     for i in features:
         if verbose:
             print(i)
-        result[i] = pair_analysis(df
+        if remove_feature_na:
+            work_df = df.dropna(subset=[i]).copy()
+        else:
+            work_df = df
+        result[i] = pair_analysis(work_df
                       , i
                       , concept
                       , metrics=metrics)
