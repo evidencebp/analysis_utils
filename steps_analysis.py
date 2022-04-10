@@ -5,14 +5,12 @@ from stability_analysis import build_two_years_df
 def build_two_steps_ds(metric_per_year_df
                        , keys
                        , metrics
-                       , time_column='year'
-                       , minimal_time=-1
-                       , control_variables=[]):
+                       , time_column='year'):
 
     joint = build_two_years_df(metric_per_year_df
                        , keys
                        , metrics
-                       , time_column='year'
+                       , time_column=time_column
                        , minimal_time=-1
                        , control_variables=[])
 
