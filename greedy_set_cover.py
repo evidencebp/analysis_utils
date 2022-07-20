@@ -6,7 +6,7 @@ https://en.wikipedia.org/wiki/Set_cover_problem#Greedy_algorithm
 from typing import List, Set
 
 
-def greedy_set_cover(sets_to_cover: List[Set]):
+def greedy_set_cover(sets_to_cover: List[Set]) -> List:
     covering_items = []
     to_cover = sets_to_cover
     items = set([i for cur_set in sets_to_cover for i in cur_set])
