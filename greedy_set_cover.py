@@ -5,8 +5,12 @@ https://en.wikipedia.org/wiki/Set_cover_problem#Greedy_algorithm
 
 from typing import List, Set
 
+def any_item_covers_set(set_to_cover: Set[int]
+                , covering_items: list[int]) -> bool:
+    return any([(item in set_to_cover) for item in covering_items])
 
-def greedy_set_cover(sets_to_cover: List[Set]) -> List:
+def greedy_set_cover(sets_to_cover: List[Set]
+                     , is_covered=any_item_covers_set) -> List:
     covering_items: List[int] = []
     to_cover: List[Set] = sets_to_cover
     items: Set[int] = set([i for cur_set in sets_to_cover for i in cur_set])
@@ -21,6 +25,7 @@ def greedy_set_cover(sets_to_cover: List[Set]) -> List:
         # Bookkeeping
         covering_items.append(most_covering)
         items = items - set([most_covering])
-        to_cover = [cur_set for cur_set in to_cover if most_covering not in cur_set]
+        to_cover = [cur_set for cur_set in to_cover if not is_covered(cur_set
+                                                            , [most_covering] + covering_items)]
 
     return covering_items
