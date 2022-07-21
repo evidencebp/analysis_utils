@@ -7,9 +7,9 @@ from typing import List, Set
 
 
 def greedy_set_cover(sets_to_cover: List[Set]) -> List:
-    covering_items = []
-    to_cover = sets_to_cover
-    items = set([i for cur_set in sets_to_cover for i in cur_set])
+    covering_items: List[int] = []
+    to_cover: List[Set] = sets_to_cover
+    items: Set[int] = set([i for cur_set in sets_to_cover for i in cur_set])
 
     while (items != []  # Has more items
            and to_cover != []  # More sets to cover
