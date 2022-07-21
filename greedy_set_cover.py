@@ -6,8 +6,18 @@ https://en.wikipedia.org/wiki/Set_cover_problem#Greedy_algorithm
 from typing import List, Set
 
 def any_item_covers_set(set_to_cover: Set[int]
-                , covering_items: list[int]) -> bool:
+                , covering_items: List[int]) -> bool:
     return any([(item in set_to_cover) for item in covering_items])
+
+def covers_threshold(set_to_cover: Set[int]
+                , covering_items: List[int]
+                , ratio_map: dict
+                , threshold: float = 0.8) -> bool:
+    set_ratio_map = ratio_map[hash(set_to_cover)]
+    coverage = sum([set_ratio_map.get(item, 0) for item in covering_items])
+
+    return coverage >= threshold
+
 
 def greedy_set_cover(sets_to_cover: List[Set]
                      , is_covered=any_item_covers_set) -> List:
@@ -26,6 +36,6 @@ def greedy_set_cover(sets_to_cover: List[Set]
         covering_items.append(most_covering)
         items = items - set([most_covering])
         to_cover = [cur_set for cur_set in to_cover if not is_covered(cur_set
-                                                            , [most_covering] + covering_items)]
+                                                            , covering_items)]
 
     return covering_items
