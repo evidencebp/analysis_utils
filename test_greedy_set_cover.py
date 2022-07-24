@@ -3,7 +3,8 @@ from functools import partial
 
 import pytest
 
-from greedy_set_cover import greedy_set_cover, any_item_covers_set, covers_threshold
+from greedy_set_cover import greedy_set_cover, any_item_covers_set, covers_threshold\
+    , item_covers_ratios_sum
 
 @pytest.mark.parametrize(('sets_to_cover'
                             , 'expected')
@@ -110,14 +111,14 @@ def test_covers_threshold(set_to_cover: Set[int]
                             , 'expected')
     , [
 pytest.param(
-            [frozenset([1,2 ,3])]
-            , {hash(frozenset([1,2 ,3])): {1 : 0.8 , 2:0.1, 3: 0.1}}
+            [frozenset([1, 2, 3])]
+            , {hash(frozenset([1, 2, 3])): {1: 0.09, 2: 0.8, 3: 0.11}}
             , 0.8
-            , [1]
+            , [2]
 , id='reg1')
 , pytest.param(
-            [frozenset([1,2 ,3])]
-            , {hash(frozenset([1, 2,3])): {1: 0.8, 2: 0.1, 3: 0.1}}
+            [frozenset([1, 2,3])]
+            , {hash(frozenset([1, 2, 3])): {1: 0.8, 2: 0.1, 3: 0.1}}
             , 0.9
             , [1, 2]
 , id='reg2')
@@ -127,11 +128,14 @@ def test_greedy_set_cover_by_covers_threshold(sets_to_cover: Set[int]
                 , threshold
                 , expected):
 
+    scoring_func = partial(item_covers_ratios_sum
+                            , ratio_map=ratio_map)
     covering_func = partial(covers_threshold
                             , ratio_map=ratio_map
                             , threshold=threshold)
 
     actual = greedy_set_cover(sets_to_cover
-                     , is_covered=covering_func)
+                     , is_covered=covering_func
+                     , cover_score=scoring_func)
 
     assert actual == expected
