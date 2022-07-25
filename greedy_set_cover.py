@@ -3,7 +3,7 @@ Implementation of the classical greedy set cover algorithm
 https://en.wikipedia.org/wiki/Set_cover_problem#Greedy_algorithm
 """
 
-from typing import List, Set
+from typing import List, Set, Callable
 
 def covered_sets_score(set_to_cover: Set[int]
                        , item: int) -> float:
@@ -39,8 +39,8 @@ def covers_threshold(set_to_cover: Set[int]
     return coverage >= threshold
 
 def greedy_set_cover(sets_to_cover: List[Set]
-                     , is_covered=any_item_covers_set
-                     , cover_score=covered_sets_score) -> List:
+                     , is_covered: Callable[[Set[int], List[int]], bool] = any_item_covers_set
+                     , cover_score: Callable[[Set[int], int], float] = covered_sets_score) -> List:
     covering_items: List[int] = []
     to_cover: List[Set] = sets_to_cover
     items: Set[int] = set([i for cur_set in sets_to_cover for i in cur_set])
@@ -49,7 +49,6 @@ def greedy_set_cover(sets_to_cover: List[Set]
            and to_cover != []  # More sets to cover
     ):
         # Finding the item that covers most
-        # TODO - change max coverage to abstract also
         most_covering = max(items
                             , key=lambda item: cover_score(to_cover, item))
 
