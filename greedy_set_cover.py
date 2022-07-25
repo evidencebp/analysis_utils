@@ -38,9 +38,14 @@ def covers_threshold(set_to_cover: Set[int]
 
     return coverage >= threshold
 
+def remove_new_item(items: Set[int]
+                    , new_item: int) -> Set[int]:
+    return items - set([new_item])
+
 def greedy_set_cover(sets_to_cover: List[Set]
                      , is_covered: Callable[[Set[int], List[int]], bool] = any_item_covers_set
-                     , cover_score: Callable[[Set[int], int], float] = covered_sets_score) -> List:
+                     , cover_score: Callable[[Set[int], int], float] = covered_sets_score
+                     , update_available_items: Callable[[Set[int], int], Set[int]] = remove_new_item) -> List:
     covering_items: List[int] = []
     to_cover: List[Set] = sets_to_cover
     items: Set[int] = set([i for cur_set in sets_to_cover for i in cur_set])
@@ -54,7 +59,8 @@ def greedy_set_cover(sets_to_cover: List[Set]
 
         # Bookkeeping
         covering_items.append(most_covering)
-        items = items - set([most_covering])
+        items = update_available_items(items
+                                        , most_covering)
         to_cover = [cur_set for cur_set in to_cover if not is_covered(cur_set
                                                             , covering_items)]
 
