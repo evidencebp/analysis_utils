@@ -30,10 +30,10 @@ pytest.param(
             , [0, 1, 3]
             , id='classic_not_optimal')
                          ])
-def test_greedy_set_cover(sets_to_cover
-                             , expected):
+def test_greedy_set_cover(sets_to_cover: Set[int]
+                             , expected: List[int]):
 
-    actual = greedy_set_cover(sets_to_cover)
+    actual: List[int] = greedy_set_cover(sets_to_cover)
 
     assert actual == expected
 
@@ -55,9 +55,9 @@ pytest.param(
                          ])
 def test_any_item_covers_set(set_to_cover: set[int]
                              , covering_items: list[int]
-                             , expected):
+                             , expected: bool):
 
-    actual = any_item_covers_set(set_to_cover
+    actual: bool = any_item_covers_set(set_to_cover
                                  , covering_items)
 
     assert actual == expected
@@ -94,10 +94,10 @@ pytest.param(
 def test_covers_threshold(set_to_cover: Set[int]
                 , covering_items: list[int]
                 , ratio_map: dict
-                , threshold
-                , expected):
+                , threshold: float
+                , expected: bool):
 
-    actual = covers_threshold(set_to_cover
+    actual: bool = covers_threshold(set_to_cover
                 , covering_items
                 , ratio_map
                 , threshold)
@@ -125,8 +125,8 @@ pytest.param(
                          ])
 def test_greedy_set_cover_by_covers_threshold(sets_to_cover: Set[int]
                 , ratio_map: dict
-                , threshold
-                , expected):
+                , threshold: float
+                , expected: List[int]):
 
     scoring_func = partial(item_covers_ratios_sum
                             , ratio_map=ratio_map)
@@ -134,9 +134,9 @@ def test_greedy_set_cover_by_covers_threshold(sets_to_cover: Set[int]
                             , ratio_map=ratio_map
                             , threshold=threshold)
 
-    actual = greedy_set_cover(sets_to_cover
-                     , is_covered=covering_func
-                     , cover_score=scoring_func)
+    actual: bool = greedy_set_cover(sets_to_cover
+                                     , is_covered=covering_func
+                                     , cover_score=scoring_func)
 
     assert actual == expected
 
@@ -168,7 +168,7 @@ def test_reduce_new_item(items: Set[int]
                 , expected_items: Set[int]
                 , expected_count_dict: Dict[int, int]):
 
-    actual_items = reduce_new_item(items
+    actual_items: Set[int] = reduce_new_item(items
                                    , new_item
                                    , count_dict)
 
@@ -225,9 +225,9 @@ pytest.param(
                          ])
 def test_greedy_set_cover_by_reduce_new_item(sets_to_cover: Set[int]
                 , ratio_map: dict
-                , threshold
-                , count_dict
-                , expected):
+                , threshold: float
+                , count_dict: dict
+                , expected: List[int]):
 
     reduction_func = partial(reduce_new_item
                             , count_dict=count_dict)
@@ -238,7 +238,7 @@ def test_greedy_set_cover_by_reduce_new_item(sets_to_cover: Set[int]
                             , ratio_map=ratio_map
                             , threshold=threshold)
 
-    actual = greedy_set_cover(sets_to_cover
+    actual: List[int] = greedy_set_cover(sets_to_cover
                      , is_covered=covering_func
                      , cover_score=scoring_func
                      , update_available_items=reduction_func)
