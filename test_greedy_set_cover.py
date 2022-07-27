@@ -200,3 +200,49 @@ def test_reduce_new_item_exception(items: Set[int]
                            , new_item
                            , count_dict)
 
+
+
+@pytest.mark.parametrize(('sets_to_cover'
+                            , 'ratio_map'
+                            , 'threshold'
+                            , 'count_dict'
+                            , 'expected')
+    , [
+pytest.param(
+            [frozenset([1, 2, 3])]
+            , {hash(frozenset([1, 2, 3])): {1: 0.09, 2: 0.4, 3: 0.11}}
+            , 0.8
+            , {1: 1, 2: 2, 3: 1}
+            , [2, 2]
+, id='reg1')
+, pytest.param(
+             [frozenset([1, 2, 3])]
+             , {hash(frozenset([1, 2, 3])): {1: 0.09, 2: 0.4, 3: 0.11}}
+             , 0.9
+             , {1: 1, 2: 2, 3: 1}
+             , [2, 2, 3]
+ , id='reg2')
+                         ])
+def test_greedy_set_cover_by_reduce_new_item(sets_to_cover: Set[int]
+                , ratio_map: dict
+                , threshold
+                , count_dict
+                , expected):
+
+    reduction_func = partial(reduce_new_item
+                            , count_dict=count_dict)
+
+    scoring_func = partial(item_covers_ratios_sum
+                            , ratio_map=ratio_map)
+    covering_func = partial(covers_threshold
+                            , ratio_map=ratio_map
+                            , threshold=threshold)
+
+    actual = greedy_set_cover(sets_to_cover
+                     , is_covered=covering_func
+                     , cover_score=scoring_func
+                     , update_available_items=reduction_func)
+
+
+    assert actual == expected
+
