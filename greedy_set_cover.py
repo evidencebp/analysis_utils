@@ -3,7 +3,7 @@ Implementation of the classical greedy set cover algorithm
 https://en.wikipedia.org/wiki/Set_cover_problem#Greedy_algorithm
 """
 
-from typing import List, Set, Callable
+from typing import List, Set, Callable, Dict
 
 def covered_sets_score(set_to_cover: Set[int]
                        , item: int) -> float:
@@ -41,6 +41,25 @@ def covers_threshold(set_to_cover: Set[int]
 def remove_new_item(items: Set[int]
                     , new_item: int) -> Set[int]:
     return items - set([new_item])
+
+def reduce_new_item(items: Set[int]
+                    , new_item: int
+                    , count_dict: Dict[int, int]) -> Set[int]:
+    new_items: Set[int] = items
+
+    if new_item in count_dict and new_item in items:
+        if count_dict[new_item] > 1:
+            count_dict[new_item] -= 1
+        else:
+            count_dict.pop(new_item)
+            new_items = items - set([new_item])
+    else:
+        raise Exception("New item not in current items"
+                        , new_item
+                        , items
+                        , count_dict)
+
+    return new_items
 
 def greedy_set_cover(sets_to_cover: List[Set]
                      , is_covered: Callable[[Set[int], List[int]], bool] = any_item_covers_set

@@ -1,10 +1,10 @@
-from typing import List, Set
+from typing import List, Set, Dict
 from functools import partial
 
 import pytest
 
 from greedy_set_cover import greedy_set_cover, any_item_covers_set, covers_threshold\
-    , item_covers_ratios_sum
+    , item_covers_ratios_sum, reduce_new_item
 
 @pytest.mark.parametrize(('sets_to_cover'
                             , 'expected')
@@ -139,3 +139,64 @@ def test_greedy_set_cover_by_covers_threshold(sets_to_cover: Set[int]
                      , cover_score=scoring_func)
 
     assert actual == expected
+
+@pytest.mark.parametrize(('items'
+                , 'new_item'
+                , 'count_dict'
+                , 'expected_items'
+                , 'expected_count_dict')
+    , [
+pytest.param(
+            frozenset([1, 2, 3])
+            , 2
+            , {1: 1, 2: 7, 3: 4}
+            , frozenset([1, 2, 3])
+            , {1: 1, 2: 6, 3: 4}
+, id='has_more_items')
+, pytest.param(
+            frozenset([1, 2, 3])
+            , 2
+            , {1: 1, 2: 1, 3: 4}
+            , frozenset([1, 3])
+            , {1: 1, 3: 4}
+, id='last_item')
+
+                         ])
+def test_reduce_new_item(items: Set[int]
+                , new_item: int
+                , count_dict: Dict[int, int]
+                , expected_items: Set[int]
+                , expected_count_dict: Dict[int, int]):
+
+    actual_items = reduce_new_item(items
+                                   , new_item
+                                   , count_dict)
+
+    assert actual_items == expected_items
+    assert count_dict == expected_count_dict
+
+
+@pytest.mark.parametrize(('items'
+                , 'new_item'
+                , 'count_dict')
+    , [
+pytest.param(
+            frozenset([1, 2, 3])
+            , 7
+            , {1: 1, 2: 7, 3: 4}
+, id='item_not_in_items')
+, pytest.param(
+            frozenset([1, 2, 3])
+            , 3
+            , {1: 1, 2: 1}
+, id='item_not_in_dict')
+
+                         ])
+def test_reduce_new_item_exception(items: Set[int]
+                , new_item: int
+                , count_dict: Dict[int, int]):
+    with pytest.raises(Exception):
+        reduce_new_item(items
+                           , new_item
+                           , count_dict)
+
