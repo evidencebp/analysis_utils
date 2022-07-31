@@ -4,7 +4,7 @@ from functools import partial
 import pytest
 
 from greedy_set_cover import greedy_set_cover, any_item_covers_set, covers_threshold\
-    , item_covers_ratios_sum, reduce_new_item
+    , item_covers_ratios_sum, reduce_new_item, brute_force_set_cover
 
 @pytest.mark.parametrize(('sets_to_cover'
                             , 'expected')
@@ -243,6 +243,84 @@ def test_greedy_set_cover_by_reduce_new_item(sets_to_cover: Set[int]
                      , cover_score=scoring_func
                      , update_available_items=reduction_func)
 
+
+    assert actual == expected
+
+
+@pytest.mark.parametrize(('sets_to_cover'
+                            , 'allowed_depth'
+                            , 'expected')
+    , [
+pytest.param(
+            [frozenset([1]), frozenset([2])]
+            , 3
+            , [1, 2]
+, id='reg1')
+, pytest.param(
+            []
+            , 1
+            , []
+, id='empty')
+, pytest.param(
+            [frozenset([1])]
+            , 1
+            , [1]
+, id='single')
+
+
+, pytest.param(
+            [frozenset([1]), frozenset([2]), frozenset([3])]
+            , 3
+            , [1, 2, 3]
+, id='reg2')
+
+, pytest.param(
+            [frozenset([1]), frozenset([2]), frozenset([3])]
+            , None
+            , None
+, id='reg_allowed_none')
+, pytest.param(
+            [frozenset([1, 4]), frozenset([2, 4]), frozenset([3, 4])]
+            , 1
+            , [4]
+            , id='cover_all')
+
+, pytest.param(
+            [frozenset({3, 4, 5, 6, 10, 11, 12, 13}), frozenset({1, 3, 5, 7, 9, 11, 13}), frozenset({8, 1, 2, 9})]
+            , 2
+            , [9, 13]
+            , id='classic_not_optimal_for_greedy_bounded_choose_0')
+
+, pytest.param(
+            [frozenset([2 * i for i in range(7)])
+                , frozenset([1 + 2 * i for i in range(7)])
+                , frozenset([0, 7])
+                , frozenset([1, 2, 8, 9])
+                , frozenset([3, 4, 5, 6, 10, 11, 12, 13])]
+            , 3
+            , [7, 9, 12]
+            , id='classic_not_optimal_for_greedy')
+, pytest.param(
+            [frozenset([2 * i for i in range(7)])
+                , frozenset([1 + 2 * i for i in range(7)])
+                , frozenset([0, 7])
+                , frozenset([1, 2, 8, 9])
+                , frozenset([3, 4, 5, 6, 10, 11, 12, 13])]
+            , 2
+            , None
+            , id='classic_not_optimal_for_greedy_bounded')
+
+
+
+
+
+                         ])
+def test_brute_force_set_cover(sets_to_cover: Set[int]
+                             , allowed_depth: int
+                             , expected: List[int]):
+
+    actual: List[int] = brute_force_set_cover(sets_to_cover
+                                              , allowed_depth)
 
     assert actual == expected
 

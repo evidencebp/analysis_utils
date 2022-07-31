@@ -126,3 +126,91 @@ def greedy_set_cover(sets_to_cover: List[Set]
                                                             , covering_items)]
 
     return covering_items
+
+
+def is_coverable(sets_to_cover: List[Set]
+                          , items: Set[int]) -> bool:
+
+    for cur_set in sets_to_cover:
+        if not any([i in cur_set for i in items]):
+            return False
+
+    return True
+
+def brute_force_set_cover(sets_to_cover: List[Set]
+                          , allowed_depth: int = None
+                          , verbose: bool = False) -> List:
+
+    items = set([i for cur_set in sets_to_cover for i in cur_set])
+    if not allowed_depth:
+        allowed_depth = min(len(sets_to_cover), min(items))
+
+    return _brute_force_set_cover(sets_to_cover
+                          , items
+                          , allowed_depth)
+
+def _brute_force_set_cover(sets_to_cover: List[Set]
+                          , items: Set[int]
+                          , allowed_depth: int = None
+                          , verbose: bool = False) -> List:
+    """
+        The algorithm here is a brute force set cover.
+        It goes up to a specified depth
+    """
+    if verbose:
+        print("Entering"
+              , "sets" ,sets_to_cover
+              , "items" ,items
+              , "depth", allowed_depth)
+
+
+
+    # no sets
+    if len(sets_to_cover) == 0:
+        return []
+
+    # no items
+    if len(items) == 0:
+        return None
+
+    # reached allowed depth
+    if allowed_depth == 0:
+        return None
+
+    if not is_coverable(sets_to_cover
+                          , items):
+        return None
+
+    # try recursively with and without first item
+    possible_items = items.intersection(set([item for cur_set in sets_to_cover for item in cur_set ]))
+    current_item: int = list(possible_items)[0]
+
+    uncovered_sets = set([cur_set for cur_set in sets_to_cover if current_item not in cur_set])
+    possible_items = possible_items - set([current_item])
+
+    ## with
+    if verbose:
+        print("with")
+    with_cover = _brute_force_set_cover(uncovered_sets
+                                            , items=possible_items
+                                            , allowed_depth=allowed_depth -1)
+    ## Without
+    if verbose:
+        print("without")
+    without_cover = _brute_force_set_cover(sets_to_cover
+                                            , items=possible_items
+                                            , allowed_depth=allowed_depth)
+    # Aggregate
+    if with_cover is None:
+        return without_cover # With cover failed, maybe without is ok
+    else:
+        if without_cover is None:
+            # without failed, maybe with is ok
+            # Adding current item which is used in the cover
+            return [current_item] + with_cover
+        else:
+            # Both ok, return the shorter
+            if len(with_cover) + 1 < len(without_cover):
+                return [current_item] + with_cover
+            else:
+                return without_cover
