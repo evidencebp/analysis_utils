@@ -26,14 +26,14 @@ def build_twin_ds(first_behaviour: pd.DataFrame
     """
 
     :param first_behaviour: A data frame that describes the behaviour of twin in an environment.
-    :param second_behaviour: A data frame that he behaviour of twin in an environment.
-    Many time similar to first one.
+    :param second_behaviour: A data frame that the behaviour of twin in an environment.
+    Many times similar to first one.
     :param keys: Identifiers of the twins.
     :param comparision_columns: The behaviour columns to compare.
     :param comparision_function: A function that compares the behaviour in the two environments.
     :param filtering_function: A function to exclude records (e.g., same repository).
     :param differences_num: Counts the number od different columns.
-    :return: A data frame with the twins behaviour comparision.
+    :return: A data frame with the twins' behavior comparision.
     """
 
     first_to_match = first_behaviour[keys + comparision_columns].copy()
