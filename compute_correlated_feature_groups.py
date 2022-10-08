@@ -67,7 +67,8 @@ def graph_to_groups(graph
                             , labels)
 
 def correlated_feature_groups(df
-                            , threshold=0.7):
+                            , threshold=0.7
+                            , verbose=False):
     """
         Compute the graph and its connected components.
     :param df:
@@ -81,7 +82,8 @@ def correlated_feature_groups(df
                               , threshold=threshold)
 
     graph = csr_matrix(hcorr)
-    print(graph)
+    if verbose:
+        print(graph)
 
     n_components, labels = connected_components(csgraph=graph, directed=False, return_labels=True)
 
@@ -94,12 +96,12 @@ def print_features_groups(features_groups
                           , all_features=None):
 
     group_num = 1
-    unrelated_features = set()
+    unrelated_features = set(all_features)
 
     for group in features_groups:
 
         if all_features is not None:
-            unrelated_features = set(all_features) -set(group)
+            unrelated_features = set(unrelated_features) -set(group)
 
         if translation_function:
             translated_group = [translation_function(i) for i in group]
