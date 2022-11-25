@@ -37,7 +37,7 @@ def cochange_analysis(per_year_df
                        , keys=keys
                        , control_variables=control_variables)
 
-    main_metric =  metrics_names[MAIN_METRIC_POS]
+    main_metric = metrics_names[MAIN_METRIC_POS]
     two_years[IMPROVED_PREFIX + main_metric] = two_years.apply(lambda x: metrics_dict[main_metric](x[PREV_PREFIX + main_metric]
                                                                        , x[CUR_PREFIX + main_metric])
                                 , axis=1
