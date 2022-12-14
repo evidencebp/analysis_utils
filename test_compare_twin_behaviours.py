@@ -2,7 +2,7 @@ import pandas as pd
 from pandas.testing import assert_frame_equal
 import pytest
 
-from compare_twin_behaviours import compare_twin_behaviours
+from compare_twin_behaviours import compare_twin_behaviours, build_cartesian_product_twin_ds
 
 @pytest.mark.parametrize(('first_behaviour'
                           , 'second_behaviour'
@@ -50,6 +50,50 @@ def test_compare_twin_behaviours(first_behaviour
                           , keys
                           , comparision_columns
                           , comparision_function)
+
+    assert_frame_equal(actual, expected)
+
+
+
+@pytest.mark.parametrize(('first_behaviour'
+                          , 'second_behaviour'
+                          , 'comparison_columns'
+                          , 'comparison_function'
+                      , 'expected')
+    , [
+pytest.param(
+            pd.DataFrame([
+                [1]
+                , [2]
+                , [3]
+                ], columns=['f1'])
+            , pd.DataFrame([
+                [1]
+                , [2]
+             ], columns=['f1'])
+            , ['f1']
+            , None #lambda x: x['f1' + '_x'] == x['f1' + '_y']
+            , pd.DataFrame([
+                [1, 1]
+                , [1, 2]
+                , [2, 1]
+                , [2, 2]
+                , [3, 1]
+                , [3, 2]
+    ], columns=['f1_x', 'f1_y'])
+
+, id='reg1')
+                         ])
+def test_build_cartesian_product_twin_ds(first_behaviour
+                          , second_behaviour
+                          , comparison_columns
+                          , comparison_function
+                      , expected):
+    actual = build_cartesian_product_twin_ds(first_behaviour
+                          , second_behaviour
+                          , comparison_columns
+                          , comparison_function)
+
 
     assert_frame_equal(actual, expected)
 

@@ -48,6 +48,30 @@ def build_twin_ds(first_behaviour: pd.DataFrame
 
     return joint
 
+def build_cartesian_product_twin_ds(first_behaviour: pd.DataFrame
+                            , second_behaviour: pd.DataFrame
+                            , comparison_columns: list
+                            , filtering_function=None) -> pd.DataFrame:
+    """
+        Build a Cartesian product by using a constant joint column and reducing to build_twin_ds.
+    """
+
+    SAME_VALUE_COLUMN = 'SAME_VALUE_COLUMN'
+
+    first_behaviour[SAME_VALUE_COLUMN] = SAME_VALUE_COLUMN
+    second_behaviour[SAME_VALUE_COLUMN] = SAME_VALUE_COLUMN
+
+    twins_df = build_twin_ds(first_behaviour
+                            , second_behaviour
+                            , keys=[SAME_VALUE_COLUMN]
+                            , comparision_columns=comparison_columns
+                            , filtering_function=filtering_function)
+
+    twins_df.drop(columns=[SAME_VALUE_COLUMN]
+                  , inplace=True)
+
+    return twins_df
+
 
 def compare_twin_behaviours(first_behaviour: pd.DataFrame
                             , second_behaviour: pd.DataFrame
