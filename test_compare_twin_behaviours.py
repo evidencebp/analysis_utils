@@ -81,8 +81,23 @@ pytest.param(
                 , [3, 1]
                 , [3, 2]
     ], columns=['f1_x', 'f1_y'])
-
 , id='reg1')
+, pytest.param(
+            pd.DataFrame([
+                [1, 1]
+                , [2, 0]
+                ], columns=['id', 'concept'])
+            , pd.DataFrame([
+                [3, 1]
+                , [4, 0]
+             ], columns=['id', 'concept'])
+            , ['id', 'concept']
+            , lambda x: x['concept' + '_x'] == x['concept' + '_y']
+            , pd.DataFrame([
+                [1, 1, 4, 0]
+                , [2, 0, 3, 1]
+    ], columns=['id_x', 'concept_x', 'id_y', 'concept_y'])
+            , id='remove_same_concept')
                          ])
 def test_build_cartesian_product_twin_ds(first_behaviour
                           , second_behaviour
@@ -95,6 +110,7 @@ def test_build_cartesian_product_twin_ds(first_behaviour
                           , comparison_function)
 
 
-    assert_frame_equal(actual, expected)
+    assert_frame_equal(actual.reset_index(drop=True)
+                       , expected.reset_index(drop=True))
 
 
