@@ -2,7 +2,8 @@ import pandas as pd
 from pandas.testing import assert_frame_equal
 import pytest
 
-from compare_twin_behaviours import compare_twin_behaviours, build_cartesian_product_twin_ds
+from compare_twin_behaviours import compare_twin_behaviours, build_cartesian_product_twin_ds\
+    , build_distinct_cartesian_product_twin_ds
 
 @pytest.mark.parametrize(('first_behaviour'
                           , 'second_behaviour'
@@ -108,6 +109,46 @@ def test_build_cartesian_product_twin_ds(first_behaviour
                           , second_behaviour
                           , comparison_columns
                           , comparison_function)
+
+
+    assert_frame_equal(actual.reset_index(drop=True)
+                       , expected.reset_index(drop=True))
+
+
+
+@pytest.mark.parametrize(('first_behaviour'
+                          , 'second_behaviour'
+                          , 'comparison_columns'
+                          , 'id_column'
+                      , 'expected')
+    , [
+pytest.param(
+            pd.DataFrame([
+                [1, 4]
+                , [2, 0]
+                ], columns=['id', 'concept'])
+            , pd.DataFrame([
+                [1, 5]
+                , [3, 0]
+             ], columns=['id', 'concept'])
+            , ['id', 'concept']
+            , 'id'
+            , pd.DataFrame([
+                [1, 4, 3, 0]
+                , [2, 0, 1, 5]
+                , [2, 0, 3, 0]
+    ], columns=['id_x', 'concept_x', 'id_y', 'concept_y'])
+            , id='remove_same_concept')
+                         ])
+def test_build_distinct_cartesian_product_twin_ds(first_behaviour
+                          , second_behaviour
+                          , comparison_columns
+                          , id_column
+                      , expected):
+    actual = build_distinct_cartesian_product_twin_ds(first_behaviour
+                          , second_behaviour
+                          , comparison_columns
+                          , id_column)
 
 
     assert_frame_equal(actual.reset_index(drop=True)
