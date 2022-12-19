@@ -4,7 +4,8 @@ import pandas as pd
 from pandas.testing import assert_frame_equal
 import pytest
 
-from compute_possible_explanations import compute_possible_explanations, equality
+from compute_possible_explanations import compute_possible_explanations\
+    , equality, compute_possible_explanations_stats
 
 
 @pytest.mark.parametrize(('df'
@@ -161,3 +162,92 @@ def test_compute_possible_explanations(df: pd.DataFrame
 
     assert_frame_equal(actual.reset_index(drop=True)
                        , expected.reset_index(drop=True))
+
+
+@pytest.mark.parametrize(('coverage_values_df'
+                            , 'explanations_df'
+                            , 'coverage_columns'
+                            , 'expected')
+    , [
+pytest.param(
+    pd.DataFrame([
+        ['f1']
+        , ['f2']
+        , ['f3']
+    ], columns=['feature'])
+    , pd.DataFrame([
+        [0, 4, 'f2']
+        , [1, 3, 'f2']
+        , [2, 3, 'f3']
+        , [2, 4, 'f2']
+        , [2, 4, 'f3']
+
+        , [3, 1, 'f2']
+        , [3, 2, 'f3']
+
+        , [4, 0, 'f2']
+        , [4, 2, 'f2']
+        , [4, 2, 'f3']
+
+    ], columns=['id_x', 'id_y', 'feature'])
+    , ['feature']
+            , pd.DataFrame([
+                ['f1', 0]
+                , ['f2', 6]
+                , ['f3', 4]
+    ], columns=['feature', 'count'])
+            , id='feature_coverage')
+
+
+, pytest.param(
+    pd.DataFrame([
+        [0, 3]
+        , [0, 4]
+        , [1, 3]
+        , [1, 4]
+        , [2, 3]
+        , [2, 4]
+    ], columns=['id_x', 'id_y'])
+    , pd.DataFrame([
+        [0, 4, 'f2']
+        , [1, 3, 'f2']
+        , [2, 3, 'f3']
+        , [2, 4, 'f2']
+        , [2, 4, 'f3']
+
+        , [3, 1, 'f2']
+        , [3, 2, 'f3']
+
+        , [4, 0, 'f2']
+        , [4, 2, 'f2']
+        , [4, 2, 'f3']
+
+    ], columns=['id_x', 'id_y', 'feature'])
+    , ['id_x', 'id_y']
+    ,    pd.DataFrame([
+        [0, 3, 0]
+        , [0, 4, 1]
+        , [1, 3, 1]
+        , [1, 4, 0]
+        , [2, 3, 1]
+        , [2, 4, 2]
+    ], columns=['id_x', 'id_y', 'count'])
+
+            , id='ids_coverage')
+
+
+])
+def test_compute_possible_explanations_stats(coverage_values_df: pd.DataFrame
+                                  , explanations_df: pd.DataFrame
+                                  , coverage_columns: List[str]
+                      , expected):
+    actual = compute_possible_explanations_stats(coverage_values_df=coverage_values_df
+                                  , explanations_df=explanations_df
+                                  , coverage_columns=coverage_columns
+                                    )
+
+
+    assert_frame_equal(actual.reset_index(drop=True)
+                       , expected.reset_index(drop=True))
+
+

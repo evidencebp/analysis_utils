@@ -36,14 +36,7 @@ def compute_possible_explanations(df: pd.DataFrame
                     , second_behaviour=df
                     , comparison_columns=keys + features + [concept_column]
                     , filtering_function=lambda x: x[concept_column + '_x'] == x[concept_column + '_y'])
-    """
-    different_concepts = build_cartesian_product_twin_ds(first_behaviour=df
-                    , second_behaviour=df
-                    , comparison_columns=keys + features + [concept_column])
 
-    different_concepts = different_concepts[different_concepts[concept_column + '_x']
-                                            != different_concepts[concept_column + '_y']] # TODO - bug in the twins?
-    """
     rows = []
     for _, r in different_concepts.iterrows():
         for f in features:
@@ -65,3 +58,24 @@ def compute_possible_explanations(df: pd.DataFrame
                       , columns=(explanation_columns))
 
     return explanation_df.sort_values(explanation_columns)
+
+def compute_possible_explanations_stats(coverage_values_df: pd.DataFrame
+                                  , explanations_df: pd.DataFrame
+                                  , coverage_columns: List[str]
+                                    ):
+    COUNTING_COL = 'count'
+
+    explanations_df[COUNTING_COL] = 1
+
+    g = explanations_df.groupby(coverage_columns
+                                , as_index=False).agg({COUNTING_COL:  'count'})
+
+    df = pd.merge(coverage_values_df
+                  , g
+                  , on=coverage_columns
+                  , how='left')
+    df = df[coverage_columns + [COUNTING_COL]].sort_values(coverage_columns)
+    df = df.fillna(0)
+    df[COUNTING_COL] = df[COUNTING_COL].astype('int64')
+
+    return df
