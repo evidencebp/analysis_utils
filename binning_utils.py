@@ -6,7 +6,7 @@ Utilities for values binning
 import pandas as pd
 
 from cochange_analysis import the_lower_the_better
-from feature_pair_analysis import pair_features_vs_concept, features_stats_to_cm_df, pretty_print
+from feature_pair_analysis import pair_features_vs_concept, features_stats_to_cm_df
 from ml_utils import extract_relevent_features
 
 SIDES_SUFFIX = '_SIDES'
