@@ -53,3 +53,5 @@ def plot_boxplot(df
     if output_file:
         fig.write_image(output_file)
 
+    return fig
+
