@@ -21,7 +21,7 @@ def plot_all_metrics(df
 def plot_boxplot(df
                  , grouping_column
                  , metric_column
-                 , output_file):
+                 , output_file=None):
 
     fig = go.Figure()
     item = 0;
@@ -50,5 +50,6 @@ def plot_boxplot(df
         )
     )
     fig.show()
-    fig.write_image(output_file)
+    if output_file:
+        fig.write_image(output_file)
 
