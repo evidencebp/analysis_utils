@@ -8,8 +8,8 @@ from compare_twin_behaviours import compare_twin_behaviours, build_cartesian_pro
 @pytest.mark.parametrize(('first_behaviour'
                           , 'second_behaviour'
                           , 'keys'
-                          , 'comparision_columns'
-                          , 'comparision_function'
+                          , 'comparison_columns'
+                          , 'comparison_function'
                       , 'expected')
     , [
 pytest.param(
@@ -43,14 +43,14 @@ pytest.param(
 def test_compare_twin_behaviours(first_behaviour
                           , second_behaviour
                           , keys
-                          , comparision_columns
-                          , comparision_function
+                          , comparison_columns
+                          , comparison_function
                       , expected):
     actual = compare_twin_behaviours(first_behaviour
                           , second_behaviour
                           , keys
-                          , comparision_columns
-                          , comparision_function)
+                          , comparison_columns
+                          , comparison_function)
 
     assert_frame_equal(actual, expected)
 

@@ -100,39 +100,39 @@ def build_distinct_cartesian_product_twin_ds(first_behaviour: pd.DataFrame
 def compare_twin_behaviours(first_behaviour: pd.DataFrame
                             , second_behaviour: pd.DataFrame
                             , keys: list
-                            , comparision_columns: list
-                            , comparision_function
+                            , comparison_columns: list
+                            , comparison_function
                             , filtering_function=None
                             , differences_num: str = None) -> pd.DataFrame:
     """
 
     :param first_behaviour: A data frame that describes the behaviour of twin in an environment.
-    :param second_behaviour: A data frame that he behaviour of twin in an environment.
-    Many time similar to first one.
+    :param second_behaviour: A data frame that describes the behaviour of twin in an environment.
+    Many times similar to first one.
     :param keys: Identifiers of the twins.
-    :param comparision_columns: The behaviour columns to compare.
-    :param comparision_function: A function that compares the behaviour in the two environments.
+    :param comparison_columns: The behaviour columns to compare.
+    :param comparison_function: A function that compares the behaviour in the two environments.
     :param filtering_function: A function to exclude records (e.g., same repository).
     :param differences_num: Counts the number od different columns.
-    :return: A data frame with the twins behaviour comparision.
+    :return: A data frame with the twins' behaviour comparison.
     """
 
     joint = build_twin_ds(first_behaviour=first_behaviour
                             , second_behaviour=second_behaviour
                             , keys=keys
-                            , comparision_columns=comparision_columns
+                            , comparision_columns=comparison_columns
                             , filtering_function=filtering_function)
 
     joint_cols = keys.copy()
-    for i in comparision_columns:
+    for i in comparison_columns:
         key = i + COMPARISON_SUFFIX
         joint_cols.append(key)
-        joint[key] = joint.apply(lambda x: comparision_function(x[i + '_x'], x[i + '_y'])
+        joint[key] = joint.apply(lambda x: comparison_function(x[i + '_x'], x[i + '_y'])
                                 , axis=1)
 
     if differences_num:
         joint[differences_num] = joint[
-            [i + COMPARISON_SUFFIX for i in comparision_columns]].sum(axis=1)
+            [i + COMPARISON_SUFFIX for i in comparison_columns]].sum(axis=1)
         relevant_columns = joint_cols + [differences_num]
     else:
         relevant_columns = joint_cols
