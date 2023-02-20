@@ -21,11 +21,11 @@ def plot_all_metrics(df
 def plot_boxplot(df
                  , grouping_column
                  , metric_column
-                 , output_file):
+                 , output_file=None):
 
     fig = go.Figure()
     item = 0;
-    for cur_group in df[grouping_column].unique():
+    for cur_group in sorted(df[grouping_column].unique()):
         color = 'rgb(' +str(20*item +1) + ',' + str(100 + 10*item) +',' + str(254 - 15*item) + ')'
         trace = go.Box(
             y=df[df[grouping_column] == cur_group][metric_column].tolist(),
@@ -50,5 +50,8 @@ def plot_boxplot(df
         )
     )
     fig.show()
-    fig.write_image(output_file)
+    if output_file:
+        fig.write_image(output_file)
+
+    return fig
 
