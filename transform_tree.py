@@ -92,7 +92,7 @@ def tree_to_python(tree
 
 def sql_format_leaf(node
                        , indent):
-    return "{indent} return {pos_rate} ({pos} out of {pop})\n".format(
+    return "{indent} return {pos_rate} # ({pos} out of {pop})\n".format(
                         indent=indent
                         , pos_rate=node[0][1]/(node[0][0] + node[0][1])
                         , pos=node[0][1]
