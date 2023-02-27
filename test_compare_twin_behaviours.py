@@ -226,5 +226,5 @@ def test_build_twins_identification_ds(first_behaviour
                             , matching_function
                             , filtering_function)
 
-    assert_frame_equal(actual[expected.columns].reset_index(drop=True)
-                       , expected.reset_index(drop=True))
+    assert_frame_equal(actual.sort_index(axis=1).reset_index(drop=True)
+                       , expected.sort_index(axis=1).reset_index(drop=True))
