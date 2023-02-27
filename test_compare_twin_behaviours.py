@@ -3,7 +3,7 @@ from pandas.testing import assert_frame_equal
 import pytest
 
 from compare_twin_behaviours import compare_twin_behaviours, build_cartesian_product_twin_ds\
-    , build_distinct_cartesian_product_twin_ds
+    , build_distinct_cartesian_product_twin_ds, build_twins_identification_ds
 
 @pytest.mark.parametrize(('first_behaviour'
                           , 'second_behaviour'
@@ -155,3 +155,76 @@ def test_build_distinct_cartesian_product_twin_ds(first_behaviour
                        , expected.reset_index(drop=True))
 
 
+
+
+@pytest.mark.parametrize(('first_behaviour'
+                          , 'second_behaviour'
+                          , 'matching_function'
+                          , 'filtering_function'
+                      , 'expected')
+    , [
+pytest.param(
+           pd.DataFrame([
+               [1, 1, 1, 4]
+               , [2, 1, 2, 5]
+               , [3, 2, 1, 3]
+               ], columns=['evaluation_id', 'entity_id', 'evaluator_id', 'val'])
+           , pd.DataFrame([
+               [1, 1, 1, 4]
+               , [2, 1, 2, 5]
+               , [3, 2, 1, 3]
+               ], columns=['evaluation_id', 'entity_id', 'evaluator_id', 'val'])
+           , lambda x: 1 if x['entity_id_x'] == x['entity_id_y'] else 0
+           , lambda x: x['evaluation_id_x'] == x['evaluation_id_y']
+           , pd.DataFrame([
+               [1, 1, 1, 4, 2, 1, 2, 5, 1]
+               , [1, 1, 1, 4, 3, 2, 1, 3, 0]
+               , [2, 1, 2, 5, 1, 1, 1, 4, 1]
+               , [2, 1, 2, 5, 3, 2, 1, 3, 0]
+               , [3, 2, 1, 3, 1, 1, 1, 4, 0]
+               , [3, 2, 1, 3, 2, 1, 2, 5, 0]
+   ], columns=['evaluation_id_x', 'entity_id_x', 'evaluator_id_x', 'val_x'
+               , 'evaluation_id_y', 'entity_id_y','evaluator_id_y', 'val_y', 'Is_Twin'])
+           , id='match_by_entity')
+
+, pytest.param(
+            pd.DataFrame([
+                [1, 1, 1, 4]
+                , [2, 2, 1, 5]
+                , [3, 1, 1, 3]
+                ], columns=['evaluation_id', 'entity_id', 'evaluator_id', 'val'])
+            , pd.DataFrame([
+                [1, 1, 1, 4]
+                , [2, 2, 1, 5]
+                , [3, 1, 1, 3]
+                ], columns=['evaluation_id', 'entity_id', 'evaluator_id', 'val'])
+            , lambda x: 1 if (x['entity_id_x'] == x['entity_id_y']
+                                and x['evaluator_id_x'] == x['evaluator_id_y']) else 0
+            , lambda x: x['evaluation_id_x'] == x['evaluation_id_y']
+            , pd.DataFrame([
+                [1, 1, 1, 4, 2, 2, 1, 5, 0]
+                , [1, 1, 1, 4, 3, 1, 1, 3, 1]
+                , [2, 2, 1, 5, 1, 1, 1, 4, 0]
+                , [2, 2, 1, 5, 3, 1, 1, 3, 0]
+                , [3, 1, 1, 3, 1, 1, 1, 4, 1]
+                , [3, 1, 1, 3, 2, 2, 1, 5, 0]
+    ], columns=['evaluation_id_x', 'entity_id_x', 'evaluator_id_x', 'val_x'
+                , 'evaluation_id_y', 'entity_id_y','evaluator_id_y', 'val_y', 'Is_Twin'])
+            , id='match_by_entity_and_evaluator')
+
+
+                         ])
+def test_build_twins_identification_ds(first_behaviour
+                            , second_behaviour
+                            , matching_function
+                            , filtering_function
+                            , expected):
+
+
+    actual = build_twins_identification_ds(first_behaviour
+                            , second_behaviour
+                            , matching_function
+                            , filtering_function)
+
+    assert_frame_equal(actual[expected.columns].reset_index(drop=True)
+                       , expected.reset_index(drop=True))

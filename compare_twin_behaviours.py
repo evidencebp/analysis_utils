@@ -163,3 +163,37 @@ def compute_confusion_matrics(df: pd.DataFrame
                        , keys=keys)
 
     return stats
+
+def build_twins_identification_ds(first_behaviour
+                                     , second_behaviour
+                                     , matching_function
+                                     , filtering_function):
+    """
+    The following function create a dataset whose concept is "Is_Twin".
+    Twins are pairs of samples that match according to a key.
+    For example, evaluations of the same entity
+    or evaluation of the same entity by the same evaluators.
+    The cross product of the rest are the negative samples.
+    """
+    SAME_VALUE_COLUMN = 'SAME_VALUE_COLUMN'
+
+    first_behaviour[SAME_VALUE_COLUMN] = SAME_VALUE_COLUMN
+    second_behaviour[SAME_VALUE_COLUMN] = SAME_VALUE_COLUMN
+
+    twins_df = build_twin_ds(first_behaviour=first_behaviour
+                 , second_behaviour=second_behaviour
+                 , keys=[SAME_VALUE_COLUMN]
+                 , comparision_columns=list(set(list(first_behaviour.columns)) - set([SAME_VALUE_COLUMN]))
+                 , filtering_function=filtering_function)
+
+    twins_df.drop(columns=[SAME_VALUE_COLUMN]
+                  , inplace=True)
+
+
+    twins_df['Is_Twin'] = twins_df.apply(matching_function
+                                  , axis=1)
+
+    return twins_df
+
+
+
