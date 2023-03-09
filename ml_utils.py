@@ -3,7 +3,9 @@
 """
 from cloudpickle import dump, load
 import numpy as np
+import pandas as pd
 import os
+
 from sklearn.model_selection import cross_validate
 from sklearn.model_selection import train_test_split
 from sklearn.tree import export_graphviz
@@ -29,19 +31,45 @@ def get_predictive_columns(df
                            , excluded_features=set()):
     return sorted(list(set(df.columns.tolist()) - excluded_features))
 
+
+def df_to_sk_structuring(df
+                  , concept
+                  , test_size
+                  , random_state
+                  ):
+    X = df[list(set(df.columns) - set([concept]))]
+    y = df[concept]
+    if test_size:
+        X_train, X_test, y_train, y_test = train_test_split(X
+                                                            , y
+                                                            , test_size=test_size
+                                                            , random_state=random_state)
+    else:
+        struct = pd.DataFrame(data=None
+                              , columns=df.columns
+                              , index=df.index).dropna()
+        X_train = X
+        X_test = struct[list(set(struct.columns) - set([concept]))]
+
+        y_train = y
+        y_test = struct[concept]
+
+    return X_test, X_train, y_test, y_train
+
+
 def df_to_sk_form(df
                   , concept
                   , test_size
                   , random_state
                   , get_predictive_columns_func
                   ):
-    X = df[get_predictive_columns_func(df)]
-    y = df[concept]
-    X_train, X_test, y_train, y_test = train_test_split(X
-                                                        , y
-                                                        , test_size=test_size
-                                                        , random_state=random_state)
-    return X_test, X_train, y_test, y_train
+    df = df[get_predictive_columns_func(df) + [concept]]
+
+    return df_to_sk_structuring(df
+                  , concept
+                  , test_size
+                  , random_state
+                  )
 
 
 def evaluate_model(classifier
