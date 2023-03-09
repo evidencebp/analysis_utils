@@ -37,7 +37,7 @@ def df_to_sk_structuring(df
                   , test_size
                   , random_state
                   ):
-    X = df[list(set(df.columns) - set([concept]))]
+    X = df[[i for i in df.columns if i != concept]]
     y = df[concept]
     if test_size:
         X_train, X_test, y_train, y_test = train_test_split(X
@@ -49,7 +49,7 @@ def df_to_sk_structuring(df
                               , columns=df.columns
                               , index=df.index).dropna()
         X_train = X
-        X_test = struct[list(set(struct.columns) - set([concept]))]
+        X_test = struct[[i for i in struct.columns if i != concept]]
 
         y_train = y
         y_test = struct[concept]
