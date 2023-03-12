@@ -76,7 +76,7 @@ def df_to_sk_form(df
 def evaluate_model(classifier
                    , X_test
                    , y_test
-                   , get_predictive_columns_func
+                   , get_predictive_columns_func=None
                    , performance_file=None
                    , classifier_name='classifier'
                    , concept='concept'
@@ -135,9 +135,7 @@ def train_and_eval_models_on_datasets(concept
 
         performance = evaluation_function(model
                                           , X_test
-                                          , y_test
-                                          , performance_file=None
-                                          , get_predictive_columns_func=None)
+                                          , y_test)
 
         results[model_name] = {'model': model
             , 'performance': performance}
@@ -159,7 +157,7 @@ def build_and_eval_model(df
                                 , random_state
                                 , get_predictive_columns_func
                                 , performance_file=None
-                         ):
+                                , evaluation_function=evaluate_model):
 
     X_test, X_train, y_test, y_train = df_to_sk_form(df=df
                   , concept=concept
@@ -168,11 +166,11 @@ def build_and_eval_model(df
                   , get_predictive_columns_func=get_predictive_columns_func)
 
     classifier.fit(X_train, y_train)
-    performance = evaluate_model(classifier
+    performance = evaluation_function(classifier
                    , X_test
                    , y_test
                    , performance_file=performance_file
-                   , get_predictive_columns_func=get_predictive_columns_func)
+                    )
 
     return classifier, performance
 
