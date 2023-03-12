@@ -9,6 +9,7 @@ import os
 from sklearn.model_selection import cross_validate
 from sklearn.model_selection import train_test_split
 from sklearn.tree import export_graphviz
+import time
 
 
 from confusion_matrix import ConfusionMatrix, sk_to_grouped_df
@@ -81,7 +82,12 @@ def evaluate_model(classifier
                    , concept='concept'
                    , count='count'
                    ):
-    df = X_test[get_predictive_columns_func(X_test)]
+
+    if get_predictive_columns_func:
+        df = X_test[get_predictive_columns_func(X_test)]
+    else:
+        df = X_test
+
     test_pred = classifier.predict(df)
     grouped_df = sk_to_grouped_df(labels=y_test
                      , predictions=test_pred
@@ -95,6 +101,56 @@ def evaluate_model(classifier
                  , g_df=grouped_df)
 
     return cm.summarize(performance_file)
+
+
+def train_and_eval_models_on_datasets(concept
+                                      , train_df
+                                      , test_df
+                                      , classifiers
+                                      , evaluation_function=evaluate_model
+                                      , random_state=0
+                                      , verbose=True):
+    results = {}
+
+    for model_name in classifiers.keys():
+        if verbose:
+            print(model_name)
+
+        start = time.time()
+        model = classifiers[model_name]
+
+        _, X_train, _, y_train = df_to_sk_structuring(df=train_df
+                                                      , concept=concept
+                                                      , test_size=0
+                                                      , random_state=random_state
+                                                      )
+
+        model.fit(X_train, y_train)
+
+        _, X_test, _, y_test = df_to_sk_structuring(df=test_df
+                                                    , concept=concept
+                                                    , test_size=0
+                                                    , random_state=random_state
+                                                    )
+
+        performance = evaluation_function(model
+                                          , X_test
+                                          , y_test
+                                          , performance_file=None
+                                          , get_predictive_columns_func=None)
+
+        results[model_name] = {'model': model
+            , 'performance': performance}
+
+        end = time.time()
+
+        if verbose:
+            print("Model build time"
+                  , model_name
+                  , end - start)
+
+    return results
+
 
 def build_and_eval_model(df
                                 , classifier
