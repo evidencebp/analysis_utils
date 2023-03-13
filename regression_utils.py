@@ -49,7 +49,6 @@ def evaluate_regressor(regressor
     performace['max_error'] = max_error(y_test, test_pred)
     performace['mean_absolute_error'] = mean_absolute_error(y_test, test_pred)
     performace['mean_squared_error'] = mean_squared_error(y_test, test_pred)
-    performace['mean_squared_error'] = mean_squared_error(y_test, test_pred)
     performace['r2_score'] = r2_score(y_test, test_pred)
 
     performace['pred_05'] = pred_by_rel_distance(y_test
