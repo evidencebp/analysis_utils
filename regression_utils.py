@@ -1,3 +1,4 @@
+from functools import partial
 import json
 from pandas import DataFrame
 from sklearn.metrics import explained_variance_score, max_error, mean_absolute_error \
@@ -36,34 +37,39 @@ def mmre(y_test
 
     return df['rel_diff'].mean()
 
+pred_05 = partial(pred_by_rel_distance
+                                  , threshold=0.05)
+pred_25 = partial(pred_by_rel_distance
+                                  , threshold=0.25)
+
+pred_50 = partial(pred_by_rel_distance
+                                  , threshold=0.5)
+
+metrics_dict = {
+    'explained_variance_score': explained_variance_score
+    , 'max_error': max_error
+    , 'mean_absolute_error': mean_absolute_error
+    , 'mean_squared_error': mean_squared_error
+    , 'pred_05': pred_05
+    , 'pred_25': pred_25
+    , 'pred_50': pred_50
+    , 'r2_score': r2_score
+    , 'mmre': mmre
+}
 def evaluate_regressor(regressor
                    , X_test
                    , y_test
                    , performance_file=None
-                   ):
+                   , metrics_dict=metrics_dict):
     performace = {}
     test_pred = regressor.predict(X_test)
 
     performace['samples'] = len(X_test)
-    performace['explained_variance_score'] = explained_variance_score(y_test, test_pred)
-    performace['max_error'] = max_error(y_test, test_pred)
-    performace['mean_absolute_error'] = mean_absolute_error(y_test, test_pred)
-    performace['mean_squared_error'] = mean_squared_error(y_test, test_pred)
-    performace['r2_score'] = r2_score(y_test, test_pred)
 
-    performace['pred_05'] = pred_by_rel_distance(y_test
-                                    , test_pred
-                                    , threshold=0.05)
+    if metrics_dict:
+        for i in metrics_dict.keys():
+            performace[i] = metrics_dict[i](y_test, test_pred)
 
-    performace['pred_25'] = pred_by_rel_distance(y_test
-                                    , test_pred
-                                    , threshold=0.25)
-
-    performace['pred_50'] = pred_by_rel_distance(y_test
-                                    , test_pred
-                                    , threshold=0.5)
-    performace['mmre'] = mmre(y_test
-                                    , test_pred)
 
     if performance_file:
         with open(performance_file, 'w', encoding='utf-8') as f:
