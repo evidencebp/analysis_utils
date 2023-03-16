@@ -3,6 +3,7 @@ import json
 from pandas import DataFrame
 from sklearn.metrics import explained_variance_score, max_error, mean_absolute_error \
     , mean_squared_error, r2_score
+import scipy
 
 from ml_utils import df_to_sk_form
 
@@ -45,16 +46,49 @@ pred_25 = partial(pred_by_rel_distance
 pred_50 = partial(pred_by_rel_distance
                                   , threshold=0.5)
 
+def float_max_error(y_true, y_pred):
+    return float(max_error(y_true, y_pred))
+def cor(y_true, y_pred):
+    return scipy.stats.pearsonr(y_true, y_pred)
+
+def pred_by_abs_distance(y_true, y_pred, threshold=1):
+    dict = {'concept': y_true
+            , 'classifier' : y_pred}
+    df = DataFrame(dict)
+    df = df.reset_index()
+    df['abs_diff'] = df.apply(lambda x: abs(x.classifier -x.concept), axis=1)
+    df['within_range'] = df.apply(lambda x: x.abs_diff <= threshold, axis=1)
+    return {'Accuracy': df['within_range'].mean(), 'Accuracy range': threshold}
+
+plusmins1 = partial(pred_by_abs_distance
+                    , threshold=1)
+
+def pred_by_percent_distance(y_true, y_pred, threshold = 0.25, range = [0,100]):
+    abs_range = threshold*(range[1] - range[0])
+    return pred_by_abs_distance(y_true, y_pred, threshold=abs_range)
+
+def pred_by_actual_percent_distance(y_true, y_pred, threshold = 0.25):
+    range = [y_true.min(), y_true.max()]
+    return pred_by_percent_distance(y_true, y_pred, threshold = threshold, range = range)
+
+pred_by_25percent_distance5 = partial(pred_by_percent_distance, threshold = 0.25, range = [0,5])
+pred_by_25percent_distance100 = partial(pred_by_percent_distance, threshold = 0.25, range = [0,100])
+
 metrics_dict = {
     'explained_variance_score': explained_variance_score
-    , 'max_error': max_error
-    , 'mean_absolute_error': mean_absolute_error
-    , 'mean_squared_error': mean_squared_error
-    , 'pred_05': pred_05
-    , 'pred_25': pred_25
-    , 'pred_50': pred_50
-    , 'r2_score': r2_score
-    , 'mmre': mmre
+     , 'plusmins1': plusmins1
+    , 'pred_by_25percent_distance5': pred_by_25percent_distance5
+    , 'pred_by_25percent_distance100': pred_by_25percent_distance100
+    , 'pred_by_actual_25percent_distance': pred_by_actual_percent_distance
+    # , 'max_error': float_max_error
+    # , 'mean_absolute_error': mean_absolute_error
+    # , 'mean_squared_error': mean_squared_error
+    # , 'pred_05': pred_05
+    # , 'pred_25': pred_25
+    # , 'pred_50': pred_50
+    # , 'pearson': cor
+    # , 'r2_score': r2_score
+    # , 'mmre': mmre
 }
 def evaluate_regressor(regressor
                    , X_test
