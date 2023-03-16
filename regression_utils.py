@@ -3,7 +3,6 @@ import json
 from pandas import DataFrame
 from sklearn.metrics import explained_variance_score, max_error, mean_absolute_error \
     , mean_squared_error, r2_score
-import scipy
 from utils.regression_utils import cor, float_max_error, plusmins1, pred_by_25percent_distance5, pred_by_25percent_distance100, pred_by_actual_percent_distance
 from ml_utils import df_to_sk_form
 
@@ -52,15 +51,15 @@ metrics_dict = {
     , 'pred_by_25percent_distance5': pred_by_25percent_distance5
     , 'pred_by_25percent_distance100': pred_by_25percent_distance100
     , 'pred_by_actual_25percent_distance': pred_by_actual_percent_distance
-    # , 'max_error': float_max_error
-    # , 'mean_absolute_error': mean_absolute_error
-    # , 'mean_squared_error': mean_squared_error
-    # , 'pred_05': pred_05
-    # , 'pred_25': pred_25
-    # , 'pred_50': pred_50
-    # , 'pearson': cor
-    # , 'r2_score': r2_score
-    # , 'mmre': mmre
+    , 'max_error': float_max_error
+    , 'mean_absolute_error': mean_absolute_error
+    , 'mean_squared_error': mean_squared_error
+    , 'pred_05': pred_05
+    , 'pred_25': pred_25
+    , 'pred_50': pred_50
+    , 'pearson': cor
+    , 'r2_score': r2_score
+    , 'mmre': mmre
 }
 def evaluate_regressor(regressor
                    , X_test
