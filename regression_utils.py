@@ -14,7 +14,7 @@ def pred_by_rel_distance(y_test
             , 'classifier' : test_pred}
     df = DataFrame(dict)
     df = df.reset_index()
-    df['rel_diff'] = df.apply(lambda x: 0.0 if x.concept == 0.0 else x.classifier/x.concept, axis=1)
+    df['rel_diff'] = df.apply(lambda x: None if x.concept == 0.0 else x.classifier/x.concept, axis=1)
     df['threshold_rel_diff'] = df.rel_diff.map(lambda x: x > (1 - threshold) and x < (1 + threshold))
 
     return df['threshold_rel_diff'].mean()
