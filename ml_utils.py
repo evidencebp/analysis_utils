@@ -20,6 +20,14 @@ def save_model(model
     with open(os.path.join(directory, output_file_name), "wb") as f:
         dump(model, f)
 
+def save_models(model_dict
+               , file_name_format
+               , directory):
+
+    for model_name in model_dict.keys():
+        save_model(model=model_dict[model_name]['model']
+                   , output_file_name=file_name_format.format(model_name=model_name)
+                   , directory=directory)
 
 def load_model(model_file_name
                , directory):
