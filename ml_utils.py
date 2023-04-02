@@ -72,7 +72,8 @@ def df_to_sk_form(df
                   , random_state
                   , get_predictive_columns_func
                   ):
-    df = df[get_predictive_columns_func(df) + [concept]]
+    if get_predictive_columns_func is not None:
+        df = df[get_predictive_columns_func(df) + [concept]]
 
     return df_to_sk_structuring(df
                   , concept
@@ -182,6 +183,30 @@ def build_and_eval_model(df
 
     return classifier, performance
 
+def build_and_eval_models(df
+                                , classifiers
+                                , concept
+                                , test_size
+                                , random_state
+                                , get_predictive_columns_func=None
+                                , performance_file=None
+                                , evaluation_function=evaluate_model):
+
+    results = {}
+    for classifier in classifiers.keys():
+        model, performance = build_and_eval_model(df
+                                , classifiers[classifier]
+                                , concept
+                                , test_size
+                                , random_state
+                                , get_predictive_columns_func
+                                , performance_file=performance_file
+                                , evaluation_function=evaluation_function)
+
+        results[classifier] = {'model': model
+            , 'performance': performance}
+
+    return results
 
 def same_set_build_and_eval_model(df
                                 , classifier
