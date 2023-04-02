@@ -1,6 +1,7 @@
 # Based on paulkernfeld answer to
 # https://stackoverflow.com/questions/20224526/how-to-extract-the-decision-rules-from-scikit-learn-decision-tree
 
+import math
 from os.path import join
 
 import sklearn
@@ -165,10 +166,27 @@ def random_forest_to_sql(rf
     output_file_handle.write(agg_sql)
     output_file_handle.close()
 
+def logistic_regression_to_text(model
+                                , model_name: str
+                                , output_file: str
+                                ):
+    with open(output_file, 'w') as f:
+        f.write(sql_format_signature(function_name=model_name
+                                , feature_names=model.feature_names_in_))
+        t = ("({intercept} ".format(intercept=model.intercept_[0]))
+        for i in range(model.n_features_in_):
+            t += "+ {param}*{weight} ".format(param=model.feature_names_in_[i]
+                                               , weight=model.coef_[0][i])
+        t +=" ) "
+
+        log_form = "1/(1+power({e}, -{t})".format(e=math.e
+                                                  , t=t)
+        f.write(" {f}".format(f=log_form))
+
 
 def models_to_text(models_dict
                    , output_path: str
-                   , file_name_format):
+                   , file_name_format: str):
 
     for model_name in models_dict.keys():
         if isinstance(models_dict[model_name]['model']
@@ -185,4 +203,10 @@ def models_to_text(models_dict
                          , models_dict[model_name]['model'].feature_names_in_
                          , model_name
                          , output_file_prefix=join(output_path
+                                           , file_name_format).format(model_name=model_name))
+        elif isinstance(models_dict[model_name]['model']
+                , sklearn.linear_model._logistic.LogisticRegression):
+            logistic_regression_to_text(model=models_dict[model_name]['model']
+                                        , model_name=model_name
+            , output_file=join(output_path
                                            , file_name_format).format(model_name=model_name))
