@@ -188,23 +188,19 @@ def build_and_eval_models(df
                                 , concept
                                 , test_size
                                 , random_state
-                                , get_predictive_columns_func=None
-                                , performance_file=None
-                                , evaluation_function=evaluate_model):
+                                , evaluation_function=evaluate_model
+                                , verbose: bool = True):
 
-    results = {}
-    for classifier in classifiers.keys():
-        model, performance = build_and_eval_model(df
-                                , classifiers[classifier]
-                                , concept
-                                , test_size
-                                , random_state
-                                , get_predictive_columns_func
-                                , performance_file=performance_file
-                                , evaluation_function=evaluation_function)
+    train_df, test_df = train_test_split(df
+                                         , test_size=test_size)
 
-        results[classifier] = {'model': model
-            , 'performance': performance}
+    results = train_and_eval_models_on_datasets(concept
+                                      , train_df
+                                      , test_df
+                                      , classifiers
+                                      , evaluation_function=evaluation_function
+                                      , random_state=random_state
+                                      , verbose=verbose)
 
     return results
 
