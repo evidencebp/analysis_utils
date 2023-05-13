@@ -68,14 +68,16 @@ def graph_to_groups(graph
 
 def correlated_feature_groups(df
                             , threshold=0.7
-                            , verbose=False):
+                            , verbose=False
+                            , fillna=None):
     """
         Compute the graph and its connected components.
     :param df:
     :param threshold:
     :return:
     """
-    df = df.fillna(0)
+    if fillna:
+        df = df.fillna(fillna)
     correlations = df.corr()
     correlations = correlations.fillna(0)
     hcorr = high_correlations(correlations
