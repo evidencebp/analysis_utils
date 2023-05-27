@@ -14,6 +14,14 @@ import time
 
 from confusion_matrix import ConfusionMatrix, sk_to_grouped_df
 
+
+def load_model(model_file_name
+               , directory):
+    with open(os.path.join(directory, model_file_name), 'rb') as f:
+        model = load(f)
+
+    return model
+
 def save_model(model
                , output_file_name
                , directory):
@@ -29,12 +37,25 @@ def save_models(model_dict
                    , output_file_name=file_name_format.format(model_name=model_name)
                    , directory=directory)
 
-def load_model(model_file_name
-               , directory):
-    with open(os.path.join(directory, model_file_name), 'rb') as f:
-        model = load(f)
 
-    return model
+def save_performance(model_dict
+                    , output_file: str = None):
+
+    performance_dict = {}
+    for model_name in model_dict.keys():
+        performance_dict[model_name] =model_dict[model_name]['performance']
+
+    df = pd.DataFrame(performance_dict)
+    df = df.T.reset_index()
+    df.rename(columns={'index': 'model'}
+              , inplace=True)
+
+    if output_file:
+        df.to_csv(output_file
+                  , index=False)
+
+    return df
+
 
 def get_predictive_columns(df
                            , excluded_features=set()):
