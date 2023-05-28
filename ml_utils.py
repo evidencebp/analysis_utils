@@ -351,3 +351,40 @@ def extract_relevent_features(df
         features = list(set(superset).intersection(set(features)))
 
     return features
+
+
+def build_models(df:pd.DataFrame
+                          , classifiers
+                          , concept
+                          , test_size
+                          , random_state
+                          , verbose: bool = True
+                          , performance_path: str = None
+                          , evaluation_function=evaluate_model
+                          , models_path: str = None
+                          , models_format: str = None
+                          , models_text_format: str = None
+                          ):
+    results = build_and_eval_models(df=df
+                          , classifiers=classifiers
+                          , concept=concept
+                          , test_size=test_size
+                          , random_state=random_state
+                          , evaluation_function=evaluation_function
+                          , verbose=verbose)
+
+    save_performance(model_dict=results
+                    , output_file=performance_path)
+
+    if models_path and models_format:
+        save_models(model_dict=results
+                , file_name_format=models_format
+                , directory=models_path)
+
+
+    if models_path and models_text_format:
+        models_to_text(models_dict=results
+                   , output_path=models_path
+                   , file_name_format=models_text_format)
+
+    return results
