@@ -13,6 +13,7 @@ import time
 
 
 from confusion_matrix import ConfusionMatrix, sk_to_grouped_df
+from transform_tree import models_to_text
 
 
 def load_model(model_file_name
