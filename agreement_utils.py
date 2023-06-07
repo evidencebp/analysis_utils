@@ -1,5 +1,5 @@
 """
-A utility to compute between concepts and metric.
+A utility to compute agreement between concepts and metric.
 For each metric, the agreement is computed with each concept.
 
 The basic definition of agreement is accuracy.
