@@ -32,5 +32,7 @@ def classifiers_agreement_stats(df: pd.DataFrame
     g = df.groupby(classifiers_values
                    , as_index=False).agg({count_column: 'sum'}).sort_values(classifiers_values
                                                                             , ascending=False)
+    cases = df[count_column].sum()
+    g['probability'] = g[count_column]/cases
 
     return g.reset_index(drop=True)
