@@ -10,7 +10,8 @@ def plot_std_err_bar(df : pd.DataFrame
                      , title: str
                      , x_title: str
                      , y_title: str
-                     , grouping_column: str = None):
+                     , grouping_column: str = None
+                     , text_digits: int = None):
     if grouping_column:
         grouping_values = df[grouping_column].unique()
         data = []
@@ -19,16 +20,27 @@ def plot_std_err_bar(df : pd.DataFrame
             y = df[df[grouping_column] == i][y_avg]
             error = df.apply(lambda x: x[y_std] / sqrt(x[y_count])
                              , axis=1)
-
-            data.append(go.Bar(
-                x=x,
-                y=y,
-                name=i,
-                error_y=dict(
-                    type='data',
-                    array=error,
-                    visible=True
-                )))
+            if text_digits:
+                data.append(go.Bar(
+                    x=x,
+                    y=y,
+                    name=i,
+                    text=round(y, text_digits),
+                    error_y=dict(
+                        type='data',
+                        array=error,
+                        visible=True
+                    )))
+            else:
+                data.append(go.Bar(
+                    x=x,
+                    y=y,
+                    name=i,
+                    error_y=dict(
+                        type='data',
+                        array=error,
+                        visible=True
+                    )))
 
     else:
         x = df[x_column]
@@ -36,17 +48,29 @@ def plot_std_err_bar(df : pd.DataFrame
         error = df.apply(lambda x: x[y_std] / sqrt(x[y_count])
                          , axis=1)
 
-
-        data = [go.Bar(
-            x=x,
-            y=y,
-            name=title,
-            error_y=dict(
-                type='data',
-                array=error,
-                visible=True
-            )
-        )]
+        if text_digits:
+            data = [go.Bar(
+                x=x,
+                y=y,
+                text=round(y, text_digits),
+                name=title,
+                error_y=dict(
+                    type='data',
+                    array=error,
+                    visible=True
+                )
+            )]
+        else:
+            data = [go.Bar(
+                x=x,
+                y=y,
+                name=title,
+                error_y=dict(
+                    type='data',
+                    array=error,
+                    visible=True
+                )
+            )]
 
 
     layout = go.Layout(
