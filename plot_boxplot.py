@@ -26,7 +26,7 @@ def plot_boxplot(df
     fig = go.Figure()
     item = 0;
     for cur_group in sorted(df[grouping_column].unique()):
-        color = 'rgb(' +str(20*item +1) + ',' + str(100 + 10*item) +',' + str(254 - 15*item) + ')'
+        color = 'rgb(' +str(10*item +1) + ',' + str(70 + 8*item) +',' + str(254 - 5*item) + ')'
         trace = go.Box(
             y=df[df[grouping_column] == cur_group][metric_column].tolist(),
             name=str(cur_group),
