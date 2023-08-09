@@ -47,7 +47,7 @@ def plot_groups(df
                  , output_file=None):
 
     fig = go.Figure()
-    item = 0;
+    item = 0
     for cur_group in df[grouping_column].unique():
         color = 'blue' # 'rgb(' +str(20*item +1) + ',' + str(100 + 10*item) +',' + str(254 - 15*item) + ')'
         if str(cur_group).find(',') > 0:
