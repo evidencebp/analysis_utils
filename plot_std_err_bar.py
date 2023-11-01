@@ -81,7 +81,7 @@ def plot_std_err_bar(df : pd.DataFrame
             type='category',
             titlefont=dict(
                 family='Courier New, monospace',
-                size=18,
+                size=32,
                 color='#7f7f7f'
             )
         ),
@@ -89,7 +89,7 @@ def plot_std_err_bar(df : pd.DataFrame
             title=y_title,
             titlefont=dict(
                 family='Courier New, monospace',
-                size=18,
+                size=32,
                 color='#7f7f7f'
             )
         )
