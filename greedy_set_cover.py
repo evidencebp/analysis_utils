@@ -115,7 +115,7 @@ def greedy_set_cover(sets_to_cover: List[Set]
            and to_cover != []  # More sets to cover
     ):
         # Finding the item that covers most
-        most_covering = max(items
+        most_covering = max(sorted(list(items))
                             , key=lambda item: cover_score(to_cover, item))
 
         # Bookkeeping
