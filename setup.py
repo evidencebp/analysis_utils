@@ -7,7 +7,7 @@ setup(
     install_requires=[
         'pandas',
         'psutil',
-        'plotly-orca',
+        'plotly',
         'scikit-learn',
         ],
     )
