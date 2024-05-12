@@ -4,7 +4,7 @@ import pandas as pd
 from pandas.testing import assert_frame_equal
 import pytest
 
-from classifiers_agreement_stats import classifiers_agreement_stats
+from analysis_utils.classifiers_agreement_stats import classifiers_agreement_stats
 
 
 @pytest.mark.parametrize(('df'
@@ -23,11 +23,11 @@ pytest.param(
             , ['f1', 'f2', 'f3']
             , 'count'
             , pd.DataFrame([
-                [3, 0, 0, 100]
-                , [2, 1, 0, 50]
-                , [2, 0, 1, 32]
-                , [0, 0, 3, 1000]
-    ], columns=[1, 0, -1, 'count'])
+                [3, 0, 0, 100, 0.08460]
+                , [2, 1, 0, 50, 0.04230]
+                , [2, 0, 1, 32, 0.02707]
+                , [0, 0, 3, 1000, 0.84602]
+    ], columns=[1, 0, -1, 'count', 'probability'])
 
 , id='reg1')
                          ])
@@ -41,6 +41,8 @@ def test_classifiers_agreement_stats(df: pd.DataFrame
 
 
     assert_frame_equal(actual.reset_index(drop=True)
-                       , expected.reset_index(drop=True))
+                       , expected.reset_index(drop=True)
+                       , check_exact=False
+                       , atol=0.01)
 
 
