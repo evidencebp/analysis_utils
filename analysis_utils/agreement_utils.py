@@ -12,7 +12,7 @@ For continuous values we use side binning first, yet other categorizations are a
 import pandas as pd
 from sklearn.metrics import accuracy_score
 
-from binning_utils import sides_binning, side_binning_by_direction, SIDES_SUFFIX
+from analysis_utils.binning_utils import sides_binning, side_binning_by_direction, SIDES_SUFFIX
 
 
 def compute_agreement(df: pd.DataFrame

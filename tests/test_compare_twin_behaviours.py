@@ -2,7 +2,7 @@ import pandas as pd
 from pandas.testing import assert_frame_equal
 import pytest
 
-from compare_twin_behaviours import compare_twin_behaviours, build_cartesian_product_twin_ds\
+from analysis_utils.compare_twin_behaviours import compare_twin_behaviours, build_cartesian_product_twin_ds\
     , build_distinct_cartesian_product_twin_ds, build_twins_identification_ds
 
 @pytest.mark.parametrize(('first_behaviour'

@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from cochange_analysis import cochange_analysis, cochange_analysis_by_value
+from analysis_utils.cochange_analysis import cochange_analysis, cochange_analysis_by_value
 
 @pytest.mark.parametrize(('per_year_df'
                          , 'metrics_dict'

@@ -10,7 +10,7 @@
 from functools import partial
 import pandas as pd
 
-from ml_utils import get_predictive_columns, build_and_eval_model
+from analysis_utils.ml_utils import get_predictive_columns, build_and_eval_model
 
 def classification_mistake_function(record
                                    , prediction_column

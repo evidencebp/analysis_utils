@@ -3,7 +3,7 @@ CODE_PATH = "C:/Idan/GitHub/analysis_utils/"
 sys.path.append(CODE_PATH)
 
 import pytest
-from twins_analysis import generate_twin_porfile_sql, generate_metrics_clause\
+from analysis_utils.twins_analysis import generate_twin_porfile_sql, generate_metrics_clause\
     , generate_twin_in_env_porfile_sql, generate_env_porfile_sql, generate_twins_match_stats_sql
 
 

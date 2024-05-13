@@ -4,7 +4,7 @@ import pandas as pd
 from pandas.testing import assert_frame_equal
 import pytest
 
-from compute_possible_explanations import compute_possible_explanations\
+from analysis_utils.compute_possible_explanations import compute_possible_explanations\
     , equality, compute_possible_explanations_stats
 
 

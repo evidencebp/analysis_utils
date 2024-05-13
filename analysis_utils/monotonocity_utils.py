@@ -1,6 +1,6 @@
 import pandas as pd
 
-from binning_utils import sides_binning
+from analysis_utils.binning_utils import sides_binning
 
 def evaluate_monotonocity(df : pd.DataFrame
                            , relevant_columns

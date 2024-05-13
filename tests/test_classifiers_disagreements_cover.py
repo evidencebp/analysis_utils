@@ -3,7 +3,7 @@
 import pandas as pd
 import pytest
 
-from classifiers_disagreements_cover import get_lb_disagreements, build_set_representation
+from analysis_utils.classifiers_disagreements_cover import get_lb_disagreements, build_set_representation
 
 class TestGetLbDisagreements:
     #  Tests that the function returns the expected output when provided with a valid input

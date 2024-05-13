@@ -5,7 +5,7 @@ import pandas as pd
 import pytest
 from sklearn.tree import DecisionTreeClassifier
 
-from classifier_error_analysis import classifier_error_analysis
+from analysis_utils.classifier_error_analysis import classifier_error_analysis
 
 TEST_SIZE = 0.2
 RANDOM_STATE = 123

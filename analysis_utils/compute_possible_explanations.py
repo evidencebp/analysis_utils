@@ -15,7 +15,7 @@ from typing import List
 
 import pandas as pd
 
-from compare_twin_behaviours import build_cartesian_product_twin_ds
+from analysis_utils.compare_twin_behaviours import build_cartesian_product_twin_ds
 
 
 def equality(x, y):

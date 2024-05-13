@@ -4,7 +4,7 @@ sys.path.append(CODE_PATH)
 
 import pandas as pd
 import pytest
-from confusion_matrix import ConfusionMatrix, entropy
+from analysis_utils.confusion_matrix import ConfusionMatrix, entropy
 
 @pytest.mark.parametrize(('classifier'
                          , 'concept'
