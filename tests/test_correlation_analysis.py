@@ -3,7 +3,7 @@ import pandas as pd
 from pandas.testing import assert_frame_equal
 import pytest
 
-from correlation_analysis import analyze_correlation, StringsList
+from analysis_utils.correlation_analysis import analyze_correlation, StringsList
 
 @pytest.mark.parametrize(('metrics_df'
                                 , 'concept_column'

@@ -13,7 +13,7 @@ For more explanation on the methodology and its usage, see https://arxiv.org/pdf
 
 import pandas as pd
 
-from cochange_analysis import features_confusion_matrix_analysis
+from analysis_utils.cochange_analysis import features_confusion_matrix_analysis
 
 COMPARISON_SUFFIX = '_cmp'
 

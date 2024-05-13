@@ -3,7 +3,7 @@ import pandas as pd
 from pandas.testing import assert_frame_equal
 import pytest
 
-from relative_mean import analyze_relative_mean, StringsList
+from analysis_utils.relative_mean import analyze_relative_mean, StringsList
 
 @pytest.mark.parametrize(('df'
                             , 'concepts'

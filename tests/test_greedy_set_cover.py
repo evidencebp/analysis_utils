@@ -3,7 +3,7 @@ from functools import partial
 
 import pytest
 
-from greedy_set_cover import greedy_set_cover, any_item_covers_set, covers_threshold\
+from analysis_utils.greedy_set_cover import greedy_set_cover, any_item_covers_set, covers_threshold\
     , item_covers_ratios_sum, reduce_new_item, brute_force_set_cover
 
 @pytest.mark.parametrize(('sets_to_cover'

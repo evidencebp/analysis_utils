@@ -5,7 +5,7 @@ import pandas as pd
 from pandas.testing import assert_frame_equal
 import pytest
 
-from occurrence_into_dist import occurrence_into_dist
+from analysis_utils.occurrence_into_dist import occurrence_into_dist
 
 @pytest.mark.parametrize(('df'
                          , 'group_column'

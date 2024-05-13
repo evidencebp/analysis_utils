@@ -1,6 +1,6 @@
 import pandas as pd
 
-from greedy_set_cover import greedy_set_cover
+from analysis_utils.greedy_set_cover import greedy_set_cover
 
 def get_lb_disagreements(df: pd.DataFrame
                         , lb: list[str]

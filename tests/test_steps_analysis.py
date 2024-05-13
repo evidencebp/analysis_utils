@@ -2,7 +2,7 @@ import pandas as pd
 from pandas.testing import assert_frame_equal
 import pytest
 
-from steps_analysis import build_two_steps_ds
+from analysis_utils.steps_analysis import build_two_steps_ds
 
 @pytest.mark.parametrize(('metric_per_year_df'
                              , 'keys'

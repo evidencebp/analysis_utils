@@ -2,7 +2,7 @@ import pytest
 from pandas.testing import assert_frame_equal
 import pandas as pd
 
-from ml_utils import df_to_sk_structuring
+from analysis_utils.ml_utils import df_to_sk_structuring
 
 @pytest.mark.parametrize(('df'
                                 , 'concept'

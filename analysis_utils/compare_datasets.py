@@ -16,7 +16,7 @@ hurt a model based on this data.
 """
 import pandas as pd
 
-from ml_utils import build_and_eval_model, get_predictive_columns
+from analysis_utils.ml_utils import build_and_eval_model, get_predictive_columns
 
 def build_comparison_dataset(first_df: pd.DataFrame
                              , second_df: pd.DataFrame

@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from compute_correlated_feature_groups import correlated_feature_groups, graph_to_groups
+from analysis_utils.compute_correlated_feature_groups import correlated_feature_groups, graph_to_groups
 
 @pytest.mark.parametrize(('df'
                       , 'expected')

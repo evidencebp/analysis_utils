@@ -21,7 +21,7 @@ from sklearn.model_selection import GridSearchCV
 from sklearn.utils.extmath import cartesian
 from sklearn.utils.validation import check_X_y
 
-from confusion_matrix import entropy
+from analysis_utils.confusion_matrix import entropy
 
 def confidence_entropy(y, y_pred, **kwargs):
     ent = [entropy(i) for i in y_pred]
