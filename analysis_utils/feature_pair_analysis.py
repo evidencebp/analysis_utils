@@ -2,7 +2,7 @@ import json
 import numpy as np
 import pandas as pd
 
-from confusion_matrix import ConfusionMatrix
+from analysis_utils.confusion_matrix import ConfusionMatrix
 
 
 

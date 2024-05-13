@@ -1,6 +1,6 @@
 import pandas as pd
 
-from stability_analysis import build_two_years_df
+from analysis_utils.stability_analysis import build_two_years_df
 
 def build_two_steps_ds(metric_per_year_df
                        , keys

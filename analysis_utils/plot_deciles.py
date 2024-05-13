@@ -2,7 +2,7 @@ from numpy import inf
 import pandas as pd
 import plotly.graph_objs as go
 
-from feature_pair_analysis import bin_metric_by_quantiles
+from analysis_utils.feature_pair_analysis import bin_metric_by_quantiles
 
 
 def plot_deciles(df
