@@ -2,7 +2,7 @@ import pandas as pd
 from pandas.testing import assert_frame_equal
 import pytest
 
-from file_utils import join_dataframes, Strings, DataFrames
+from analysis_utils.file_utils import join_dataframes, Strings, DataFrames
 
 @pytest.mark.parametrize(('dataframes'
                             , 'keys'

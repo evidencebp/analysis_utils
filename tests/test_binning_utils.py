@@ -3,8 +3,8 @@ import pandas as pd
 from pandas.testing import assert_frame_equal
 import pytest
 
-from binning_utils import sides_binning, side_binning_by_direction, SIDES_SUFFIX
-from cochange_analysis import the_lower_the_better, the_higher_the_better
+from analysis_utils.binning_utils import sides_binning, side_binning_by_direction, SIDES_SUFFIX
+from analysis_utils.cochange_analysis import the_lower_the_better, the_higher_the_better
 
 @pytest.mark.parametrize(('df'
                   , 'column'

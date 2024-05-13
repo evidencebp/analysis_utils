@@ -3,7 +3,7 @@ from numpy.testing import assert_array_equal
 import pandas as pd
 import pytest
 
-from maximize_classifiers_agreement import minimize_classifiers_entropy, FixedLogisticRegression, confidence_entropy
+from analysis_utils.maximize_classifiers_agreement import minimize_classifiers_entropy, FixedLogisticRegression, confidence_entropy
 
 def equal_dictionaries(dict1
                        , dict2):

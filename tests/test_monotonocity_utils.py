@@ -2,7 +2,7 @@ import pandas as pd
 from pandas.testing import assert_frame_equal
 import pytest
 
-from monotonocity_utils import evaluate_monotonocity, evaluate_monotonocity_vs_concept\
+from analysis_utils.monotonocity_utils import evaluate_monotonocity, evaluate_monotonocity_vs_concept\
     , evaluate_sides_monotonocity_vs_concept
 
 @pytest.mark.parametrize(('df'

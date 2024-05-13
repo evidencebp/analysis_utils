@@ -2,7 +2,7 @@
 import pytest
 import numpy as np
 
-from representation_utils import convert_char_to_size, convert_minutes_to_text
+from analysis_utils.representation_utils import convert_char_to_size, convert_minutes_to_text
 
 @pytest.mark.parametrize(('chars'
                             , 'expected')

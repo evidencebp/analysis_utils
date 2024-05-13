@@ -1,6 +1,6 @@
 import pytest
 
-from email_utilities import generate_text_from_template, generate_email_message
+from analysis_utils.email_utilities import generate_text_from_template, generate_email_message
 
 @pytest.mark.parametrize(('template'
                          , 'params_dict'

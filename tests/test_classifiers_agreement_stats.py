@@ -4,7 +4,7 @@ import pandas as pd
 from pandas.testing import assert_frame_equal
 import pytest
 
-from classifiers_agreement_stats import classifiers_agreement_stats
+from analysis_utils.classifiers_agreement_stats import classifiers_agreement_stats
 
 
 @pytest.mark.parametrize(('df'

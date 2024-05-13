@@ -6,7 +6,7 @@ from pandas.testing import assert_frame_equal
 import pytest
 from sklearn.tree import DecisionTreeClassifier
 
-from compare_datasets import build_comparison_dataset, compare_datasets
+from analysis_utils.compare_datasets import build_comparison_dataset, compare_datasets
 
 TEST_SIZE = 0.5
 RANDOM_STATE = 123
