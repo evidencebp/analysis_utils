@@ -66,6 +66,9 @@ Version used for "ComSum: Commit Messages Summarization and Meaning Preservation
 
 Live version is updating at https://github.com/evidencebp/analysis_utils/
 
+Adding the setup, to allow pipi install, changed the repository structure.
+To run the code of the related paper, use version up to commit e4f9ba0
+
 Repository will keep advancing.
 
 
