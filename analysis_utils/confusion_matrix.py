@@ -270,7 +270,7 @@ class ConfusionMatrix(object):
         print(r"\hline")
         print(r"		&\multicolumn{2}{c|}{Classification}		  \\ \cline{2-3}")
         print(r"Concept & True(Corrective) & False              \\ \hline")
-        print(r"True & ", self.tp(), "(", round(100*self.tp()/self.samples(), self.digits) ,"\% ) TP")
+        print(r"True & ", self.tp(), "(", round(100*self.tp()/self.samples(), self.digits) ,r"\% ) TP")
         print(r"& ", self.fn(), "(", round(100*self.fn()/self.samples(), self.digits) ,r"\% ) FN      \\ \hline")
         print(r"False & ", self.fp(), "(" , round(100*self.fp()/self.samples(), self.digits) ,r"\% ) FP")
         print(r"& ", self.tn(),  "(" , round(100*self.tn()/self.samples(), self.digits) ,r"\% ) TN \\ \hline")
