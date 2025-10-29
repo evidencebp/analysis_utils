@@ -12,8 +12,8 @@ from sklearn.tree import export_graphviz
 import time
 
 
-from analysis_utils.confusion_matrix import ConfusionMatrix, sk_to_grouped_df
-from analysis_utils.transform_tree import models_to_text
+from analysis_utils.analysis_utils.confusion_matrix import ConfusionMatrix, sk_to_grouped_df
+from analysis_utils.analysis_utils.transform_tree import models_to_text
 
 
 def load_model(model_file_name

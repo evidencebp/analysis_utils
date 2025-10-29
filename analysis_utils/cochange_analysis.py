@@ -1,7 +1,7 @@
 import pandas as pd
 
-from analysis_utils.confusion_matrix import ConfusionMatrix, ifnull, safe_divide
-from analysis_utils.stability_analysis import build_two_years_df, PREV_PREFIX, CUR_PREFIX
+from analysis_utils.analysis_utils.confusion_matrix import ConfusionMatrix, ifnull, safe_divide
+from analysis_utils.analysis_utils.stability_analysis import build_two_years_df, PREV_PREFIX, CUR_PREFIX
 
 
 IMPROVED_PREFIX = 'improved_'

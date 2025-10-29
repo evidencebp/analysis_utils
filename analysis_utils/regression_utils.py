@@ -4,7 +4,7 @@ from pandas import DataFrame
 from sklearn.metrics import explained_variance_score, max_error, mean_absolute_error \
     , mean_squared_error, r2_score
 
-from analysis_utils.ml_utils import df_to_sk_form
+from analysis_utils.analysis_utils.ml_utils import df_to_sk_form
 
 def pred_by_rel_distance(y_test
             , test_pred

@@ -4,7 +4,7 @@ import pandas as pd
 PREV_PREFIX = 'prev_'
 CUR_PREFIX = 'cur_'
 
-from analysis_utils.regression_utils import pred_by_rel_distance
+from analysis_utils.analysis_utils.regression_utils import pred_by_rel_distance
 
 def analyze_stability(metric_per_year_df
                       , keys
