@@ -1,7 +1,68 @@
 import pandas as pd
 import pytest
 
-from analysis_utils.analysis_utils.cochange_analysis import cochange_analysis, cochange_analysis_by_value
+from analysis_utils.analysis_utils.cochange_analysis import value_in_range, cochange_analysis, cochange_analysis_by_value
+
+
+@pytest.mark.parametrize(('val'
+                        , 'upper_bound'
+                        , 'lower_bound'
+                         , 'expected')
+    , [
+pytest.param(3 # val
+             , 4 # upper_bound
+             , 2 # lower_bound
+             , 'in' # expected
+, id='reg_in')
+, pytest.param(3 # val
+     , 4 # upper_bound
+     , None # lower_bound
+     , 'in' # expected
+     , id='reg_in_just_upper')
+, pytest.param(3 # val
+            , None # upper_bound
+            , 2 # lower_bound
+            , 'in' # expected
+            , id='reg_in_just_lower')
+, pytest.param(5 # val
+            , 4 # upper_bound
+            , 2 # lower_bound
+            , 'above' # expected
+            , id='reg_above')
+, pytest.param(5 # val
+            , 4 # upper_bound
+            , None # lower_bound
+            , 'above'  # expected
+            , id='reg_above_no_lower')
+, pytest.param(1 # val
+            , 4  # upper_bound
+            , 2  # lower_bound
+            , 'below'  # expected
+            , id='reg_below')
+, pytest.param(1 # val
+            , None  # upper_bound
+            , 2  # lower_bound
+            , 'below'  # expected
+            , id='reg_above_no_upper')
+                         ])
+def test_value_in_range(val
+                        , upper_bound
+                        , lower_bound
+                         , expected
+                         ):
+
+    actual = value_in_range(val
+                   , upper_bound=upper_bound
+                   , lower_bound=lower_bound)
+
+    assert actual == expected
+
+
+def test_value_in_range_invalid_range():
+    with pytest.raises(Exception):
+        value_in_range(val=None
+                       , upper_bound=3
+                       , lower_bound=3)
 
 @pytest.mark.parametrize(('per_year_df'
                          , 'metrics_dict'

@@ -19,6 +19,22 @@ def the_higher_the_better(prev
                          , required_gap=0):
     return prev < (cur - required_gap)
 
+# In range
+range_values = ['below', 'in', 'above']
+
+def value_in_range(val
+                   , upper_bound=None
+                   , lower_bound=None):
+    in_range = 'in'
+    if upper_bound and lower_bound and lower_bound >= upper_bound:
+        raise Exception('Lower bound most be lower then upper bound')
+    elif upper_bound and upper_bound < val:
+        in_range = 'above'
+    elif lower_bound and lower_bound > val:
+        in_range = 'below'
+
+    return in_range
+
 
 def cochange_analysis(per_year_df
                         , metrics_dict
