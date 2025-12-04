@@ -35,6 +35,33 @@ def value_in_range(val
 
     return in_range
 
+in_range_change_dict = {1: 'moved to range'
+                        , 0: 'both not in range'
+                        , -1 : 'other'
+                        , -2: 'moved out of range'}
+def in_range_change(prev
+                    , cur
+                    , upper_bound=None
+                    , lower_bound=None):
+
+    prev_in_range = value_in_range(val=prev
+                   , upper_bound=upper_bound
+                   , lower_bound=lower_bound)
+
+    cur_in_range = value_in_range(val=cur
+                   , upper_bound=upper_bound
+                   , lower_bound=lower_bound)
+
+    if cur_in_range == 'in' and prev_in_range != 'in':
+        result = 1
+    elif cur_in_range == 'in' and prev_in_range == 'in':
+        result = 0
+    elif cur_in_range != 'in' and prev_in_range == 'in':
+        result = -2
+    else:
+        result = -1
+
+    return result
 
 def cochange_analysis(per_year_df
                         , metrics_dict
