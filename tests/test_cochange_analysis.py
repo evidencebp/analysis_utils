@@ -72,11 +72,17 @@ def test_value_in_range_invalid_range():
                          , 'expected')
     , [
 pytest.param(10 # prev
-             , 5 # val
+             , 5 # cur
              , 6 # upper_bound
              , 2 # lower_bound
              , 1 # expected
 , id='reg_to_range')
+, pytest.param(3  # prev
+            , 5  # cur
+            , 6  # upper_bound
+            , 2  # lower_bound
+            , -1  # expected
+            , id='reg_both_in_range')
                          ])
 def test_in_range_change(prev
                     , cur

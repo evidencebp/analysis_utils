@@ -55,7 +55,7 @@ def in_range_change(prev
     if cur_in_range == 'in' and prev_in_range != 'in':
         result = 1
     elif cur_in_range == 'in' and prev_in_range == 'in':
-        result = 0
+        result = -1
     elif cur_in_range != 'in' and prev_in_range == 'in':
         result = -2
     else:
