@@ -45,6 +45,11 @@ pytest.param(3 # val
             , 2  # lower_bound
             , 'below'  # expected
             , id='reg_above_no_upper')
+, pytest.param(None  # val
+            , 4  # upper_bound
+            , 2  # lower_bound
+            , None  # expected
+            , id='reg_none')
                          ])
 def test_value_in_range(val
                         , upper_bound

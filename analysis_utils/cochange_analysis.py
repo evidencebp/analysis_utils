@@ -26,7 +26,9 @@ def value_in_range(val
                    , upper_bound=None
                    , lower_bound=None):
     in_range = 'in'
-    if upper_bound and lower_bound and lower_bound >= upper_bound:
+    if val is None:
+        in_range = None
+    elif upper_bound and lower_bound and lower_bound >= upper_bound:
         raise Exception('Lower bound most be lower then upper bound')
     elif upper_bound and upper_bound < val:
         in_range = 'above'
