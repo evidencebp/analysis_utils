@@ -86,7 +86,7 @@ pytest.param(10 # prev
             , 5  # cur
             , 6  # upper_bound
             , 2  # lower_bound
-            , 'other' # expected
+            , 'both in range' # expected
             , id='reg_both_in_range')
 , pytest.param(7  # prev
             , 8  # cur
@@ -100,6 +100,19 @@ pytest.param(10 # prev
      , 2  # lower_bound
      , 'moved out of range' # expected
      , id='reg_move_out_of_range')
+, pytest.param(None  # prev
+            , 7  # cur
+            , 6  # upper_bound
+            , 2  # lower_bound
+            , None # expected
+            , id='reg_prev_none')
+, pytest.param(2 # prev
+     , None  # cur
+     , 6  # upper_bound
+     , 2  # lower_bound
+     , None # expected
+     , id='reg_cur_none')
+
                          ])
 def test_in_range_change(prev
                     , cur

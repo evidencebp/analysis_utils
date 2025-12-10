@@ -37,18 +37,15 @@ def value_in_range(val
 
     return in_range
 
-in_range_change_dict = {1: 'moved to range'
-                        , 0: 'both not in range'
-                        , -1 : 'other'
-                        , -2: 'moved out of range'}
 in_range_change = ['moved to range'
                         , 'both not in range'
-                        ,  'other'
+                        ,  'both in range'
                         ,  'moved out of range']
 def in_range_change(prev
                     , cur
                     , upper_bound=None
                     , lower_bound=None):
+    result = None
 
     prev_in_range = value_in_range(val=prev
                    , upper_bound=upper_bound
@@ -58,16 +55,16 @@ def in_range_change(prev
                    , upper_bound=upper_bound
                    , lower_bound=lower_bound)
 
-    if cur_in_range == 'in' and prev_in_range != 'in':
+    if cur_in_range is None or prev_in_range is None:
+        result = None
+    elif cur_in_range == 'in' and prev_in_range != 'in':
         result = 'moved to range'
     elif cur_in_range == 'in' and prev_in_range == 'in':
-        result = 'other'
+        result = 'both in range'
     elif cur_in_range != 'in' and prev_in_range == 'in':
         result = 'moved out of range'
     elif cur_in_range != 'in' and prev_in_range != 'in':
         result = 'both not in range'
-    else:
-        result = 'other'
 
     return result
 
