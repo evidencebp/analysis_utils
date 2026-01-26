@@ -389,3 +389,27 @@ def build_models(df:pd.DataFrame
                    , file_name_format=models_text_format)
 
     return results
+
+
+def build_models_by_settings(settings: dict
+                                , verbose: bool = True):
+
+    settings_results = {}
+    for cur_setting in settings:
+        if verbose:
+            print("Current setting", cur_setting)
+        results = build_models(df=settings[cur_setting]['df']
+                        , classifiers=settings[cur_setting]['classifiers']
+                        , concept=settings[cur_setting]['concept']
+                        , test_size=settings[cur_setting]['test_size']
+                        , random_state=settings[cur_setting]['random_state']
+                        , verbose=settings[cur_setting]['verbose']
+                        , performance_path=settings[cur_setting]['performance_path']
+                        , evaluation_function=settings[cur_setting]['evaluation_function']
+                        , models_path=settings[cur_setting]['models_path']
+                        , models_format=settings[cur_setting]['models_format']
+                        , models_text_format=settings[cur_setting]['models_text_format']
+                        )
+        settings_results[cur_setting] = results
+
+    return settings_results
