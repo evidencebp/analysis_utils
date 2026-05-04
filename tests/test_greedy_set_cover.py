@@ -3,8 +3,9 @@ from functools import partial
 
 import pytest
 
-from analysis_utils.greedy_set_cover import greedy_set_cover, any_item_covers_set, covers_threshold\
-    , item_covers_ratios_sum, reduce_new_item, brute_force_set_cover
+from analysis_utils.analysis_utils.greedy_set_cover import (greedy_set_cover, any_item_covers_set, covers_threshold
+    , item_covers_ratios_sum, reduce_new_item, brute_force_set_cover, covered_sets_score
+    , covers_ratios_sum, is_coverable)
 
 @pytest.mark.parametrize(('sets_to_cover'
                             , 'expected')
@@ -59,6 +60,66 @@ def test_any_item_covers_set(set_to_cover: set[int]
 
     actual: bool = any_item_covers_set(set_to_cover
                                  , covering_items)
+
+    assert actual == expected
+
+
+@pytest.mark.parametrize(('sets_to_cover'
+                            , 'item'
+                            , 'expected')
+    , [
+pytest.param(
+            []
+            , 1
+            , 0
+, id='empty')
+, pytest.param(
+            [frozenset([1, 2]), frozenset([2, 3]), frozenset([4])]
+            , 2
+            , 2
+, id='covered_by_two_sets')
+, pytest.param(
+            [frozenset([1, 2]), frozenset([2, 3]), frozenset([4])]
+            , 5
+            , 0
+, id='not_covered')
+                         ])
+def test_covered_sets_score(sets_to_cover: Set[int]
+                             , item: int
+                             , expected: float):
+
+    actual: float = covered_sets_score(sets_to_cover
+                                       , item)
+
+    assert actual == expected
+
+
+@pytest.mark.parametrize(('set_to_cover'
+                            , 'covering_items'
+                            , 'ratio_map'
+                            , 'expected')
+    , [
+pytest.param(
+            frozenset([1, 2, 3])
+            , [1, 3]
+            , {hash(frozenset([1, 2, 3])): {1: 0.25, 2: 0.25, 3: 0.5}}
+            , 0.75
+, id='sums_known_ratios')
+, pytest.param(
+            frozenset([1, 2, 3])
+            , [1, 4]
+            , {hash(frozenset([1, 2, 3])): {1: 0.25, 2: 0.25, 3: 0.5}}
+            , 0.25
+, id='unknown_item_counts_as_zero')
+                         ])
+def test_covers_ratios_sum(set_to_cover: Set[int]
+                , covering_items: list[int]
+                , ratio_map: dict
+                , expected: float):
+
+    actual: float = covers_ratios_sum(set_to_cover
+                                      , covering_items
+                                      , ratio_map)
 
     assert actual == expected
 
@@ -199,6 +260,36 @@ def test_reduce_new_item_exception(items: Set[int]
         reduce_new_item(items
                            , new_item
                            , count_dict)
+
+
+@pytest.mark.parametrize(('sets_to_cover'
+                            , 'items'
+                            , 'expected')
+    , [
+pytest.param(
+            []
+            , set()
+            , True
+, id='empty_sets')
+, pytest.param(
+            [frozenset([1, 2]), frozenset([3])]
+            , {2, 3}
+            , True
+, id='all_sets_coverable')
+, pytest.param(
+            [frozenset([1, 2]), frozenset([3])]
+            , {2}
+            , False
+, id='missing_cover_for_set')
+                         ])
+def test_is_coverable(sets_to_cover: Set[int]
+                , items: Set[int]
+                , expected: bool):
+
+    actual: bool = is_coverable(sets_to_cover
+                                , items)
+
+    assert actual == expected
 
 
 
