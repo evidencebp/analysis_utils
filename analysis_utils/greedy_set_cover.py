@@ -111,8 +111,8 @@ def greedy_set_cover(sets_to_cover: List[Set]
     to_cover: List[Set] = sets_to_cover
     items: Set[int] = set([i for cur_set in sets_to_cover for i in cur_set])
 
-    while (items != []  # Has more items
-           and to_cover != []  # More sets to cover
+    while (items  # Has more items
+           and to_cover  # More sets to cover
     ):
         # Finding the item that covers most
         most_covering = max(sorted(list(items))
